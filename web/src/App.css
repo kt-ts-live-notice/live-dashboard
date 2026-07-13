@@ -1,0 +1,184 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+  background: #111;
+  color: #fff;
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 2px solid #333;
+}
+
+header h1 {
+  font-size: 1.4rem;
+}
+
+.conn {
+  font-size: 0.9rem;
+  color: #f66;
+}
+
+.conn.ok {
+  color: #6f6;
+}
+
+main {
+  flex: 1;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+
+.empty {
+  color: #888;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.card {
+  background: #1d1d1d;
+  border: 2px solid #444;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.card.sev-주의 {
+  border-color: #e6a700;
+  background: #2a2205;
+}
+
+.card.sev-긴급 {
+  border-color: #ff3b30;
+  background: #330a08;
+  animation: pulse 1s ease-in-out 4;
+}
+
+@keyframes pulse {
+  50% {
+    background: #5c1210;
+  }
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tag {
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: #333;
+  border-radius: 8px;
+  padding: 4px 10px;
+}
+
+.sev-tag-주의 {
+  background: #e6a700;
+  color: #000;
+}
+
+.sev-tag-긴급 {
+  background: #ff3b30;
+  color: #fff;
+}
+
+time {
+  margin-left: auto;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.simplified {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.45;
+  word-break: keep-all;
+}
+
+.card.sev-긴급 .simplified {
+  font-size: 1.9rem;
+}
+
+details {
+  margin-top: 12px;
+}
+
+summary {
+  color: #8ab4f8;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.original {
+  margin-top: 8px;
+  color: #ccc;
+  line-height: 1.5;
+}
+
+.meta {
+  margin-top: 4px;
+  color: #777;
+  font-size: 0.85rem;
+}
+
+footer {
+  border-top: 2px solid #333;
+  padding: 12px 20px 16px;
+}
+
+.ticker {
+  min-height: 1.4em;
+  color: #9a9a9a;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.panel button {
+  font-size: 1rem;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #555;
+  background: #2a2a2a;
+  color: #fff;
+  cursor: pointer;
+}
+
+.panel button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.panel button:not(:disabled):hover {
+  background: #3a3a3a;
+}
