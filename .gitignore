@@ -4,4 +4,6 @@ dist/
 samples/*.wav
 samples/*.aiff
 sample_data/
+.omc/
+.omx/
 .DS_Store
