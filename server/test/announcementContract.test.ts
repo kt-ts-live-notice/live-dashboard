@@ -47,4 +47,14 @@ describe('announcement classification contract', () => {
       simplified: '이 열차는 정차하지 않습니다.',
     })).toThrow('분류 결과 형식 오류')
   })
+
+  it('repairs missing sentence-boundary spacing before passenger display', () => {
+    expect(parseClassification({
+      is_announcement: true,
+      category: '열차 통과',
+      label: '급행 열차 안내',
+      severity: '주의',
+      simplified: '이 열차는 세류역에 서지 않습니다.세류역에 가려면 다음 열차를 타세요.',
+    }).simplified).toBe('이 열차는 세류역에 서지 않습니다. 세류역에 가려면 다음 열차를 타세요.')
+  })
 })

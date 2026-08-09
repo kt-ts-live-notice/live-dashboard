@@ -24,6 +24,19 @@ interface ServerEvent {
   [key: string]: unknown
 }
 
+interface DemoSample {
+  name: string
+  title: string
+  source: '실제 역사 녹음' | '시나리오 녹음'
+}
+
+const DEMO_SAMPLES: DemoSample[] = [
+  { name: 'kt_93', title: '열차 진입', source: '실제 역사 녹음' },
+  { name: 'kt_89', title: '발빠짐 주의', source: '실제 역사 녹음' },
+  { name: 'kt_100', title: '출입문 닫힘', source: '실제 역사 녹음' },
+  { name: 'skip-stop', title: '열차 통과', source: '시나리오 녹음' },
+]
+
 const SEVERITY_INFO: Record<AnnouncementSeverity, { symbol: string }> = {
   일반: { symbol: 'i' },
   주의: { symbol: '▲' },
@@ -39,34 +52,6 @@ function textLengthClass(text: string): 'copy-short' | 'copy-medium' | 'copy-lon
 
 function formatTime(ts: number): string {
   return new Date(ts).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
-}
-
-function previewAnnouncements(stationId: string, enabled: boolean): Announcement[] {
-  if (!enabled) return []
-  const now = Date.now()
-  return [
-    {
-      id: -1,
-      original: '지금 들어오는 열차는 우리 역을 통과하는 열차입니다.',
-      simplified: '지금 들어오는 열차는 영등포역에 정차하지 않습니다. 안전선 안으로 이동하세요.',
-      category: '열차 통과', label: '열차 통과', severity: '긴급', latencyMs: 1320, ts: now, device_id: stationId,
-      display: { conclusion: '정차하지\n않습니다', support: '안전선 안으로 이동하세요' },
-    },
-    {
-      id: -2,
-      original: '지금 인천, 인천행 열차가 들어오고 있습니다. 이 역은 승강장과 열차 사이가 넓으니 내리고 타실 때 조심하시기 바랍니다.',
-      simplified: '인천행 열차가 들어오고 있습니다. 승강장과 열차 사이가 넓습니다.',
-      category: '열차 진입', label: '열차 진입', severity: '주의', latencyMs: 1480, ts: now - 3 * 60_000, device_id: stationId,
-      display: { conclusion: '열차가\n들어옵니다', support: '승강장과 열차 사이가 넓습니다' },
-    },
-    {
-      id: -3,
-      original: '전동킥보드, 전기자전거, 전동휠 등 리튬배터리로 구동되는 이동수단은 역사와 열차 내 반입을 제한합니다.',
-      simplified: '전동킥보드 등 리튬배터리 이동수단은 역사와 열차에 반입할 수 없습니다.',
-      category: '일반 안내', label: '반입 제한', severity: '일반', latencyMs: 1570, ts: now - 8 * 60_000, device_id: stationId,
-      display: { conclusion: '반입이\n제한됩니다', support: '전동킥보드 · 전기자전거 · 전동휠' },
-    },
-  ]
 }
 
 function SituationBadge({ announcement }: { announcement: Announcement }) {
@@ -129,27 +114,34 @@ function InvalidStationPage() {
   )
 }
 
-function WaitingPanel({ stationName }: { stationName: string }) {
+function WaitingPanel({ stationName, demo }: { stationName: string; demo: boolean }) {
   return (
     <section className="waiting-panel" aria-live="polite">
       <span className="waiting-mark" aria-hidden="true">···</span>
-      <h2>{stationName} 방송을<br />기다리고 있습니다</h2>
+      <h2>{demo ? <>음성을 선택하면<br />자막이 표시됩니다</> : <>{stationName} 방송을<br />기다리고 있습니다</>}</h2>
     </section>
   )
 }
 
+function demoSampleTitle(name: string): string {
+  return DEMO_SAMPLES.find((sample) => sample.name === name)?.title ?? name
+}
+
 function StationPage({ station }: { station: StationPageContext }) {
-  const [previewItems] = useState<Announcement[]>(() => previewAnnouncements(station.id, station.previewAll))
-  const [previewIndex, setPreviewIndex] = useState(0)
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
   const [interim, setInterim] = useState('')
   const [playing, setPlaying] = useState<string | null>(null)
   const [samples, setSamples] = useState<string[]>([])
+  const [selectedSample, setSelectedSample] = useState<string | null>(null)
+  const [localPlaying, setLocalPlaying] = useState(false)
+  const [demoNotice, setDemoNotice] = useState('')
   const wsRef = useRef<WebSocket | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const isDemo = station.mode === 'demo'
 
   useEffect(() => {
-    document.title = `${station.name} 안내방송`
-    if (station.showDeveloperTools) {
+    document.title = isDemo ? `${station.name} 음성 데모` : `${station.name} 안내방송`
+    if (isDemo) {
       fetch('/api/samples')
         .then((response) => response.json())
         .then((data: { samples?: unknown; playing?: unknown }) => {
@@ -177,56 +169,120 @@ function StationPage({ station }: { station: StationPageContext }) {
         if (typeof serverEvent.device_id === 'string' && serverEvent.device_id !== station.id) return
         if (serverEvent.type === 'stt-interim') setInterim(String(serverEvent.text ?? ''))
         if (serverEvent.type === 'stt-final') setInterim('')
-        if (serverEvent.type === 'status') setPlaying(typeof serverEvent.playing === 'string' ? serverEvent.playing : null)
+        if (serverEvent.type === 'status') {
+          setPlaying(typeof serverEvent.playing === 'string' ? serverEvent.playing : null)
+          if (serverEvent.playing === null) setLocalPlaying(false)
+          if (typeof serverEvent.error === 'string') setDemoNotice(`분석 오류: ${serverEvent.error}`)
+        }
         if (serverEvent.type === 'announcement') {
+          setDemoNotice('')
           setAnnouncements((previous) => [serverEvent as unknown as Announcement, ...previous].slice(0, 20))
         }
+        if (serverEvent.type === 'filtered') setDemoNotice('이 음성은 안내방송으로 분류되지 않았습니다.')
+        if (serverEvent.type === 'session-error') setDemoNotice('음성 처리 중 오류가 발생했습니다.')
       }
     }
     connect()
     return () => {
       closed = true
-      wsRef.current?.close()
+      const activeSocket = wsRef.current
+      if (activeSocket?.readyState === WebSocket.CONNECTING) activeSocket.onopen = () => activeSocket.close()
+      else activeSocket?.close()
     }
-  }, [station.id, station.name, station.showDeveloperTools])
+  }, [isDemo, station.id, station.name])
 
-  const play = (name: string) => {
-    fetch(`/api/play/${encodeURIComponent(name)}?station_id=${encodeURIComponent(station.id)}`, { method: 'POST' }).catch(() => undefined)
+  const play = async (name: string) => {
+    const audio = audioRef.current
+    if (!audio || playing || localPlaying) return
+    setSelectedSample(name)
+    setDemoNotice('')
+    setLocalPlaying(true)
+    audio.src = `/api/samples/${encodeURIComponent(name)}/audio`
+    audio.load()
+    const browserPlayback = audio.play()
+    try {
+      const [response] = await Promise.all([
+        fetch(`/api/play/${encodeURIComponent(name)}?station_id=${encodeURIComponent(station.id)}`, { method: 'POST' }),
+        browserPlayback,
+      ])
+      if (!response.ok) {
+        const problem = await response.json().catch(() => null) as { error?: string } | null
+        throw new Error(problem?.error ?? '데모를 시작할 수 없습니다.')
+      }
+    } catch (error) {
+      audio.pause()
+      audio.currentTime = 0
+      setLocalPlaying(false)
+      setDemoNotice(error instanceof Error ? error.message : '데모를 시작할 수 없습니다.')
+    }
   }
-  const latest = station.previewAll ? previewItems[previewIndex] : announcements[0]
-  const history = station.previewAll ? previewItems.filter((_, index) => index !== previewIndex) : announcements.slice(1)
+  const latest = announcements[0]
+  const history = announcements.slice(1)
+  const featuredSamples = DEMO_SAMPLES.filter((sample) => samples.includes(sample.name))
+  const busy = playing !== null || localPlaying
 
   return (
     <div className="app-shell">
       <header className="topbar">
         <h1>{station.name}</h1>
+        {isDemo && <span className="demo-badge">DEMO</span>}
       </header>
 
       <main className="station-main">
-        {station.previewAll && (
-          <nav className="preview-switcher" aria-label="동적 자막 테스트 장면">
-            {previewItems.map((announcement, index) => (
-              <button
-                key={announcement.id}
-                type="button"
-                data-severity={announcement.severity}
-                aria-pressed={previewIndex === index}
-                onClick={() => setPreviewIndex(index)}
-              >
-                {announcement.label ?? announcement.category}
-              </button>
-            ))}
-          </nav>
+        {isDemo && (
+          <section className="demo-player" aria-labelledby="demo-player-title">
+            <div className="demo-player-head">
+              <div>
+                <h2 id="demo-player-title">녹음 재생</h2>
+                <p>소리와 자막 분석이 함께 시작됩니다.</p>
+              </div>
+              {busy && <span className="demo-running">분석 중</span>}
+            </div>
+            <div className="demo-sample-grid">
+              {featuredSamples.map((sample) => (
+                <button
+                  key={sample.name}
+                  type="button"
+                  aria-pressed={selectedSample === sample.name}
+                  onClick={() => void play(sample.name)}
+                  disabled={busy}
+                >
+                  <span className="demo-play-icon" aria-hidden="true">▶</span>
+                  <span><strong>{sample.title}</strong><small>{sample.source}</small></span>
+                </button>
+              ))}
+            </div>
+            <audio
+              ref={audioRef}
+              className={selectedSample ? 'demo-audio is-visible' : 'demo-audio'}
+              controls
+              preload="metadata"
+              aria-label={selectedSample ? `${demoSampleTitle(selectedSample)} 녹음` : '데모 녹음 재생기'}
+              onEnded={() => setLocalPlaying(false)}
+              onError={() => setDemoNotice('음성 파일을 재생할 수 없습니다.')}
+            />
+            {demoNotice && <p className="demo-notice" role="status">{demoNotice}</p>}
+            {samples.length > featuredSamples.length && (
+              <details className="all-samples">
+                <summary>전체 녹음 {samples.length}개</summary>
+                <div className="sample-list">
+                  {samples.map((sample) => (
+                    <button key={sample} type="button" onClick={() => void play(sample)} disabled={busy}>▶ {sample}</button>
+                  ))}
+                </div>
+              </details>
+            )}
+          </section>
         )}
 
         {(interim || playing) && (
           <section className={`live-caption ${interim ? 'has-caption' : ''}`} aria-live="polite" aria-atomic="true">
             <div className="live-label"><span aria-hidden="true" />{interim ? '임시 자막 · 확정 전' : '음성 인식 중'}</div>
-            <p>{interim || `${playing} 방송을 처리하고 있습니다.`}</p>
+            <p>{interim || '방송 내용을 분석하고 있습니다.'}</p>
           </section>
         )}
 
-        {latest ? <FocusAnnouncement key={latest.id ?? latest.session_id ?? latest.ts} announcement={latest} showTechnical={station.showDeveloperTools} /> : <WaitingPanel stationName={station.name} />}
+        {latest ? <FocusAnnouncement key={latest.id ?? latest.session_id ?? latest.ts} announcement={latest} showTechnical={isDemo} /> : <WaitingPanel stationName={station.name} demo={isDemo} />}
 
         {history.length > 0 && (
           <section className="history" aria-labelledby="history-title">
@@ -247,24 +303,7 @@ function StationPage({ station }: { station: StationPageContext }) {
             </div>
           </section>
         )}
-
       </main>
-
-      {station.showDeveloperTools && (
-        <footer className="test-dock">
-          <details>
-            <summary><span>개발용 테스트 음성</span><small>{samples.length}개</small></summary>
-            <div className="test-content">
-              <p>긴급도는 음량이 아니라 방송 내용의 분류 결과로 결정됩니다.</p>
-              <div className="sample-list">
-                {samples.map((sample) => (
-                  <button key={sample} onClick={() => play(sample)} disabled={playing !== null}><span aria-hidden="true">▶</span> {sample}</button>
-                ))}
-              </div>
-            </div>
-          </details>
-        </footer>
-      )}
     </div>
   )
 }

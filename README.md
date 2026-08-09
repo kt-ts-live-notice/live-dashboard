@@ -17,11 +17,11 @@ WAV 샘플 재생 ─────────┘
 - 서버: `http://localhost:8787` (WebSocket `/ws`)
 - 웹: `http://localhost:5173` (`/api`, `/ws`는 개발 서버가 프록시)
 
-기존 샘플 데모는 그대로 사용할 수 있습니다. `./scripts/make-samples.sh`로 합성 샘플을 만들거나 `./scripts/import-audio-samples.sh [원본 폴더]`로 M4A·MP3·WAV 실제 녹음을 변환한 뒤, 웹 하단의 `테스트 음성 재생`을 펼쳐 실행합니다. 변환본은 원본을 건드리지 않고 `samples/` 아래에 16kHz·mono·16bit PCM WAV로 생성됩니다. 한 번에 한 샘플만 재생되며 `neg-*` 샘플은 분류 후 카드에서 제외됩니다. `/api/samples`와 `/api/play/:name`에는 장치 bearer 인증이 적용되지 않습니다.
+샘플 데모는 서비스 페이지와 분리된 `/demo/{station_id}/{역이름}`에서 실행합니다. `./scripts/make-samples.sh`로 합성 샘플을 만들거나 `./scripts/import-audio-samples.sh [원본 폴더]`로 M4A·MP3·WAV 실제 녹음을 변환한 뒤 데모 화면에서 녹음을 선택합니다. 변환본은 원본을 건드리지 않고 `samples/` 아래에 16kHz·mono·16bit PCM WAV로 생성됩니다. 버튼을 누르면 브라우저에서 실제 음성이 들리는 동시에 같은 파일이 STT·분류·WebSocket 자막 흐름으로 처리됩니다. 한 번에 한 샘플만 재생되며 `neg-*` 샘플은 분류 후 카드에서 제외됩니다. `/api/samples`, `/api/samples/:name/audio`, `/api/play/:name`에는 장치 bearer 인증이 적용되지 않습니다.
 
-승객은 역에 설치된 QR로 `/stations/{station_id}/{역이름}`에 접속합니다. PoC에서는 `station_id`를 해당 역 Raspberry Pi의 `device_id`와 동일하게 두며, 웹은 `/ws?station_id={station_id}`로 구독해 그 장치의 방송만 받습니다. 데모와 발표의 기준 역은 **영등포역**이고, 기준 주소는 `http://localhost:5173/stations/yeongdeungpo-01/영등포역`입니다. 역 식별자가 없는 루트 주소는 잘못된 QR 안내 화면을 표시합니다.
+승객은 역에 설치된 QR로 `/stations/{station_id}/{역이름}`에 접속합니다. 이 서비스 주소에는 테스트 조작부가 나타나지 않습니다. PoC에서는 `station_id`를 해당 역 Raspberry Pi의 `device_id`와 동일하게 두며, 웹은 `/ws?station_id={station_id}`로 구독해 그 장치의 방송만 받습니다. 데모와 발표의 기준 역은 **영등포역**입니다. 서비스 주소는 `http://localhost:5173/stations/yeongdeungpo-01/영등포역`, 체험 주소는 `http://localhost:5173/demo/yeongdeungpo-01/영등포역`입니다. 역 식별자가 없는 루트 주소는 잘못된 QR 안내 화면을 표시합니다.
 
-화면 구성만 확인할 때는 API 키 없이 `http://localhost:5173/stations/yeongdeungpo-01/영등포역?preview=all`을 열면 `긴급·주의·일반` 세 상태와 개발용 음성 재생 도구를 볼 수 있습니다. 일반 승객 URL에서는 개발 도구를 숨깁니다. 표시 단계는 서버가 전달한 분류값만 사용하며 음량으로 긴급도를 올리지 않습니다.
+데모 화면도 표시 단계는 서버가 전달한 분류값만 사용하며 음량으로 긴급도를 올리지 않습니다. 실제 STT·분류 결과를 보려면 `.env`의 VITO·Anthropic API 키가 필요하지만, 브라우저 음성 재생 자체는 샘플 파일만 있으면 동작합니다.
 
 ## 안내 분류 계약
 
@@ -100,7 +100,7 @@ curl --fail-with-body \
 
 외부 배포에서는 listener를 인터넷에 직접 노출하지 말고 HTTPS reverse proxy 뒤에 둡니다. 신뢰하는 proxy가 `X-Forwarded-Proto: https`를 덮어쓰도록 제한한 뒤 `REQUIRE_HTTPS=true`를 설정합니다. 장치 토큰은 git 밖에서 관리·회전하고 Authorization header를 로그에 남기지 않습니다.
 
-승객 웹을 정적 호스팅할 때는 `/stations/*` 요청을 `index.html`로 보내는 SPA fallback을 설정해야 역별 QR URL을 새로 열거나 새로고침해도 같은 페이지가 표시됩니다.
+승객 웹을 정적 호스팅할 때는 `/stations/*`와 `/demo/*` 요청을 `index.html`로 보내는 SPA fallback을 설정해야 역별 QR·데모 URL을 새로 열거나 새로고침해도 같은 페이지가 표시됩니다.
 
 ## 검증
 

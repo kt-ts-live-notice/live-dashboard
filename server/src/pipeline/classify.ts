@@ -54,6 +54,10 @@ const CLASSIFY_TOOL: Anthropic.Tool = {
 
 const client = new Anthropic()
 
+function normalizeSentenceSpacing(text: string): string {
+  return text.trim().replace(/([.!?])(?=[가-힣A-Za-z])/g, '$1 ')
+}
+
 export function parseClassification(input: unknown): Classification {
   if (!input || typeof input !== 'object') throw new Error('분류 결과 형식 오류')
   const value = input as Record<string, unknown>
@@ -74,7 +78,7 @@ export function parseClassification(input: unknown): Classification {
     category: value.category,
     label: value.label,
     severity: value.severity,
-    simplified: value.simplified,
+    simplified: normalizeSentenceSpacing(value.simplified),
   }
 }
 

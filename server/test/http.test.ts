@@ -40,9 +40,15 @@ async function setup(options: { configuredAuth?: boolean; connectFails?: boolean
   openManagers.push(manager)
   const tokens = options.configuredAuth === false ? new Map<string, string>() : new Map([['pi-1', '0123456789abcdef']])
   const samplePlay = vi.fn(() => true)
+  const sampleAudio = Buffer.from(makeWav({ samples: 16 }))
   const app = createApp({
     authenticator: new DeviceAuthenticator(tokens, options.configuredAuth !== false), sessionManager: manager,
-    samples: { list: async () => ['positive'], current: () => null, play: samplePlay },
+    samples: {
+      list: async () => ['positive'],
+      read: async (name) => name === 'positive' ? sampleAudio : null,
+      current: () => null,
+      play: samplePlay,
+    },
   })
   const server = createServer(app)
   openServers.push(server)
@@ -99,6 +105,26 @@ describe('audio chunk HTTP integration', () => {
     expect((await fetch(`${base}/api/play/positive?station_id=station-pi-01`, { method: 'POST' })).status).toBe(200)
     expect(samplePlay).toHaveBeenCalledWith('positive', 'station-pi-01')
     expect((await fetch(`${base}/api/play/positive?station_id=..%2Fother`, { method: 'POST' })).status).toBe(400)
+  })
+
+  it('serves playable WAV sample bytes without exposing arbitrary paths', async () => {
+    const { base } = await setup()
+    const response = await fetch(`${base}/api/samples/positive/audio`)
+    expect(response.status).toBe(200)
+    expect(response.headers.get('content-type')).toBe('audio/wav')
+    expect(response.headers.get('cache-control')).toBe('no-store')
+    expect(response.headers.get('accept-ranges')).toBe('bytes')
+    expect(Buffer.from(await response.arrayBuffer()).subarray(0, 4).toString('ascii')).toBe('RIFF')
+    const partial = await fetch(`${base}/api/samples/positive/audio`, { headers: { Range: 'bytes=0-15' } })
+    expect(partial.status).toBe(206)
+    expect(partial.headers.get('content-range')).toMatch(/^bytes 0-15\//)
+    expect(Buffer.from(await partial.arrayBuffer())).toHaveLength(16)
+    const head = await fetch(`${base}/api/samples/positive/audio`, { method: 'HEAD' })
+    expect(head.status).toBe(200)
+    expect(head.headers.get('content-length')).toBe(String(makeWav({ samples: 16 }).length))
+    expect((await fetch(`${base}/api/samples/positive/audio`, { headers: { Range: 'bytes=999999-' } })).status).toBe(416)
+    expect((await fetch(`${base}/api/samples/missing/audio`)).status).toBe(404)
+    expect((await fetch(`${base}/api/samples/..%2Fsecret/audio`)).status).toBe(404)
   })
 
   it('maps VITO initialization failure to 502 and missing device config to 503', async () => {

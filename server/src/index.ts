@@ -29,7 +29,6 @@ function broadcast(event: Record<string, unknown>): void {
 
 let playing: string | null = null
 let announcementSeq = 0
-const recentUtterances: string[] = []
 
 async function runSamplePipeline(sampleName: string, stationId?: string): Promise<void> {
   const filePath = join(SAMPLES_DIR, `${sampleName}.wav`)
@@ -37,40 +36,42 @@ async function runSamplePipeline(sampleName: string, stationId?: string): Promis
   const stationIdentity = stationId ? { device_id: stationId } : {}
   broadcast({ type: 'status', playing, ...stationIdentity })
   console.log(`[play] ${sampleName} (${sampleRate}Hz)`)
-  recentUtterances.length = 0
-  let sttDone!: () => void
-  const sttClosed = new Promise<void>((resolve) => { sttDone = resolve })
-  const pendingClassify: Promise<void>[] = []
+  const finalSegments = new Map<number, string>()
   const stt = new VitoStream({
     onInterim: (text) => broadcast({ type: 'stt-interim', text, ts: Date.now(), ...stationIdentity }),
     onFinal: (text, seq) => {
-      const finalAt = Date.now()
       console.log(`[stt-final #${seq}] ${text}`)
-      broadcast({ type: 'stt-final', text, seq, ts: finalAt, ...stationIdentity })
-      const context = [...recentUtterances]
-      recentUtterances.push(text)
-      if (recentUtterances.length > 2) recentUtterances.shift()
-      pendingClassify.push(classify(text, context).then((result) => {
-        const latencyMs = Date.now() - finalAt
-        if (!result.is_announcement) {
-          broadcast({ type: 'filtered', text, ts: Date.now(), ...stationIdentity })
-          return
-        }
-        broadcast({
-          type: 'announcement', id: ++announcementSeq, original: text, simplified: result.simplified,
-          category: result.category, label: result.label, severity: result.severity, latencyMs, ts: Date.now(), ...stationIdentity,
-        })
-      }).catch((error) => console.error('[classify error]', error)))
+      finalSegments.set(seq, text)
+      broadcast({ type: 'stt-final', text, seq, ts: Date.now(), ...stationIdentity })
     },
     onError: (error) => console.error('[stt error]', error.message),
-    onClose: sttDone,
+    onClose: () => undefined,
   }, config.vitoDomain)
   try {
     await stt.connect(sampleRate)
     await playWavRealtime(filePath, (chunk) => stt.sendAudio(chunk))
     await stt.end()
-    await Promise.race([sttClosed, new Promise((resolve) => setTimeout(resolve, config.vitoFinalWaitMs))])
-    await Promise.allSettled(pendingClassify)
+    await Promise.race([
+      stt.finish(),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error('VITO final result timeout')), config.vitoFinalWaitMs)),
+    ])
+    const transcript = [...finalSegments.entries()]
+      .sort(([left], [right]) => left - right)
+      .map(([, text]) => text)
+      .join(' ')
+      .trim()
+    if (!transcript) return
+    const finalAt = Date.now()
+    const result = await classify(transcript)
+    const latencyMs = Date.now() - finalAt
+    if (!result.is_announcement) {
+      broadcast({ type: 'filtered', text: transcript, ts: Date.now(), ...stationIdentity })
+      return
+    }
+    broadcast({
+      type: 'announcement', id: ++announcementSeq, original: transcript, simplified: result.simplified,
+      category: result.category, label: result.label, severity: result.severity, latencyMs, ts: Date.now(), ...stationIdentity,
+    })
   } finally {
     stt.close()
     playing = null
@@ -83,6 +84,12 @@ const samples: SampleController = {
   async list() {
     const files = await readdir(SAMPLES_DIR).catch((): string[] => [])
     return files.filter((file) => file.endsWith('.wav')).map((file) => file.replace(/\.wav$/, ''))
+  },
+  async read(name) {
+    return readFile(join(SAMPLES_DIR, `${name}.wav`)).catch((error: unknown) => {
+      if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') return null
+      throw error
+    })
   },
   current: () => playing,
   play(name, stationId) {

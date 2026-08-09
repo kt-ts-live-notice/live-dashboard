@@ -1,8 +1,7 @@
 export interface StationPageContext {
   id: string
   name: string
-  previewAll: boolean
-  showDeveloperTools: boolean
+  mode: 'service' | 'demo'
 }
 
 const STATION_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/
@@ -15,18 +14,15 @@ function decodeSegment(value: string): string | null {
   }
 }
 
-export function resolveStationPage(pathname = location.pathname, search = location.search): StationPageContext | null {
-  const match = pathname.match(/^\/stations\/([^/]+)\/([^/]+)\/?$/)
+export function resolveStationPage(pathname = location.pathname): StationPageContext | null {
+  const match = pathname.match(/^\/(stations|demo)\/([^/]+)\/([^/]+)\/?$/)
   if (!match) return null
-  const id = decodeSegment(match[1])
-  const rawName = decodeSegment(match[2])?.trim().replace(/\s+/g, ' ')
+  const id = decodeSegment(match[2])
+  const rawName = decodeSegment(match[3])?.trim().replace(/\s+/g, ' ')
   if (!id || !STATION_ID_PATTERN.test(id) || !rawName || rawName.length > 30 || /[\u0000-\u001f]/.test(rawName)) return null
-  const params = new URLSearchParams(search)
-  const previewAll = params.get('preview') === 'all'
   return {
     id,
     name: rawName.endsWith('역') ? rawName : `${rawName}역`,
-    previewAll,
-    showDeveloperTools: previewAll || params.get('dev') === '1',
+    mode: match[1] === 'demo' ? 'demo' : 'service',
   }
 }
