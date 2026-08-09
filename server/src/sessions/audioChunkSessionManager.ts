@@ -277,7 +277,8 @@ export class AudioChunkSessionManager {
       this.logger.info(JSON.stringify({ metric: 'final_to_card_ms', device_id: session.deviceId, session_id: session.sessionId, value: latencyMs }))
       await this.deps.broadcast({
         type: 'announcement', device_id: session.deviceId, session_id: session.sessionId, original: transcript,
-        simplified: classification.simplified, category: classification.category, severity: classification.severity,
+        simplified: classification.simplified, category: classification.category, label: classification.label,
+        severity: classification.severity,
         latencyMs, ts: cardAt,
       })
     } else {

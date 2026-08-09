@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
+import type { AnnouncementCategory, AnnouncementSeverity } from '@live-notice/contracts'
 import { resolveStationPage, type StationPageContext } from './stationRoute'
-
-type Severity = '일반' | '주의' | '긴급'
 
 interface Announcement {
   id?: number
   original: string
   simplified: string
-  category: string
-  severity: Severity
+  category: AnnouncementCategory
+  label?: string
+  severity: AnnouncementSeverity
   latencyMs: number
   ts: number
   device_id?: string
@@ -24,7 +24,7 @@ interface ServerEvent {
   [key: string]: unknown
 }
 
-const SEVERITY_INFO: Record<Severity, { symbol: string }> = {
+const SEVERITY_INFO: Record<AnnouncementSeverity, { symbol: string }> = {
   일반: { symbol: 'i' },
   주의: { symbol: '▲' },
   긴급: { symbol: '!' },
@@ -49,21 +49,21 @@ function previewAnnouncements(stationId: string, enabled: boolean): Announcement
       id: -1,
       original: '지금 들어오는 열차는 우리 역을 통과하는 열차입니다.',
       simplified: '지금 들어오는 열차는 영등포역에 정차하지 않습니다. 안전선 안으로 이동하세요.',
-      category: '열차 통과', severity: '긴급', latencyMs: 1320, ts: now, device_id: stationId,
+      category: '열차 통과', label: '열차 통과', severity: '긴급', latencyMs: 1320, ts: now, device_id: stationId,
       display: { conclusion: '정차하지\n않습니다', support: '안전선 안으로 이동하세요' },
     },
     {
       id: -2,
       original: '지금 인천, 인천행 열차가 들어오고 있습니다. 이 역은 승강장과 열차 사이가 넓으니 내리고 타실 때 조심하시기 바랍니다.',
       simplified: '인천행 열차가 들어오고 있습니다. 승강장과 열차 사이가 넓습니다.',
-      category: '열차 진입', severity: '주의', latencyMs: 1480, ts: now - 3 * 60_000, device_id: stationId,
+      category: '열차 진입', label: '열차 진입', severity: '주의', latencyMs: 1480, ts: now - 3 * 60_000, device_id: stationId,
       display: { conclusion: '열차가\n들어옵니다', support: '승강장과 열차 사이가 넓습니다' },
     },
     {
       id: -3,
       original: '전동킥보드, 전기자전거, 전동휠 등 리튬배터리로 구동되는 이동수단은 역사와 열차 내 반입을 제한합니다.',
       simplified: '전동킥보드 등 리튬배터리 이동수단은 역사와 열차에 반입할 수 없습니다.',
-      category: '반입 제한', severity: '일반', latencyMs: 1570, ts: now - 8 * 60_000, device_id: stationId,
+      category: '일반 안내', label: '반입 제한', severity: '일반', latencyMs: 1570, ts: now - 8 * 60_000, device_id: stationId,
       display: { conclusion: '반입이\n제한됩니다', support: '전동킥보드 · 전기자전거 · 전동휠' },
     },
   ]
@@ -71,11 +71,12 @@ function previewAnnouncements(stationId: string, enabled: boolean): Announcement
 
 function SituationBadge({ announcement }: { announcement: Announcement }) {
   const info = SEVERITY_INFO[announcement.severity]
+  const label = announcement.label ?? announcement.category
   return (
-    <div className="severity-badge" aria-label={`${announcement.category}, 중요도 ${announcement.severity}`}>
+    <div className="severity-badge" aria-label={`${label}, 분류 ${announcement.category}, 중요도 ${announcement.severity}`}>
       <span className="severity-symbol" aria-hidden="true">{info.symbol}</span>
       <span className="severity-copy">
-        <strong>{announcement.category}</strong>
+        <strong>{label}</strong>
       </span>
     </div>
   )
@@ -212,7 +213,7 @@ function StationPage({ station }: { station: StationPageContext }) {
                 aria-pressed={previewIndex === index}
                 onClick={() => setPreviewIndex(index)}
               >
-                {announcement.category}
+                {announcement.label ?? announcement.category}
               </button>
             ))}
           </nav>

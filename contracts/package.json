@@ -1,0 +1,17 @@
+{
+  "name": "@live-notice/contracts",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/announcement.ts",
+      "default": "./src/announcement.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}
