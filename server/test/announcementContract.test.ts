@@ -6,7 +6,7 @@ import {
   isAnnouncementCategory,
   isAnnouncementSeverity,
 } from '@live-notice/contracts'
-import { parseClassification } from '../src/pipeline/classify.js'
+import { displayUsesSourceWording, groundPassengerWording, parseClassification } from '../src/pipeline/classify.js'
 
 describe('announcement classification contract', () => {
   it('keeps the agreed station-facing categories and their contents in one runtime contract', () => {
@@ -53,7 +53,7 @@ describe('announcement classification contract', () => {
     })).toThrow('분류 결과 형식 오류')
   })
 
-  it('repairs missing sentence-boundary spacing before passenger display', () => {
+  it('preserves the STT wording without sentence-boundary preprocessing', () => {
     expect(parseClassification({
       is_announcement: true,
       category: '열차 통과',
@@ -61,7 +61,39 @@ describe('announcement classification contract', () => {
       severity: '주의',
       simplified: '이 열차는 세류역에 서지 않습니다.세류역에 가려면 다음 열차를 타세요.',
       display: { lead: '지금 들어오는 급행 열차는', conclusion: '세류역에 서지 않습니다', support: '세류역은 다음 일반 열차를 타세요' },
-    }).simplified).toBe('이 열차는 세류역에 서지 않습니다. 세류역에 가려면 다음 열차를 타세요.')
+    }).simplified).toBe('이 열차는 세류역에 서지 않습니다.세류역에 가려면 다음 열차를 타세요.')
+  })
+
+  it('accepts only verbatim transcript excerpts for the three-level display', () => {
+    const source = '지금 들어오는 열차는 세류역에 정차하지 않습니다. 세류역으로 가실 고객께서는 다음 일반 열차를 이용하시기 바랍니다.'
+    expect(displayUsesSourceWording(source, {
+      lead: '지금 들어오는 열차는',
+      conclusion: '세류역에 정차하지 않습니다',
+      support: '다음 일반 열차를 이용하시기 바랍니다',
+    })).toBe(true)
+    expect(displayUsesSourceWording(source, {
+      lead: '지금 들어오는 열차는',
+      conclusion: '세류역에 서지 않습니다',
+      support: '다음 일반 열차를 이용하세요',
+    })).toBe(false)
+  })
+
+  it('keeps the full STT wording and drops a rewritten structured caption', () => {
+    const source = '세류역으로 가실 고객께서는 다음 일반 열차를 이용하시기 바랍니다.'
+    const grounded = groundPassengerWording(source, parseClassification({
+      is_announcement: true,
+      category: '열차 통과',
+      label: '열차 통과',
+      severity: '주의',
+      simplified: '세류역은 다음 열차를 이용하세요.',
+      display: {
+        lead: '세류역으로 가실 고객께서는',
+        conclusion: '다음 일반 열차를',
+        support: '이용하세요',
+      },
+    }))
+    expect(grounded.simplified).toBe(source)
+    expect(grounded.display).toBeUndefined()
   })
 
   it('rejects announcements that cannot stand alone without the source transcript', () => {
