@@ -70,7 +70,8 @@ async function runSamplePipeline(sampleName: string, stationId?: string): Promis
     }
     broadcast({
       type: 'announcement', id: ++announcementSeq, original: transcript, simplified: result.simplified,
-      category: result.category, label: result.label, severity: result.severity, latencyMs, ts: Date.now(), ...stationIdentity,
+      category: result.category, label: result.label, severity: result.severity, display: result.display,
+      latencyMs, ts: Date.now(), ...stationIdentity,
     })
   } finally {
     stt.close()

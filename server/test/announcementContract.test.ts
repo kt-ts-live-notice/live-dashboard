@@ -37,7 +37,11 @@ describe('announcement classification contract', () => {
       label: '반입 제한',
       severity: '일반',
       simplified: '전동킥보드는 역사와 열차에 반입할 수 없습니다.',
-    })).toMatchObject({ category: '일반 안내', label: '반입 제한' })
+      display: { lead: '역사와 열차에는', conclusion: '반입할 수 없습니다', support: '전동킥보드 등 리튬배터리 이동수단' },
+    })).toMatchObject({
+      category: '일반 안내', label: '반입 제한',
+      display: { lead: '역사와 열차에는', conclusion: '반입할 수 없습니다', support: '전동킥보드 등 리튬배터리 이동수단' },
+    })
 
     expect(() => parseClassification({
       is_announcement: true,
@@ -45,6 +49,7 @@ describe('announcement classification contract', () => {
       label: '열차 통과',
       severity: '주의',
       simplified: '이 열차는 정차하지 않습니다.',
+      display: { lead: '지금 들어오는 열차는', conclusion: '정차하지 않습니다', support: '안전선 안으로 이동하세요' },
     })).toThrow('분류 결과 형식 오류')
   })
 
@@ -55,6 +60,18 @@ describe('announcement classification contract', () => {
       label: '급행 열차 안내',
       severity: '주의',
       simplified: '이 열차는 세류역에 서지 않습니다.세류역에 가려면 다음 열차를 타세요.',
+      display: { lead: '지금 들어오는 급행 열차는', conclusion: '세류역에 서지 않습니다', support: '세류역은 다음 일반 열차를 타세요' },
     }).simplified).toBe('이 열차는 세류역에 서지 않습니다. 세류역에 가려면 다음 열차를 타세요.')
+  })
+
+  it('rejects announcements that cannot stand alone without the source transcript', () => {
+    expect(() => parseClassification({
+      is_announcement: true,
+      category: '열차 통과',
+      label: '열차 통과',
+      severity: '주의',
+      simplified: '이 열차는 정차하지 않습니다.',
+      display: { lead: '지금 들어오는 열차는', conclusion: '', support: '안전선 안으로 이동하세요' },
+    })).toThrow('분류 결과 형식 오류')
   })
 })

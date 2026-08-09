@@ -29,6 +29,7 @@ function setup(
   const events: Record<string, unknown>[] = []
   const defaultClassifier: Classifier = async () => ({
     is_announcement: true, category: '일반 안내', label: '일반 안내', severity: '일반', simplified: '안내',
+    display: { lead: '역사에서', conclusion: '안내합니다', support: '안내 내용을 확인하세요' },
   })
   const classifier = vi.fn(custom.classifier ?? defaultClassifier)
   const store = new InMemoryResultStore()
@@ -104,7 +105,10 @@ describe('AudioChunkSessionManager', () => {
     expect(classifier.mock.calls[0][0]).toBe('하나 둘')
     expect(store.get('4:pi-111:broadcast-1')?.transcript).toBe('하나 둘')
     expect(events.filter((event) => event.type === 'announcement')).toEqual([
-      expect.objectContaining({ category: '일반 안내', label: '일반 안내', severity: '일반' }),
+      expect.objectContaining({
+        category: '일반 안내', label: '일반 안내', severity: '일반',
+        display: { lead: '역사에서', conclusion: '안내합니다', support: '안내 내용을 확인하세요' },
+      }),
     ])
     expect((await manager.accept(chunk(1, { final: true }))).is_duplicate).toBe(true)
     expect(streams).toHaveLength(1)
@@ -237,6 +241,7 @@ describe('AudioChunkSessionManager', () => {
     const { manager, streams, classifier, events } = setup()
     classifier.mockResolvedValueOnce({
       is_announcement: false, category: '일반 안내', label: '', severity: '일반', simplified: '',
+      display: { lead: '', conclusion: '', support: '' },
     })
     await manager.accept(chunk(0, { final: true }))
     await settle()

@@ -444,9 +444,21 @@ time {
   position: relative;
   z-index: 1;
   margin: auto 0;
-  padding: 22px 0 28px;
+  padding: 22px 0 18px;
   display: grid;
-  gap: 18px;
+  gap: 13px;
+}
+
+.dynamic-lead {
+  max-width: 300px;
+  margin: 0;
+  color: #000;
+  font-size: clamp(1.18rem, 5.3vw, 1.52rem);
+  font-weight: 720;
+  line-height: 1.28;
+  letter-spacing: -0.035em;
+  word-break: keep-all;
+  animation: support-rise 300ms ease-out both;
 }
 
 .dynamic-conclusion {
@@ -467,15 +479,15 @@ time {
 }
 
 .dynamic-support {
-  max-width: 290px;
+  max-width: 305px;
   margin: 0;
   color: #000;
-  font-size: clamp(1.16rem, 5vw, 1.45rem);
-  font-weight: 760;
+  font-size: clamp(1.28rem, 5.6vw, 1.65rem);
+  font-weight: 790;
   line-height: 1.3;
   letter-spacing: -0.035em;
   word-break: keep-all;
-  animation: support-rise 360ms ease-out 300ms both;
+  animation: support-rise 360ms ease-out 320ms both;
 }
 
 @keyframes conclusion-pop {
@@ -487,31 +499,6 @@ time {
 @keyframes support-rise {
   from { transform: translateY(7px); }
   to { transform: translateY(0); }
-}
-
-.original-details {
-  position: relative;
-  z-index: 1;
-}
-
-.original-details summary {
-  color: #000;
-  font-size: 0.78rem;
-  font-weight: 690;
-  cursor: pointer;
-}
-
-.original {
-  margin: 9px 0 0;
-  color: #4c4c4e;
-  font-size: 0.85rem;
-  line-height: 1.5;
-}
-
-.technical-meta {
-  margin: 5px 0 0;
-  color: #4c4c4e;
-  font-size: 0.72rem;
 }
 
 .waiting-panel {

@@ -14,8 +14,9 @@ interface Announcement {
   device_id?: string
   session_id?: string
   display?: {
+    lead: string
     conclusion: string
-    support?: string
+    support: string
   }
 }
 
@@ -67,8 +68,7 @@ function SituationBadge({ announcement }: { announcement: Announcement }) {
   )
 }
 
-function FocusAnnouncement({ announcement, showTechnical }: { announcement: Announcement; showTechnical: boolean }) {
-  const source = [announcement.device_id, announcement.session_id].filter(Boolean).join(' · ')
+function FocusAnnouncement({ announcement }: { announcement: Announcement }) {
   return (
     <article
       className="focus-announcement"
@@ -85,20 +85,13 @@ function FocusAnnouncement({ announcement, showTechnical }: { announcement: Anno
 
       {announcement.display ? (
         <div className="dynamic-caption">
+          <p className="dynamic-lead">{announcement.display.lead}</p>
           <p className="dynamic-conclusion">{announcement.display.conclusion}</p>
-          {announcement.display.support && <p className="dynamic-support">{announcement.display.support}</p>}
+          <p className="dynamic-support">{announcement.display.support}</p>
         </div>
       ) : (
         <p className={`focus-message ${textLengthClass(announcement.simplified)}`}>{announcement.simplified}</p>
       )}
-
-      <details className="original-details">
-        <summary>방송 원문 확인</summary>
-        <p className="original">{announcement.original}</p>
-        {showTechnical && (
-          <p className="technical-meta">처리 {announcement.latencyMs.toLocaleString('ko-KR')}ms{source ? ` · ${source}` : ''}</p>
-        )}
-      </details>
     </article>
   )
 }
@@ -282,7 +275,7 @@ function StationPage({ station }: { station: StationPageContext }) {
           </section>
         )}
 
-        {latest ? <FocusAnnouncement key={latest.id ?? latest.session_id ?? latest.ts} announcement={latest} showTechnical={isDemo} /> : <WaitingPanel stationName={station.name} demo={isDemo} />}
+        {latest ? <FocusAnnouncement key={latest.id ?? latest.session_id ?? latest.ts} announcement={latest} /> : <WaitingPanel stationName={station.name} demo={isDemo} />}
 
         {history.length > 0 && (
           <section className="history" aria-labelledby="history-title">

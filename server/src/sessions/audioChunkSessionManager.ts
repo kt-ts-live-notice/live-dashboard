@@ -278,7 +278,7 @@ export class AudioChunkSessionManager {
       await this.deps.broadcast({
         type: 'announcement', device_id: session.deviceId, session_id: session.sessionId, original: transcript,
         simplified: classification.simplified, category: classification.category, label: classification.label,
-        severity: classification.severity,
+        severity: classification.severity, display: classification.display,
         latencyMs, ts: cardAt,
       })
     } else {
