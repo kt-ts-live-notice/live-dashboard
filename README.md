@@ -19,9 +19,9 @@ WAV 샘플 재생 ─────────┘
 
 기존 샘플 데모는 그대로 사용할 수 있습니다. `./scripts/make-samples.sh`로 합성 샘플을 만들거나 `./scripts/import-audio-samples.sh [원본 폴더]`로 M4A·MP3·WAV 실제 녹음을 변환한 뒤, 웹 하단의 `테스트 음성 재생`을 펼쳐 실행합니다. 변환본은 원본을 건드리지 않고 `samples/` 아래에 16kHz·mono·16bit PCM WAV로 생성됩니다. 한 번에 한 샘플만 재생되며 `neg-*` 샘플은 분류 후 카드에서 제외됩니다. `/api/samples`와 `/api/play/:name`에는 장치 bearer 인증이 적용되지 않습니다.
 
-승객은 역에 설치된 QR로 `/stations/{station_id}/{역이름}`에 접속합니다. PoC에서는 `station_id`를 해당 역 Raspberry Pi의 `device_id`와 동일하게 두며, 웹은 `/ws?station_id={station_id}`로 구독해 그 장치의 방송만 받습니다. 예시는 `http://localhost:5173/stations/station-pi-01/테스트역`입니다. 역 식별자가 없는 루트 주소는 잘못된 QR 안내 화면을 표시합니다.
+승객은 역에 설치된 QR로 `/stations/{station_id}/{역이름}`에 접속합니다. PoC에서는 `station_id`를 해당 역 Raspberry Pi의 `device_id`와 동일하게 두며, 웹은 `/ws?station_id={station_id}`로 구독해 그 장치의 방송만 받습니다. 데모와 발표의 기준 역은 **영등포역**이고, 기준 주소는 `http://localhost:5173/stations/yeongdeungpo-01/영등포역`입니다. 역 식별자가 없는 루트 주소는 잘못된 QR 안내 화면을 표시합니다.
 
-화면 구성만 확인할 때는 API 키 없이 `http://localhost:5173/stations/station-pi-01/테스트역?preview=all`을 열면 `긴급·주의·일반` 세 상태와 개발용 음성 재생 도구를 볼 수 있습니다. 일반 승객 URL에서는 개발 도구를 숨깁니다. 표시 단계는 서버가 전달한 분류값만 사용하며 음량으로 긴급도를 올리지 않습니다.
+화면 구성만 확인할 때는 API 키 없이 `http://localhost:5173/stations/yeongdeungpo-01/영등포역?preview=all`을 열면 `긴급·주의·일반` 세 상태와 개발용 음성 재생 도구를 볼 수 있습니다. 일반 승객 URL에서는 개발 도구를 숨깁니다. 표시 단계는 서버가 전달한 분류값만 사용하며 음량으로 긴급도를 올리지 않습니다.
 
 ## Raspberry Pi 오디오 청크 계약
 
@@ -44,7 +44,7 @@ curl --fail-with-body \
   -F 'session_id=550e8400-e29b-41d4-a716-446655440000' \
   -F 'chunk_index=0' \
   -F 'is_final=false' \
-  -F 'device_id=station-pi-01' \
+  -F 'device_id=yeongdeungpo-01' \
   -F 'recorded_at=2026-08-03T03:00:00.000Z' \
   -F 'audio=@chunk-0000.wav;type=audio/wav' \
   http://localhost:8787/api/v1/audio-chunks
