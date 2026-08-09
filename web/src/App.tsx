@@ -13,6 +13,10 @@ interface Announcement {
   ts: number
   device_id?: string
   session_id?: string
+  display?: {
+    conclusion: string
+    support?: string
+  }
 }
 
 interface ServerEvent {
@@ -20,10 +24,10 @@ interface ServerEvent {
   [key: string]: unknown
 }
 
-const SEVERITY_INFO: Record<Severity, { symbol: string; cue: string }> = {
-  일반: { symbol: 'i', cue: '안내 정보' },
-  주의: { symbol: '▲', cue: '변경·지연 확인' },
-  긴급: { symbol: '!', cue: '즉시 행동' },
+const SEVERITY_INFO: Record<Severity, { symbol: string }> = {
+  일반: { symbol: 'i' },
+  주의: { symbol: '▲' },
+  긴급: { symbol: '!' },
 }
 
 function textLengthClass(text: string): 'copy-short' | 'copy-medium' | 'copy-long' {
@@ -43,33 +47,35 @@ function previewAnnouncements(stationId: string, enabled: boolean): Announcement
   return [
     {
       id: -1,
-      original: '긴급 상황입니다. 역사 내 화재가 발생하였습니다. 가까운 비상구로 대피해 주십시오.',
-      simplified: '역사 안에 화재가 발생했습니다. 직원 안내에 따라 가까운 비상구로 지금 대피하세요.',
-      category: '긴급', severity: '긴급', latencyMs: 2410, ts: now, device_id: stationId,
+      original: '지금 들어오는 열차는 우리 역을 통과하는 열차입니다.',
+      simplified: '지금 들어오는 열차는 영등포역에 정차하지 않습니다. 안전선 안으로 이동하세요.',
+      category: '열차 통과', severity: '긴급', latencyMs: 1320, ts: now, device_id: stationId,
+      display: { conclusion: '정차하지\n않습니다', support: '안전선 안으로 이동하세요' },
     },
     {
       id: -2,
-      original: '부산 방면 열차의 타는 곳이 3번에서 5번 승강장으로 변경되었습니다.',
-      simplified: '부산 방면 열차는 5번 승강장에서 탑승하세요.',
-      category: '승강장 변경', severity: '주의', latencyMs: 1880, ts: now - 3 * 60_000, device_id: stationId,
+      original: '지금 인천, 인천행 열차가 들어오고 있습니다. 이 역은 승강장과 열차 사이가 넓으니 내리고 타실 때 조심하시기 바랍니다.',
+      simplified: '인천행 열차가 들어오고 있습니다. 승강장과 열차 사이가 넓습니다.',
+      category: '열차 진입', severity: '주의', latencyMs: 1480, ts: now - 3 * 60_000, device_id: stationId,
+      display: { conclusion: '열차가\n들어옵니다', support: '승강장과 열차 사이가 넓습니다' },
     },
     {
       id: -3,
-      original: '대합실 물품 보관함 운영 시간을 안내드립니다.',
-      simplified: '물품 보관함은 밤 11시까지 이용할 수 있습니다.',
-      category: '시설 안내', severity: '일반', latencyMs: 1640, ts: now - 8 * 60_000, device_id: stationId,
+      original: '전동킥보드, 전기자전거, 전동휠 등 리튬배터리로 구동되는 이동수단은 역사와 열차 내 반입을 제한합니다.',
+      simplified: '전동킥보드 등 리튬배터리 이동수단은 역사와 열차에 반입할 수 없습니다.',
+      category: '반입 제한', severity: '일반', latencyMs: 1570, ts: now - 8 * 60_000, device_id: stationId,
+      display: { conclusion: '반입이\n제한됩니다', support: '전동킥보드 · 전기자전거 · 전동휠' },
     },
   ]
 }
 
-function SeverityBadge({ severity }: { severity: Severity }) {
-  const info = SEVERITY_INFO[severity]
+function SituationBadge({ announcement }: { announcement: Announcement }) {
+  const info = SEVERITY_INFO[announcement.severity]
   return (
-    <div className="severity-badge" aria-label={`${severity}, ${info.cue}`}>
+    <div className="severity-badge" aria-label={`${announcement.category}, 중요도 ${announcement.severity}`}>
       <span className="severity-symbol" aria-hidden="true">{info.symbol}</span>
       <span className="severity-copy">
-        <strong>{severity}</strong>
-        <small>{info.cue}</small>
+        <strong>{announcement.category}</strong>
       </span>
     </div>
   )
@@ -85,14 +91,20 @@ function FocusAnnouncement({ announcement, showTechnical }: { announcement: Anno
       aria-atomic="true"
     >
       <div className="focus-head">
-        <SeverityBadge severity={announcement.severity} />
+        <SituationBadge announcement={announcement} />
         <div className="focus-meta">
-          {announcement.category !== announcement.severity && <span className="category-chip">{announcement.category}</span>}
           <time dateTime={new Date(announcement.ts).toISOString()}>{formatTime(announcement.ts)}</time>
         </div>
       </div>
 
-      <p className={`focus-message ${textLengthClass(announcement.simplified)}`}>{announcement.simplified}</p>
+      {announcement.display ? (
+        <div className="dynamic-caption">
+          <p className="dynamic-conclusion">{announcement.display.conclusion}</p>
+          {announcement.display.support && <p className="dynamic-support">{announcement.display.support}</p>}
+        </div>
+      ) : (
+        <p className={`focus-message ${textLengthClass(announcement.simplified)}`}>{announcement.simplified}</p>
+      )}
 
       <details className="original-details">
         <summary>방송 원문 확인</summary>
@@ -126,7 +138,9 @@ function WaitingPanel({ stationName }: { stationName: string }) {
 }
 
 function StationPage({ station }: { station: StationPageContext }) {
-  const [announcements, setAnnouncements] = useState<Announcement[]>(() => previewAnnouncements(station.id, station.previewAll))
+  const [previewItems] = useState<Announcement[]>(() => previewAnnouncements(station.id, station.previewAll))
+  const [previewIndex, setPreviewIndex] = useState(0)
+  const [announcements, setAnnouncements] = useState<Announcement[]>([])
   const [interim, setInterim] = useState('')
   const [playing, setPlaying] = useState<string | null>(null)
   const [samples, setSamples] = useState<string[]>([])
@@ -178,8 +192,8 @@ function StationPage({ station }: { station: StationPageContext }) {
   const play = (name: string) => {
     fetch(`/api/play/${encodeURIComponent(name)}?station_id=${encodeURIComponent(station.id)}`, { method: 'POST' }).catch(() => undefined)
   }
-  const latest = announcements[0]
-  const history = announcements.slice(1)
+  const latest = station.previewAll ? previewItems[previewIndex] : announcements[0]
+  const history = station.previewAll ? previewItems.filter((_, index) => index !== previewIndex) : announcements.slice(1)
 
   return (
     <div className="app-shell">
@@ -188,6 +202,22 @@ function StationPage({ station }: { station: StationPageContext }) {
       </header>
 
       <main className="station-main">
+        {station.previewAll && (
+          <nav className="preview-switcher" aria-label="동적 자막 테스트 장면">
+            {previewItems.map((announcement, index) => (
+              <button
+                key={announcement.id}
+                type="button"
+                data-severity={announcement.severity}
+                aria-pressed={previewIndex === index}
+                onClick={() => setPreviewIndex(index)}
+              >
+                {announcement.category}
+              </button>
+            ))}
+          </nav>
+        )}
+
         {(interim || playing) && (
           <section className={`live-caption ${interim ? 'has-caption' : ''}`} aria-live="polite" aria-atomic="true">
             <div className="live-label"><span aria-hidden="true" />{interim ? '임시 자막 · 확정 전' : '음성 인식 중'}</div>
@@ -195,7 +225,7 @@ function StationPage({ station }: { station: StationPageContext }) {
           </section>
         )}
 
-        {latest ? <FocusAnnouncement announcement={latest} showTechnical={station.showDeveloperTools} /> : <WaitingPanel stationName={station.name} />}
+        {latest ? <FocusAnnouncement key={latest.id ?? latest.session_id ?? latest.ts} announcement={latest} showTechnical={station.showDeveloperTools} /> : <WaitingPanel stationName={station.name} />}
 
         {history.length > 0 && (
           <section className="history" aria-labelledby="history-title">
@@ -207,11 +237,10 @@ function StationPage({ station }: { station: StationPageContext }) {
               {history.map((announcement) => (
                 <article key={`${announcement.ts}-${announcement.id ?? announcement.session_id ?? announcement.original}`} className="history-card" data-severity={announcement.severity}>
                   <div className="history-head">
-                    <SeverityBadge severity={announcement.severity} />
+                    <SituationBadge announcement={announcement} />
                     <time dateTime={new Date(announcement.ts).toISOString()}>{formatTime(announcement.ts)}</time>
                   </div>
                   <p>{announcement.simplified}</p>
-                  <span className="history-category">{announcement.category}</span>
                 </article>
               ))}
             </div>
