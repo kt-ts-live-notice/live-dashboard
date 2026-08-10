@@ -51,6 +51,13 @@ function textLengthClass(text: string): 'copy-short' | 'copy-medium' | 'copy-lon
   return 'copy-long'
 }
 
+function dynamicConclusionClass(text: string): 'dynamic-short' | 'dynamic-medium' | 'dynamic-long' {
+  const length = [...text.replace(/\s/g, '')].length
+  if (length <= 9) return 'dynamic-short'
+  if (length <= 15) return 'dynamic-medium'
+  return 'dynamic-long'
+}
+
 function formatTime(ts: number): string {
   return new Date(ts).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
 }
@@ -86,7 +93,7 @@ function FocusAnnouncement({ announcement }: { announcement: Announcement }) {
       {announcement.display ? (
         <div className="dynamic-caption">
           <p className="dynamic-lead">{announcement.display.lead}</p>
-          <p className="dynamic-conclusion">{announcement.display.conclusion}</p>
+          <p className={`dynamic-conclusion ${dynamicConclusionClass(announcement.display.conclusion)}`}>{announcement.display.conclusion}</p>
           <p className="dynamic-support">{announcement.display.support}</p>
         </div>
       ) : (
@@ -120,9 +127,44 @@ function demoSampleTitle(name: string): string {
   return DEMO_SAMPLES.find((sample) => sample.name === name)?.title ?? name
 }
 
+function appendTranscript(previous: string, next: string): string {
+  const segment = next.trim()
+  if (!segment || previous.endsWith(segment)) return previous
+  return `${previous} ${segment}`.trim()
+}
+
+function StreamingCaption({ committed, interim }: { committed: string; interim: string }) {
+  const current = interim.trim()
+  const currentIncludesCommitted = committed && current.startsWith(committed)
+  return (
+    <section className="streaming-caption" aria-live="polite" aria-atomic="false">
+      <div className="streaming-head">
+        <span className="streaming-dot" aria-hidden="true" />
+        <strong>실시간 자막</strong>
+        <span>인식 중</span>
+      </div>
+      <p className={committed || current ? 'streaming-text' : 'streaming-text is-waiting'}>
+        {currentIncludesCommitted ? (
+          <span key={current} className="streaming-current">{current}</span>
+        ) : (
+          <>
+            {committed && <span className="streaming-committed">{committed}</span>}
+            {committed && current && ' '}
+            {current && <span key={current} className="streaming-current">{current}</span>}
+          </>
+        )}
+        {!committed && !current && '음성을 듣고 있습니다'}
+        <span className="streaming-caret" aria-hidden="true" />
+      </p>
+    </section>
+  )
+}
+
 function StationPage({ station }: { station: StationPageContext }) {
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
   const [interim, setInterim] = useState('')
+  const [committedTranscript, setCommittedTranscript] = useState('')
+  const [isRecognizing, setIsRecognizing] = useState(false)
   const [playing, setPlaying] = useState<string | null>(null)
   const [samples, setSamples] = useState<string[]>([])
   const [selectedSample, setSelectedSample] = useState<string | null>(null)
@@ -130,6 +172,7 @@ function StationPage({ station }: { station: StationPageContext }) {
   const [demoNotice, setDemoNotice] = useState('')
   const wsRef = useRef<WebSocket | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const liveSessionRef = useRef<string | null>(null)
   const isDemo = station.mode === 'demo'
 
   useEffect(() => {
@@ -160,19 +203,59 @@ function StationPage({ station }: { station: StationPageContext }) {
           return
         }
         if (typeof serverEvent.device_id === 'string' && serverEvent.device_id !== station.id) return
+        if (serverEvent.type === 'stt-interim' || serverEvent.type === 'stt-final') {
+          const sessionKey = typeof serverEvent.session_id === 'string' ? `session:${serverEvent.session_id}` : liveSessionRef.current
+          if (sessionKey && liveSessionRef.current !== sessionKey) {
+            liveSessionRef.current = sessionKey
+            setCommittedTranscript('')
+            setInterim('')
+          }
+          setIsRecognizing(true)
+        }
         if (serverEvent.type === 'stt-interim') setInterim(String(serverEvent.text ?? ''))
-        if (serverEvent.type === 'stt-final') setInterim('')
+        if (serverEvent.type === 'stt-final') {
+          setCommittedTranscript((previous) => appendTranscript(previous, String(serverEvent.text ?? '')))
+          setInterim('')
+        }
         if (serverEvent.type === 'status') {
-          setPlaying(typeof serverEvent.playing === 'string' ? serverEvent.playing : null)
+          const nextPlaying = typeof serverEvent.playing === 'string' ? serverEvent.playing : null
+          setPlaying(nextPlaying)
+          if (nextPlaying) {
+            const sessionKey = `sample:${nextPlaying}`
+            if (liveSessionRef.current !== sessionKey) {
+              liveSessionRef.current = sessionKey
+              setCommittedTranscript('')
+              setInterim('')
+            }
+            setIsRecognizing(true)
+          }
           if (serverEvent.playing === null) setLocalPlaying(false)
-          if (typeof serverEvent.error === 'string') setDemoNotice(`분석 오류: ${serverEvent.error}`)
+          if (typeof serverEvent.error === 'string') {
+            setIsRecognizing(false)
+            setCommittedTranscript('')
+            setInterim('')
+            setDemoNotice(`분석 오류: ${serverEvent.error}`)
+          }
         }
         if (serverEvent.type === 'announcement') {
           setDemoNotice('')
+          setIsRecognizing(false)
+          setCommittedTranscript('')
+          setInterim('')
           setAnnouncements((previous) => [serverEvent as unknown as Announcement, ...previous].slice(0, 20))
         }
-        if (serverEvent.type === 'filtered') setDemoNotice('이 음성은 안내방송으로 분류되지 않았습니다.')
-        if (serverEvent.type === 'session-error') setDemoNotice('음성 처리 중 오류가 발생했습니다.')
+        if (serverEvent.type === 'filtered') {
+          setIsRecognizing(false)
+          setCommittedTranscript('')
+          setInterim('')
+          setDemoNotice('이 음성은 안내방송으로 분류되지 않았습니다.')
+        }
+        if (serverEvent.type === 'session-error') {
+          setIsRecognizing(false)
+          setCommittedTranscript('')
+          setInterim('')
+          setDemoNotice('음성 처리 중 오류가 발생했습니다.')
+        }
       }
     }
     connect()
@@ -190,6 +273,10 @@ function StationPage({ station }: { station: StationPageContext }) {
     setSelectedSample(name)
     setDemoNotice('')
     setLocalPlaying(true)
+    liveSessionRef.current = `sample:${name}`
+    setCommittedTranscript('')
+    setInterim('')
+    setIsRecognizing(true)
     audio.src = `/api/samples/${encodeURIComponent(name)}/audio`
     audio.load()
     const browserPlayback = audio.play()
@@ -206,11 +293,12 @@ function StationPage({ station }: { station: StationPageContext }) {
       audio.pause()
       audio.currentTime = 0
       setLocalPlaying(false)
+      setIsRecognizing(false)
       setDemoNotice(error instanceof Error ? error.message : '데모를 시작할 수 없습니다.')
     }
   }
   const latest = announcements[0]
-  const history = announcements.slice(1)
+  const history = isRecognizing ? announcements : announcements.slice(1)
   const featuredSamples = DEMO_SAMPLES.filter((sample) => samples.includes(sample.name))
   const busy = playing !== null || localPlaying
 
@@ -268,14 +356,11 @@ function StationPage({ station }: { station: StationPageContext }) {
           </section>
         )}
 
-        {(interim || playing) && (
-          <section className={`live-caption ${interim ? 'has-caption' : ''}`} aria-live="polite" aria-atomic="true">
-            <div className="live-label"><span aria-hidden="true" />{interim ? '임시 자막 · 확정 전' : '음성 인식 중'}</div>
-            <p>{interim || '방송 내용을 분석하고 있습니다.'}</p>
-          </section>
-        )}
-
-        {latest ? <FocusAnnouncement key={latest.id ?? latest.session_id ?? latest.ts} announcement={latest} /> : <WaitingPanel stationName={station.name} demo={isDemo} />}
+        {isRecognizing
+          ? <StreamingCaption committed={committedTranscript} interim={interim} />
+          : latest
+            ? <FocusAnnouncement key={latest.id ?? latest.session_id ?? latest.ts} announcement={latest} />
+            : <WaitingPanel stationName={station.name} demo={isDemo} />}
 
         {history.length > 0 && (
           <section className="history" aria-labelledby="history-title">
