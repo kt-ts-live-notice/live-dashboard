@@ -270,6 +270,8 @@ function useProgressiveTranscript(target: string): string {
 function StreamingCaption({ committed, interim }: { committed: string; interim: string }) {
   const target = liveTranscriptTarget(committed, interim)
   const visible = useProgressiveTranscript(target)
+  if (!target) return null
+
   return (
     <section className="streaming-caption">
       <div className="streaming-head">
@@ -278,15 +280,15 @@ function StreamingCaption({ committed, interim }: { committed: string; interim: 
         <span>인식 중</span>
       </div>
       <p
-        className={target ? 'streaming-text' : 'streaming-text is-waiting'}
+        className="streaming-text"
         data-stream-target={target}
         aria-hidden="true"
       >
-        {visible || '음성을 듣고 있습니다'}
+        {visible}
         <span className="streaming-caret" aria-hidden="true" />
       </p>
       <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
-        {target || '음성을 듣고 있습니다'}
+        {target}
       </span>
     </section>
   )
@@ -437,7 +439,9 @@ function StationPage({ station }: { station: StationPageContext }) {
     ? severityExamples.find((announcement) => announcement.severity === selectedSeverity)
     : undefined
   const displayedAnnouncement = severityExample ?? latest
-  const history = isRecognizing || severityExample ? announcements : announcements.slice(1)
+  const hasLiveTranscript = Boolean(committedTranscript.trim() || interim.trim())
+  const showingLiveTranscript = isRecognizing && hasLiveTranscript
+  const history = showingLiveTranscript || severityExample ? announcements : announcements.slice(1)
   const featuredSamples = DEMO_SAMPLES.filter((sample) => samples.includes(sample.name))
   const busy = playing !== null || localPlaying
 
@@ -519,7 +523,7 @@ function StationPage({ station }: { station: StationPageContext }) {
           </section>
         )}
 
-        {isRecognizing
+        {showingLiveTranscript
           ? <StreamingCaption committed={committedTranscript} interim={interim} />
           : displayedAnnouncement
             ? <FocusAnnouncement key={displayedAnnouncement.id ?? displayedAnnouncement.session_id ?? displayedAnnouncement.ts} announcement={displayedAnnouncement} />

@@ -347,8 +347,6 @@ summary { font: inherit; }
   text-wrap: wrap;
 }
 
-.streaming-text.is-waiting { color: var(--muted); }
-
 .streaming-caret {
   width: 3px;
   height: 1em;
