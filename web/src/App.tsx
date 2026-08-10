@@ -44,6 +44,60 @@ const SEVERITY_INFO: Record<AnnouncementSeverity, { symbol: string }> = {
   긴급: { symbol: '!' },
 }
 
+function demoSeverityExamples(stationId: string): Announcement[] {
+  const now = Date.now()
+  return [
+    {
+      id: -1,
+      original: '전동킥보드와 전기자전거 등은 반입이 제한됩니다. 역사와 열차 내 반입을 삼가시기 바랍니다.',
+      simplified: '전동킥보드와 전기자전거 등은 반입이 제한됩니다. 역사와 열차 내 반입을 삼가시기 바랍니다.',
+      category: '일반 안내',
+      label: '반입 제한',
+      severity: '일반',
+      latencyMs: 0,
+      ts: now,
+      device_id: stationId,
+      display: {
+        lead: '전동킥보드와 전기자전거 등은',
+        conclusion: '반입이 제한됩니다',
+        support: '역사와 열차 내 반입을 삼가시기 바랍니다',
+      },
+    },
+    {
+      id: -2,
+      original: '지금 들어오는 열차는 우리 역을 통과하는 열차입니다. 안전선 안쪽으로 이동하여 주시기 바랍니다.',
+      simplified: '지금 들어오는 열차는 우리 역을 통과하는 열차입니다. 안전선 안쪽으로 이동하여 주시기 바랍니다.',
+      category: '열차 통과',
+      label: '열차 통과',
+      severity: '주의',
+      latencyMs: 0,
+      ts: now,
+      device_id: stationId,
+      display: {
+        lead: '지금 들어오는 열차는',
+        conclusion: '우리 역을 통과하는 열차입니다',
+        support: '안전선 안쪽으로 이동하여 주시기 바랍니다',
+      },
+    },
+    {
+      id: -3,
+      original: '역사 내 화재가 발생하였습니다. 즉시 대피하시기 바랍니다. 가까운 비상구를 이용하여 주시기 바랍니다.',
+      simplified: '역사 내 화재가 발생하였습니다. 즉시 대피하시기 바랍니다. 가까운 비상구를 이용하여 주시기 바랍니다.',
+      category: '긴급 안내',
+      label: '화재 대피',
+      severity: '긴급',
+      latencyMs: 0,
+      ts: now,
+      device_id: stationId,
+      display: {
+        lead: '역사 내 화재가 발생하였습니다',
+        conclusion: '즉시 대피하시기 바랍니다',
+        support: '가까운 비상구를 이용하여 주시기 바랍니다',
+      },
+    },
+  ]
+}
+
 function textLengthClass(text: string): 'copy-short' | 'copy-medium' | 'copy-long' {
   const length = [...text].length
   if (length <= 34) return 'copy-short'
@@ -216,6 +270,8 @@ function StreamingCaption({ committed, interim }: { committed: string; interim: 
 }
 
 function StationPage({ station }: { station: StationPageContext }) {
+  const [severityExamples] = useState<Announcement[]>(() => demoSeverityExamples(station.id))
+  const [selectedSeverity, setSelectedSeverity] = useState<AnnouncementSeverity | null>(null)
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
   const [interim, setInterim] = useState('')
   const [committedTranscript, setCommittedTranscript] = useState('')
@@ -325,6 +381,7 @@ function StationPage({ station }: { station: StationPageContext }) {
   const play = async (name: string) => {
     const audio = audioRef.current
     if (!audio || playing || localPlaying) return
+    setSelectedSeverity(null)
     setSelectedSample(name)
     setDemoNotice('')
     setLocalPlaying(true)
@@ -353,7 +410,11 @@ function StationPage({ station }: { station: StationPageContext }) {
     }
   }
   const latest = announcements[0]
-  const history = isRecognizing ? announcements : announcements.slice(1)
+  const severityExample = selectedSeverity
+    ? severityExamples.find((announcement) => announcement.severity === selectedSeverity)
+    : undefined
+  const displayedAnnouncement = severityExample ?? latest
+  const history = isRecognizing || severityExample ? announcements : announcements.slice(1)
   const featuredSamples = DEMO_SAMPLES.filter((sample) => samples.includes(sample.name))
   const busy = playing !== null || localPlaying
 
@@ -411,10 +472,31 @@ function StationPage({ station }: { station: StationPageContext }) {
           </section>
         )}
 
+        {isDemo && (
+          <section className="demo-preview" aria-labelledby="demo-preview-title">
+            <h2 id="demo-preview-title">안내 등급 예시</h2>
+            <nav className="preview-switcher" aria-label="일반, 주의, 긴급 화면 예시">
+              {severityExamples.map((announcement) => (
+                <button
+                  key={announcement.severity}
+                  type="button"
+                  data-severity={announcement.severity}
+                  aria-pressed={selectedSeverity === announcement.severity}
+                  onClick={() => setSelectedSeverity((current) => current === announcement.severity ? null : announcement.severity)}
+                  disabled={busy}
+                >
+                  <span>{announcement.severity}</span>
+                  <small>{announcement.label}</small>
+                </button>
+              ))}
+            </nav>
+          </section>
+        )}
+
         {isRecognizing
           ? <StreamingCaption committed={committedTranscript} interim={interim} />
-          : latest
-            ? <FocusAnnouncement key={latest.id ?? latest.session_id ?? latest.ts} announcement={latest} />
+          : displayedAnnouncement
+            ? <FocusAnnouncement key={displayedAnnouncement.id ?? displayedAnnouncement.session_id ?? displayedAnnouncement.ts} announcement={displayedAnnouncement} />
             : <WaitingPanel stationName={station.name} demo={isDemo} />}
 
         {history.length > 0 && (
