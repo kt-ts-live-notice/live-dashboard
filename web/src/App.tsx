@@ -113,7 +113,29 @@ function dynamicConclusionClass(text: string): 'dynamic-short' | 'dynamic-medium
 }
 
 function formatTime(ts: number): string {
-  return new Date(ts).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+  return new Date(ts).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+}
+
+function CurrentClock() {
+  const [now, setNow] = useState(() => Date.now())
+
+  useEffect(() => {
+    let timer = 0
+    const update = () => {
+      const current = Date.now()
+      setNow(current)
+      timer = window.setTimeout(update, 60_000 - (current % 60_000) + 50)
+    }
+    update()
+    return () => window.clearTimeout(timer)
+  }, [])
+
+  return (
+    <time className="current-clock" dateTime={new Date(now).toISOString()} aria-label={`현재 시각 ${formatTime(now)}`}>
+      <span>현재</span>
+      {formatTime(now)}
+    </time>
+  )
 }
 
 function SituationBadge({ announcement }: { announcement: Announcement }) {
@@ -140,6 +162,7 @@ function FocusAnnouncement({ announcement }: { announcement: Announcement }) {
       <div className="focus-head">
         <SituationBadge announcement={announcement} />
         <div className="focus-meta">
+          <span>방송</span>
           <time dateTime={new Date(announcement.ts).toISOString()}>{formatTime(announcement.ts)}</time>
         </div>
       </div>
@@ -422,7 +445,10 @@ function StationPage({ station }: { station: StationPageContext }) {
     <div className="app-shell">
       <header className="topbar">
         <h1>{station.name}</h1>
-        {isDemo && <span className="demo-badge">DEMO</span>}
+        <div className="topbar-tools">
+          <CurrentClock />
+          {isDemo && <span className="demo-badge">DEMO</span>}
+        </div>
       </header>
 
       <main className="station-main">
