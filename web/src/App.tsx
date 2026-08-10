@@ -133,29 +133,84 @@ function appendTranscript(previous: string, next: string): string {
   return `${previous} ${segment}`.trim()
 }
 
-function StreamingCaption({ committed, interim }: { committed: string; interim: string }) {
+function liveTranscriptTarget(committed: string, interim: string): string {
+  const stable = committed.trim()
   const current = interim.trim()
-  const currentIncludesCommitted = committed && current.startsWith(committed)
+  if (stable && current.startsWith(stable)) return current
+  return [stable, current].filter(Boolean).join(' ')
+}
+
+function advanceTranscriptReveal(visible: string, target: string): string {
+  if (visible === target) return visible
+
+  const shown = [...visible]
+  const received = [...target]
+  let commonLength = 0
+  while (
+    commonLength < shown.length
+    && commonLength < received.length
+    && shown[commonLength] === received[commonLength]
+  ) commonLength += 1
+
+  if (commonLength < shown.length) {
+    return shown.slice(0, commonLength).join('')
+  }
+
+  const remaining = received.length - shown.length
+  const step = remaining > 28 ? 3 : remaining > 12 ? 2 : 1
+  return received.slice(0, shown.length + step).join('')
+}
+
+function useProgressiveTranscript(target: string): string {
+  const [visible, setVisible] = useState('')
+
+  useEffect(() => {
+    if (!target) {
+      setVisible('')
+      return
+    }
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduceMotion || document.hidden) {
+      setVisible(target)
+      return
+    }
+
+    const timer = window.setInterval(() => {
+      setVisible((current) => {
+        const next = advanceTranscriptReveal(current, target)
+        if (next === target) window.clearInterval(timer)
+        return next
+      })
+    }, 42)
+
+    return () => window.clearInterval(timer)
+  }, [target])
+
+  return visible
+}
+
+function StreamingCaption({ committed, interim }: { committed: string; interim: string }) {
+  const target = liveTranscriptTarget(committed, interim)
+  const visible = useProgressiveTranscript(target)
   return (
-    <section className="streaming-caption" aria-live="polite" aria-atomic="false">
+    <section className="streaming-caption">
       <div className="streaming-head">
         <span className="streaming-dot" aria-hidden="true" />
         <strong>실시간 자막</strong>
         <span>인식 중</span>
       </div>
-      <p className={committed || current ? 'streaming-text' : 'streaming-text is-waiting'}>
-        {currentIncludesCommitted ? (
-          <span key={current} className="streaming-current">{current}</span>
-        ) : (
-          <>
-            {committed && <span className="streaming-committed">{committed}</span>}
-            {committed && current && ' '}
-            {current && <span key={current} className="streaming-current">{current}</span>}
-          </>
-        )}
-        {!committed && !current && '음성을 듣고 있습니다'}
+      <p
+        className={target ? 'streaming-text' : 'streaming-text is-waiting'}
+        data-stream-target={target}
+        aria-hidden="true"
+      >
+        {visible || '음성을 듣고 있습니다'}
         <span className="streaming-caret" aria-hidden="true" />
       </p>
+      <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {target || '음성을 듣고 있습니다'}
+      </span>
     </section>
   )
 }

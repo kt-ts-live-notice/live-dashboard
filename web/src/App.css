@@ -18,6 +18,18 @@
 
 * { box-sizing: border-box; }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 html,
 body,
 #root {
@@ -286,18 +298,10 @@ summary { font: inherit; }
   line-height: 1.32;
   letter-spacing: -0.045em;
   word-break: keep-all;
-  text-wrap: balance;
+  text-wrap: wrap;
 }
 
 .streaming-text.is-waiting { color: var(--muted); }
-
-.streaming-current {
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--general) 55%, transparent);
-  text-decoration-thickness: 0.18em;
-  text-underline-offset: 0.12em;
-  animation: stream-in 140ms ease-out both;
-}
 
 .streaming-caret {
   width: 3px;
@@ -307,11 +311,6 @@ summary { font: inherit; }
   background: var(--emergency);
   display: inline-block;
   vertical-align: -0.08em;
-}
-
-@keyframes stream-in {
-  from { opacity: 0.4; transform: translateY(2px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .focus-announcement,
