@@ -451,6 +451,13 @@ summary { font: inherit; }
   gap: 6px;
 }
 
+.focus-meta time {
+  color: #000;
+  font-size: 1.05rem;
+  font-weight: 740;
+  letter-spacing: -0.02em;
+}
+
 time {
   color: #4c4c4e;
   font-size: 0.8rem;
