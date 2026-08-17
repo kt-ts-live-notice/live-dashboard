@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 2682 --host",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit"
   },
