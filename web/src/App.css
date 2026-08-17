@@ -8416,3 +8416,2642 @@ button[aria-pressed='true']:disabled {
     font-size: 1.28rem;
   }
 }
+
+
+/* =========================================================
+   RESTRICTED ITEMS — 리튬 배터리 반입 제한 FINAL
+
+   일반 정보형:
+   - Sky Blue = 규정/정보
+   - Black = 핵심 문장
+   - Yellow/Red 사용 금지
+   - 즉시 위험 경고처럼 보이지 않되, 반입 제한 자체는 명확하게
+   ========================================================= */
+
+.focus-announcement[data-severity='일반'][data-label='리튬 배터리 반입 제한'] {
+  --restricted-blue: var(--kt-blue);
+  --restricted-blue-soft: var(--kt-blue-soft);
+  --restricted-line: #d9e5ec;
+  --restricted-ink: #111111;
+  --restricted-muted: #626b71;
+
+  border-top: 6px solid var(--restricted-blue);
+  background: var(--white);
+}
+
+
+/* HEADER */
+.focus-announcement[data-severity='일반'][data-label='리튬 배터리 반입 제한']
+.focus-head {
+  min-height: 70px;
+
+  padding:
+    10px
+    5px;
+
+  border-bottom:
+    1px solid
+    var(--restricted-line);
+}
+
+
+.focus-announcement[data-severity='일반'][data-label='리튬 배터리 반입 제한']
+.severity-symbol {
+  width: 41px;
+  height: 41px;
+
+  flex-basis: 41px;
+
+  border: 0;
+  border-radius: 50%;
+
+  color: var(--restricted-ink);
+  background: var(--restricted-blue);
+
+  font-size: 0.8rem;
+  font-weight: 950;
+}
+
+
+.focus-announcement[data-severity='일반'][data-label='리튬 배터리 반입 제한']
+.severity-copy strong {
+  font-size:
+    clamp(
+      0.9rem,
+      3.35vw,
+      1.03rem
+    );
+
+  letter-spacing: -0.045em;
+}
+
+
+/* MAIN */
+.restricted-items-layout {
+  width: 100%;
+  min-width: 0;
+}
+
+
+.restricted-items-context {
+  padding:
+    27px
+    10px
+    23px;
+}
+
+
+.restricted-items-kicker {
+  margin-bottom: 12px;
+
+  color: var(--restricted-muted);
+
+  font-size: 0.69rem;
+  font-weight: 850;
+}
+
+
+.restricted-items-context
+.dynamic-lead {
+  max-width: 560px;
+
+  margin:
+    0
+    0
+    7px;
+
+  color: #4f575c;
+
+  font-size:
+    clamp(
+      1.05rem,
+      3.75vw,
+      1.28rem
+    );
+
+  font-weight: 740;
+  line-height: 1.38;
+
+  letter-spacing: -0.04em;
+}
+
+
+.restricted-items-context
+.dynamic-conclusion,
+.restricted-items-context
+.dynamic-conclusion.dynamic-medium,
+.restricted-items-context
+.dynamic-conclusion.dynamic-long {
+  max-width: 530px;
+
+  margin: 0;
+
+  color: var(--restricted-ink);
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      2.28rem,
+      7.45vw,
+      2.98rem
+    );
+
+  font-weight: 900;
+  line-height: 1.035;
+
+  letter-spacing: -0.067em;
+}
+
+
+/* VISUAL */
+.restricted-items-visual {
+  width: 100%;
+  max-width: 500px;
+
+  margin-top: 25px;
+
+  padding-top: 15px;
+
+  border-top:
+    1px solid
+    var(--restricted-line);
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    42px
+    minmax(92px, 0.7fr);
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+.restricted-items-source {
+  min-width: 0;
+
+  display: grid;
+
+  gap: 4px;
+}
+
+
+.restricted-items-source span {
+  color: #596269;
+
+  font-size: 0.66rem;
+  font-weight: 760;
+
+  line-height: 1.2;
+
+  white-space: nowrap;
+}
+
+
+.restricted-items-block {
+  width: 32px;
+  height: 32px;
+
+  justify-self: center;
+
+  border:
+    2px solid
+    var(--restricted-ink);
+
+  border-radius: 50%;
+
+  color: var(--restricted-ink);
+  background: var(--white);
+
+  display: grid;
+  place-items: center;
+
+  font-size: 1.1rem;
+  font-weight: 900;
+
+  line-height: 1;
+}
+
+
+.restricted-items-target {
+  min-width: 0;
+
+  padding-left: 10px;
+
+  border-left:
+    4px solid
+    var(--restricted-blue);
+
+  display: grid;
+
+  gap: 3px;
+}
+
+
+.restricted-items-target strong {
+  color: var(--restricted-ink);
+
+  font-size: 0.82rem;
+  font-weight: 900;
+
+  white-space: nowrap;
+}
+
+
+.restricted-items-target span {
+  color: #596269;
+
+  font-size: 0.65rem;
+  font-weight: 780;
+
+  white-space: nowrap;
+}
+
+
+/* ACTION / RULE */
+.restricted-items-action {
+  margin:
+    0
+    -24px;
+
+  padding:
+    22px
+    30px
+    20px;
+
+  border-top:
+    1px solid
+    #cfe0e9;
+
+  background:
+    var(--restricted-blue-soft);
+}
+
+
+.restricted-items-action
+.message-kicker {
+  margin-bottom: 9px;
+
+  color: #315a70;
+
+  font-size: 0.69rem;
+  font-weight: 850;
+}
+
+
+.restricted-items-action
+.dynamic-support,
+.restricted-items-action
+.dynamic-support.support-medium,
+.restricted-items-action
+.dynamic-support.support-long {
+  max-width: 470px;
+
+  margin: 0;
+
+  color: var(--restricted-ink);
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      1.38rem,
+      4.8vw,
+      1.78rem
+    );
+
+  font-weight: 900;
+  line-height: 1.25;
+
+  letter-spacing: -0.05em;
+}
+
+
+.restricted-items-meta {
+  margin-top: 17px;
+
+  padding-top: 11px;
+
+  border-top:
+    1px solid
+    #c5d9e4;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+
+.restricted-items-meta span,
+.restricted-items-meta strong {
+  font-size: 0.63rem;
+  line-height: 1.2;
+}
+
+
+.restricted-items-meta span {
+  color: #66747c;
+
+  font-weight: 720;
+}
+
+
+.restricted-items-meta strong {
+  color: #243a47;
+
+  font-weight: 850;
+
+  font-variant-numeric: tabular-nums;
+
+  white-space: nowrap;
+}
+
+
+/* MOBILE */
+@media (max-width: 520px) {
+  .restricted-items-context {
+    padding:
+      24px
+      6px
+      21px;
+  }
+
+  .restricted-items-visual {
+    grid-template-columns:
+      minmax(0, 1fr)
+      38px
+      minmax(86px, 0.68fr);
+
+    gap: 8px;
+  }
+
+  .restricted-items-source span {
+    font-size: 0.61rem;
+  }
+
+  .restricted-items-block {
+    width: 29px;
+    height: 29px;
+
+    font-size: 1rem;
+  }
+
+  .restricted-items-action {
+    margin:
+      0
+      -20px;
+
+    padding:
+      21px
+      25px
+      19px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .restricted-items-context {
+    padding:
+      21px
+      3px
+      19px;
+  }
+
+  .restricted-items-context
+  .dynamic-conclusion,
+  .restricted-items-context
+  .dynamic-conclusion.dynamic-medium,
+  .restricted-items-context
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(
+        1.9rem,
+        9.15vw,
+        2.34rem
+      );
+  }
+
+  .restricted-items-visual {
+    grid-template-columns:
+      minmax(0, 1fr)
+      32px
+      minmax(74px, 0.62fr);
+
+    gap: 6px;
+  }
+
+  .restricted-items-source span {
+    font-size: 0.54rem;
+  }
+
+  .restricted-items-block {
+    width: 26px;
+    height: 26px;
+
+    font-size: 0.9rem;
+  }
+
+  .restricted-items-target {
+    padding-left: 7px;
+  }
+
+  .restricted-items-target strong {
+    font-size: 0.7rem;
+  }
+
+  .restricted-items-target span {
+    font-size: 0.56rem;
+  }
+
+  .restricted-items-action {
+    margin:
+      0
+      -14px;
+
+    padding:
+      20px
+      20px
+      18px;
+  }
+
+  .restricted-items-action
+  .dynamic-support {
+    font-size: 1.2rem;
+  }
+}
+
+
+/* =========================================================
+   RESTRICTED ITEMS — 100% FINAL POLISH
+
+   목표
+   - 즉시 위험 경고와 구분되는 '규정 안내' 화면
+   - 1~2초 안에 "무엇을 / 어디에 / 어떻게" 인지
+   - 둥근 카드/배지 대신 공공 안내판형 선·면·타이포 사용
+   - 기존 확정된 주의 화면과 시각 체계 충돌 방지
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   FULL-BLEED INFORMATION SIGNAL
+   기존 border-top의 좌측 들뜸을 제거한다.
+   --------------------------------------------------------- */
+
+.focus-announcement[data-severity='일반'][data-label='리튬 배터리 반입 제한'] {
+  position: relative;
+
+  border-top: 0;
+}
+
+
+.focus-announcement[data-severity='일반'][data-label='리튬 배터리 반입 제한']::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: -24px;
+
+  width: calc(100% + 48px);
+  height: 6px;
+
+  background: var(--restricted-blue);
+}
+
+
+/* ---------------------------------------------------------
+   HEADER — 공공 안내 표지형
+   --------------------------------------------------------- */
+
+.focus-announcement[data-severity='일반'][data-label='리튬 배터리 반입 제한']
+.focus-head {
+  min-height: 70px;
+
+  padding:
+    13px
+    4px
+    10px;
+}
+
+
+.focus-announcement[data-severity='일반'][data-label='리튬 배터리 반입 제한']
+.severity-badge {
+  gap: 11px;
+}
+
+
+.focus-announcement[data-severity='일반'][data-label='리튬 배터리 반입 제한']
+.severity-symbol {
+  width: 39px;
+  height: 39px;
+
+  flex: 0 0 39px;
+
+  border:
+    2px solid
+    #111111;
+
+  border-radius: 0;
+
+  color: #111111;
+  background: var(--restricted-blue);
+
+  font-size: 0.82rem;
+  font-weight: 950;
+}
+
+
+.focus-announcement[data-severity='일반'][data-label='리튬 배터리 반입 제한']
+.severity-level {
+  color: #65727a;
+
+  font-size: 0.62rem;
+  font-weight: 850;
+}
+
+
+.focus-announcement[data-severity='일반'][data-label='리튬 배터리 반입 제한']
+.severity-copy strong {
+  color: #111111;
+
+  font-size:
+    clamp(
+      0.94rem,
+      3.4vw,
+      1.05rem
+    );
+
+  font-weight: 900;
+
+  letter-spacing: -0.045em;
+}
+
+
+/* ---------------------------------------------------------
+   MAIN MESSAGE
+   --------------------------------------------------------- */
+
+.restricted-items-context {
+  padding:
+    26px
+    10px
+    23px;
+}
+
+
+.restricted-items-kicker {
+  margin-bottom: 12px;
+
+  color: #66737b;
+
+  font-size: 0.69rem;
+  font-weight: 850;
+}
+
+
+.restricted-items-context
+.dynamic-lead {
+  max-width: 570px;
+
+  margin:
+    0
+    0
+    7px;
+
+  color: #50585e;
+
+  font-size:
+    clamp(
+      1.02rem,
+      3.55vw,
+      1.23rem
+    );
+
+  font-weight: 740;
+  line-height: 1.35;
+
+  letter-spacing: -0.04em;
+}
+
+
+.restricted-items-context
+.dynamic-conclusion,
+.restricted-items-context
+.dynamic-conclusion.dynamic-medium,
+.restricted-items-context
+.dynamic-conclusion.dynamic-long {
+  max-width: 530px;
+
+  margin: 0;
+
+  color: #111111;
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      2.22rem,
+      7.05vw,
+      2.86rem
+    );
+
+  font-weight: 900;
+  line-height: 1.035;
+
+  letter-spacing: -0.065em;
+}
+
+
+/* ---------------------------------------------------------
+   RESTRICTION DIAGRAM
+
+   제한 대상        ║        역 · 열차
+   리튬 이동수단    ║        반입 제한
+   대용량 배터리    ║
+
+   X 아이콘 대신 '장벽' 자체를 보여줘
+   금지보다 정확한 '반입 제한' 의미를 전달한다.
+   --------------------------------------------------------- */
+
+.restricted-items-visual {
+  width: 100%;
+  max-width: 510px;
+
+  margin-top: 25px;
+
+  padding-top: 15px;
+
+  border-top:
+    1px solid
+    var(--restricted-line);
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    34px
+    minmax(92px, 0.58fr);
+
+  align-items: center;
+
+  gap: 13px;
+}
+
+
+.restricted-items-source {
+  min-width: 0;
+
+  display: grid;
+
+  gap: 4px;
+}
+
+
+.restricted-items-source-label {
+  margin-bottom: 2px;
+
+  color: #7a858c;
+
+  font-size: 0.56rem;
+  font-weight: 820;
+
+  line-height: 1;
+
+  letter-spacing: -0.01em;
+}
+
+
+.restricted-items-source strong {
+  color: #50595f;
+
+  font-size: 0.69rem;
+  font-weight: 790;
+
+  line-height: 1.18;
+
+  white-space: nowrap;
+}
+
+
+.restricted-items-barrier {
+  width: 22px;
+  height: 43px;
+
+  justify-self: center;
+
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+
+  gap: 5px;
+}
+
+
+.restricted-items-barrier span {
+  width: 4px;
+
+  background: var(--restricted-blue);
+}
+
+
+.restricted-items-target {
+  min-width: 0;
+
+  padding-left: 12px;
+
+  border-left:
+    1px solid
+    #cbd9e1;
+
+  display: grid;
+
+  align-content: center;
+
+  gap: 4px;
+}
+
+
+.restricted-items-target strong {
+  color: #111111;
+
+  font-size: 0.87rem;
+  font-weight: 900;
+
+  white-space: nowrap;
+}
+
+
+.restricted-items-target span {
+  color: #52616a;
+
+  font-size: 0.67rem;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+
+/* ---------------------------------------------------------
+   ACTION — 정보 화면이므로 검정 긴급 Action Zone 대신
+   명확한 Sky Blue 안내면 사용
+   --------------------------------------------------------- */
+
+.restricted-items-action {
+  margin:
+    0
+    -24px;
+
+  padding:
+    22px
+    30px
+    20px;
+
+  border-top:
+    1px solid
+    #c6dbe6;
+
+  background: #edf8fd;
+}
+
+
+.restricted-items-action
+.message-kicker {
+  margin-bottom: 9px;
+
+  color: #315a70;
+
+  font-size: 0.69rem;
+  font-weight: 850;
+}
+
+
+.restricted-items-action
+.dynamic-support,
+.restricted-items-action
+.dynamic-support.support-medium,
+.restricted-items-action
+.dynamic-support.support-long {
+  max-width: 480px;
+
+  margin: 0;
+
+  color: #111111;
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      1.35rem,
+      4.55vw,
+      1.7rem
+    );
+
+  font-weight: 900;
+  line-height: 1.24;
+
+  letter-spacing: -0.049em;
+}
+
+
+.restricted-items-meta {
+  margin-top: 17px;
+
+  padding-top: 11px;
+
+  border-top:
+    1px solid
+    #c8dce6;
+}
+
+
+.restricted-items-meta span {
+  color: #687780;
+
+  font-weight: 720;
+}
+
+
+.restricted-items-meta strong {
+  color: #203b4a;
+
+  font-weight: 900;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 520px) {
+  .focus-announcement[data-severity='일반'][data-label='리튬 배터리 반입 제한']::before {
+    left: -20px;
+
+    width: calc(100% + 40px);
+  }
+
+  .restricted-items-context {
+    padding:
+      24px
+      6px
+      21px;
+  }
+
+  .restricted-items-visual {
+    grid-template-columns:
+      minmax(0, 1fr)
+      30px
+      minmax(86px, 0.55fr);
+
+    gap: 10px;
+  }
+
+  .restricted-items-source strong {
+    font-size: 0.63rem;
+  }
+
+  .restricted-items-barrier {
+    width: 20px;
+    height: 40px;
+
+    gap: 4px;
+  }
+
+  .restricted-items-target {
+    padding-left: 9px;
+  }
+
+  .restricted-items-action {
+    margin:
+      0
+      -20px;
+
+    padding:
+      21px
+      25px
+      19px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .focus-announcement[data-severity='일반'][data-label='리튬 배터리 반입 제한']::before {
+    left: -14px;
+
+    width: calc(100% + 28px);
+  }
+
+  .restricted-items-context {
+    padding:
+      21px
+      3px
+      19px;
+  }
+
+  .restricted-items-context
+  .dynamic-conclusion,
+  .restricted-items-context
+  .dynamic-conclusion.dynamic-medium,
+  .restricted-items-context
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(
+        1.88rem,
+        8.95vw,
+        2.29rem
+      );
+  }
+
+  .restricted-items-visual {
+    grid-template-columns:
+      minmax(0, 1fr)
+      26px
+      minmax(74px, 0.52fr);
+
+    gap: 7px;
+  }
+
+  .restricted-items-source-label {
+    font-size: 0.5rem;
+  }
+
+  .restricted-items-source strong {
+    font-size: 0.55rem;
+  }
+
+  .restricted-items-barrier {
+    height: 36px;
+
+    gap: 3px;
+  }
+
+  .restricted-items-barrier span {
+    width: 3px;
+  }
+
+  .restricted-items-target {
+    padding-left: 7px;
+  }
+
+  .restricted-items-target strong {
+    font-size: 0.72rem;
+  }
+
+  .restricted-items-target span {
+    font-size: 0.57rem;
+  }
+
+  .restricted-items-action {
+    margin:
+      0
+      -14px;
+
+    padding:
+      20px
+      20px
+      18px;
+  }
+
+  .restricted-items-action
+  .dynamic-support {
+    font-size: 1.18rem;
+  }
+}
+
+
+/* =========================================================
+   FIRE EVACUATION — 열차 화재 100% FINAL
+
+   설계 원칙
+   - 긴급은 일반/주의와 완전히 다른 시각 체계
+   - 첫 시선은 '행동'
+   - Red = 긴급 행동
+   - White = 상황 확인
+   - Black = 조건부 대피 절차
+   - 장식보다 정보 순서와 면적 차이로 긴급성을 전달
+   ========================================================= */
+
+.focus-announcement.fire-emergency {
+  --fire-red: #d71920;
+  --fire-red-dark: #a80f15;
+  --fire-ink: #101010;
+  --fire-muted: #656c71;
+  --fire-line: #d9dde0;
+
+  width: 100%;
+  min-width: 0;
+
+  overflow: visible;
+
+  border: 0;
+  border-radius: 0;
+
+  background: #ffffff;
+
+  box-shadow: none;
+}
+
+
+/* ---------------------------------------------------------
+   1. PRIMARY EMERGENCY ACTION
+   --------------------------------------------------------- */
+
+.fire-emergency-hero {
+  margin:
+    0
+    -24px;
+
+  color: #ffffff;
+  background: var(--fire-red);
+}
+
+
+.fire-emergency-head {
+  min-height: 72px;
+
+  padding:
+    15px
+    28px
+    13px;
+
+  border-bottom:
+    1px solid
+    rgba(255, 255, 255, 0.34);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+
+.fire-emergency-title {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+}
+
+
+.fire-emergency-symbol {
+  width: 38px;
+  height: 38px;
+
+  flex: 0 0 38px;
+
+  border:
+    2px solid
+    #ffffff;
+
+  display: grid;
+  place-items: center;
+
+  color: #ffffff;
+
+  font-size: 1.2rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+
+.fire-emergency-title > div {
+  min-width: 0;
+
+  display: grid;
+
+  gap: 2px;
+}
+
+
+.fire-emergency-title span:not(.fire-emergency-symbol) {
+  color:
+    rgba(255, 255, 255, 0.82);
+
+  font-size: 0.62rem;
+  font-weight: 850;
+}
+
+
+.fire-emergency-title strong {
+  color: #ffffff;
+
+  font-size: 1.08rem;
+  font-weight: 950;
+
+  letter-spacing: -0.04em;
+}
+
+
+.fire-emergency-head time {
+  color:
+    rgba(255, 255, 255, 0.88);
+
+  font-size: 0.78rem;
+  font-weight: 760;
+
+  font-variant-numeric:
+    tabular-nums;
+
+  white-space: nowrap;
+}
+
+
+.fire-emergency-primary {
+  padding:
+    25px
+    30px
+    27px;
+}
+
+
+.fire-emergency-primary
+.message-kicker {
+  margin-bottom: 9px;
+
+  color:
+    rgba(255, 255, 255, 0.83);
+
+  font-size: 0.69rem;
+  font-weight: 850;
+}
+
+
+.fire-emergency-primary
+.dynamic-conclusion,
+.fire-emergency-primary
+.dynamic-conclusion.dynamic-medium,
+.fire-emergency-primary
+.dynamic-conclusion.dynamic-long {
+  max-width: 520px;
+
+  margin: 0;
+
+  color: #ffffff;
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      2.24rem,
+      7.35vw,
+      2.95rem
+    );
+
+  font-weight: 950;
+  line-height: 1.03;
+
+  letter-spacing: -0.066em;
+}
+
+
+.fire-emergency-move {
+  margin-top: 21px;
+
+  padding-top: 15px;
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.38);
+
+  display: grid;
+
+  grid-template-columns:
+    31px
+    minmax(0, 1fr);
+
+  align-items: start;
+
+  gap: 10px;
+}
+
+
+.fire-emergency-move-arrow {
+  color: #ffffff;
+
+  font-size: 1.55rem;
+  font-weight: 950;
+  line-height: 1.05;
+}
+
+
+.fire-emergency-move p {
+  max-width: 440px;
+
+  margin: 0;
+
+  color: #ffffff;
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      1.24rem,
+      4.2vw,
+      1.58rem
+    );
+
+  font-weight: 850;
+  line-height: 1.25;
+
+  letter-spacing: -0.046em;
+}
+
+
+/* ---------------------------------------------------------
+   2. CURRENT SITUATION
+   --------------------------------------------------------- */
+
+.fire-emergency-context {
+  padding:
+    23px
+    10px
+    22px;
+
+  border-bottom:
+    1px solid
+    var(--fire-line);
+
+  background: #ffffff;
+}
+
+
+.fire-emergency-context
+.message-kicker {
+  margin-bottom: 8px;
+
+  color: var(--fire-muted);
+
+  font-size: 0.68rem;
+  font-weight: 830;
+}
+
+
+.fire-emergency-context
+.dynamic-lead {
+  max-width: 500px;
+
+  margin: 0;
+
+  color: var(--fire-ink);
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      1.48rem,
+      5.1vw,
+      1.92rem
+    );
+
+  font-weight: 900;
+  line-height: 1.14;
+
+  letter-spacing: -0.052em;
+}
+
+
+.fire-emergency-context
+.dynamic-lead::first-line {
+  color: var(--fire-red);
+}
+
+
+/* ---------------------------------------------------------
+   3. CONDITIONAL EVACUATION PROCEDURE
+   --------------------------------------------------------- */
+
+.fire-emergency-procedure {
+  margin:
+    0
+    -24px;
+
+  padding:
+    23px
+    30px
+    25px;
+
+  color: #ffffff;
+  background: var(--fire-ink);
+}
+
+
+.fire-procedure-heading {
+  padding-bottom: 14px;
+
+  border-bottom:
+    1px solid
+    #444444;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 14px;
+}
+
+
+.fire-procedure-heading
+.message-kicker {
+  margin: 0;
+
+  color: #ff7377;
+
+  font-size: 0.68rem;
+  font-weight: 850;
+}
+
+
+.fire-procedure-heading > strong {
+  color: #ffffff;
+
+  font-size: 0.77rem;
+  font-weight: 850;
+
+  white-space: nowrap;
+}
+
+
+.fire-procedure-list {
+  margin:
+    0;
+
+  padding: 0;
+
+  list-style: none;
+}
+
+
+.fire-procedure-list li {
+  padding:
+    14px
+    0;
+
+  border-bottom:
+    1px solid
+    #373737;
+
+  display: grid;
+
+  grid-template-columns:
+    35px
+    minmax(0, 1fr);
+
+  align-items: start;
+
+  gap: 11px;
+}
+
+
+.fire-procedure-list li:last-child {
+  border-bottom: 0;
+
+  padding-bottom: 0;
+}
+
+
+.fire-procedure-number {
+  padding-top: 2px;
+
+  color: #ff5d63;
+
+  font-size: 0.66rem;
+  font-weight: 900;
+
+  font-variant-numeric:
+    tabular-nums;
+}
+
+
+.fire-procedure-list p {
+  margin: 0;
+
+  color: #c9cdd0;
+
+  font-size:
+    clamp(
+      0.91rem,
+      3.1vw,
+      1.02rem
+    );
+
+  font-weight: 680;
+  line-height: 1.34;
+
+  letter-spacing: -0.032em;
+}
+
+
+.fire-procedure-list p strong {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #ffffff;
+
+  font-size:
+    clamp(
+      1.04rem,
+      3.55vw,
+      1.19rem
+    );
+
+  font-weight: 900;
+  line-height: 1.28;
+
+  letter-spacing: -0.044em;
+}
+
+
+/* ---------------------------------------------------------
+   4. LOW-PRIORITY ADDITIONAL INFO
+   --------------------------------------------------------- */
+
+.fire-extinguisher-note {
+  padding:
+    17px
+    10px
+    18px;
+
+  border-bottom:
+    1px solid
+    var(--fire-line);
+
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(0, 1fr);
+
+  align-items: baseline;
+
+  gap: 13px;
+}
+
+
+.fire-extinguisher-note > span {
+  color: var(--fire-muted);
+
+  font-size: 0.62rem;
+  font-weight: 820;
+
+  white-space: nowrap;
+}
+
+
+.fire-extinguisher-note p {
+  margin: 0;
+
+  color: #4f565b;
+
+  font-size: 0.78rem;
+  font-weight: 700;
+
+  line-height: 1.35;
+}
+
+
+.fire-extinguisher-note p strong {
+  color: var(--fire-ink);
+
+  font-weight: 900;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 520px) {
+  .fire-emergency-hero,
+  .fire-emergency-procedure {
+    margin:
+      0
+      -20px;
+  }
+
+  .fire-emergency-head {
+    padding:
+      14px
+      24px
+      12px;
+  }
+
+  .fire-emergency-primary {
+    padding:
+      23px
+      25px
+      25px;
+  }
+
+  .fire-emergency-context {
+    padding:
+      21px
+      6px
+      20px;
+  }
+
+  .fire-emergency-procedure {
+    padding:
+      21px
+      25px
+      23px;
+  }
+
+  .fire-extinguisher-note {
+    padding:
+      16px
+      6px
+      17px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .fire-emergency-hero,
+  .fire-emergency-procedure {
+    margin:
+      0
+      -14px;
+  }
+
+  .fire-emergency-head {
+    min-height: 65px;
+
+    padding:
+      12px
+      18px
+      11px;
+  }
+
+  .fire-emergency-symbol {
+    width: 34px;
+    height: 34px;
+
+    flex-basis: 34px;
+
+    font-size: 1.05rem;
+  }
+
+  .fire-emergency-title strong {
+    font-size: 0.96rem;
+  }
+
+  .fire-emergency-primary {
+    padding:
+      20px
+      20px
+      22px;
+  }
+
+  .fire-emergency-primary
+  .dynamic-conclusion,
+  .fire-emergency-primary
+  .dynamic-conclusion.dynamic-medium,
+  .fire-emergency-primary
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(
+        1.92rem,
+        9.25vw,
+        2.35rem
+      );
+  }
+
+  .fire-emergency-move {
+    grid-template-columns:
+      26px
+      minmax(0, 1fr);
+
+    gap: 8px;
+  }
+
+  .fire-emergency-move p {
+    font-size: 1.12rem;
+  }
+
+  .fire-emergency-context {
+    padding:
+      19px
+      3px
+      18px;
+  }
+
+  .fire-emergency-procedure {
+    padding:
+      20px
+      20px
+      21px;
+  }
+
+  .fire-procedure-heading {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 4px;
+  }
+
+  .fire-procedure-list li {
+    grid-template-columns:
+      31px
+      minmax(0, 1fr);
+
+    gap: 8px;
+  }
+
+  .fire-extinguisher-note {
+    grid-template-columns: 1fr;
+
+    gap: 5px;
+
+    padding:
+      15px
+      3px
+      16px;
+  }
+}
+
+
+/* =========================================================
+   HISTORY — 100% FINAL POLISH
+
+   목표
+   - 현재 안내보다 한 단계 낮은 우선순위
+   - 아이콘(! / ▲ / i)은 기존 시스템 그대로 유지
+   - 색 + 아이콘 + 텍스트를 함께 사용
+   - 요약 문장만 봐도 과거 상황을 다시 이해할 수 있게 함
+   - 카드형 장식 없이 공공 안내 목록 구조 유지
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   LIST ACCENT
+   --------------------------------------------------------- */
+
+.history-card {
+  --history-accent: var(--sky);
+
+  position: relative;
+
+  padding:
+    11px
+    6px
+    12px
+    14px;
+
+  border-left:
+    4px solid
+    var(--history-accent);
+}
+
+
+/* 일반 = Sky Blue */
+.history-card[data-severity='일반'] {
+  --history-accent: var(--sky);
+}
+
+
+/* 주의 = Yellow */
+.history-card[data-severity='주의'] {
+  --history-accent: #f4c900;
+}
+
+
+/* 긴급 = Red */
+.history-card[data-severity='긴급'] {
+  --history-accent: var(--emergency);
+}
+
+
+/* ---------------------------------------------------------
+   HEADER
+   --------------------------------------------------------- */
+
+.history-head {
+  min-width: 0;
+
+  align-items: center;
+}
+
+
+.history-card
+.severity-badge {
+  min-width: 0;
+
+  flex: 1 1 auto;
+}
+
+
+.history-card
+.severity-copy {
+  min-width: 0;
+}
+
+
+.history-card
+.severity-copy strong {
+  max-width: 240px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.history-meta {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+}
+
+
+.history-meta time {
+  color: var(--muted);
+
+  font-size: 0.68rem;
+  font-weight: 680;
+
+  font-variant-numeric: tabular-nums;
+
+  white-space: nowrap;
+}
+
+
+.history-chevron {
+  color: #71787d;
+
+  font-size: 1rem;
+  font-weight: 850;
+
+  line-height: 1;
+
+  transform: translateY(-1px);
+}
+
+
+/* ---------------------------------------------------------
+   ICONS
+   기존 SituationBadge 디자인을 유지하되
+   History에서는 작은 크기로만 사용한다.
+   --------------------------------------------------------- */
+
+.history-card
+.severity-symbol {
+  width: 27px;
+  height: 27px;
+
+  flex-basis: 27px;
+}
+
+
+/*
+  주의 아이콘은 기존 ▲ 유지.
+  노란 세로선과 함께 사용하되 아이콘 자체의 구조는 변경하지 않는다.
+*/
+.history-card[data-severity='주의']
+.severity-symbol {
+  font-size: 0.49rem;
+}
+
+
+/*
+  긴급 아이콘은 현재 화면처럼 면 전체를 빨갛게 만들지 않고
+  과거 기록 수준으로 절제한다.
+*/
+.history-card[data-severity='긴급']
+.severity-symbol {
+  color: var(--emergency);
+  background: var(--white);
+
+  border-color: var(--emergency);
+}
+
+
+/* ---------------------------------------------------------
+   SUMMARY
+   --------------------------------------------------------- */
+
+.history-summary-text {
+  margin:
+    8px
+    26px
+    0
+    0;
+
+  color: #292f33;
+
+  font-size:
+    clamp(
+      0.88rem,
+      3.05vw,
+      0.94rem
+    );
+
+  font-weight: 760;
+  line-height: 1.38;
+
+  letter-spacing: -0.035em;
+
+  white-space: normal;
+
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+
+/* ---------------------------------------------------------
+   INTERACTION
+   --------------------------------------------------------- */
+
+.history-card-button:hover:not(:disabled) {
+  background: #f8fafb;
+}
+
+
+.history-card-button:active:not(:disabled) {
+  background: #f1f5f7;
+}
+
+
+.history-card-button:focus-visible {
+  outline:
+    3px solid
+    var(--sky);
+
+  outline-offset: -3px;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 520px) {
+  .history-card {
+    padding:
+      11px
+      5px
+      12px
+      12px;
+  }
+
+  .history-card
+  .severity-copy strong {
+    max-width: 205px;
+  }
+
+  .history-summary-text {
+    margin-right: 20px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .history-card {
+    padding-left: 10px;
+  }
+
+  .history-card
+  .severity-copy strong {
+    max-width: 165px;
+
+    font-size: 0.72rem;
+  }
+
+  .history-meta {
+    gap: 5px;
+  }
+
+  .history-meta time {
+    font-size: 0.64rem;
+  }
+
+  .history-chevron {
+    font-size: 0.9rem;
+  }
+
+  .history-summary-text {
+    margin-right: 14px;
+
+    font-size: 0.84rem;
+  }
+}
+
+
+/* =========================================================
+   TRAIN BREAKDOWN — 열차 일시 정차 FINAL
+
+   성격
+   - 긴급 대피가 아닌 일반 운행 안내
+   - Sky Blue = 운행 상태 정보
+   - White = 현재 상황
+   - Pale Blue = 승객 행동 안내
+   - "고장"보다 "현재 정차 상태 + 기다려야 함"을 우선 전달
+   ========================================================= */
+
+.focus-announcement[data-severity='일반'][data-label='열차 일시 정차'] {
+  --breakdown-blue: var(--kt-blue);
+  --breakdown-blue-soft: #edf8fd;
+  --breakdown-ink: #111111;
+  --breakdown-muted: #667179;
+  --breakdown-line: #d8e4eb;
+
+  position: relative;
+
+  border-top: 0;
+  background: #ffffff;
+}
+
+
+/* full-bleed 정보 신호 */
+.focus-announcement[data-severity='일반'][data-label='열차 일시 정차']::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: -24px;
+
+  width: calc(100% + 48px);
+  height: 6px;
+
+  background: var(--breakdown-blue);
+}
+
+
+/* ---------------------------------------------------------
+   HEADER
+   --------------------------------------------------------- */
+
+.focus-announcement[data-severity='일반'][data-label='열차 일시 정차']
+.focus-head {
+  min-height: 70px;
+
+  padding:
+    13px
+    4px
+    10px;
+
+  border-bottom:
+    1px solid
+    var(--breakdown-line);
+}
+
+
+.focus-announcement[data-severity='일반'][data-label='열차 일시 정차']
+.severity-badge {
+  gap: 11px;
+}
+
+
+.focus-announcement[data-severity='일반'][data-label='열차 일시 정차']
+.severity-symbol {
+  width: 39px;
+  height: 39px;
+
+  flex: 0 0 39px;
+
+  border: 2px solid var(--breakdown-ink);
+  border-radius: 0;
+
+  color: var(--breakdown-ink);
+  background: var(--breakdown-blue);
+
+  font-size: 0.82rem;
+  font-weight: 950;
+}
+
+
+.focus-announcement[data-severity='일반'][data-label='열차 일시 정차']
+.severity-level {
+  color: #65727a;
+
+  font-size: 0.62rem;
+  font-weight: 850;
+}
+
+
+.focus-announcement[data-severity='일반'][data-label='열차 일시 정차']
+.severity-copy strong {
+  color: var(--breakdown-ink);
+
+  font-size:
+    clamp(
+      0.96rem,
+      3.45vw,
+      1.06rem
+    );
+
+  font-weight: 900;
+
+  letter-spacing: -0.045em;
+}
+
+
+/* ---------------------------------------------------------
+   CURRENT SITUATION
+   --------------------------------------------------------- */
+
+.train-breakdown-layout {
+  width: 100%;
+  min-width: 0;
+}
+
+
+.train-breakdown-context {
+  min-height: 292px;
+
+  padding:
+    27px
+    10px
+    23px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  background: #ffffff;
+}
+
+
+.train-breakdown-kicker {
+  margin-bottom: 12px;
+
+  color: var(--breakdown-muted);
+
+  font-size: 0.69rem;
+  font-weight: 850;
+}
+
+
+.train-breakdown-context
+.dynamic-lead {
+  max-width: 560px;
+
+  margin:
+    0
+    0
+    5px;
+
+  color: #50585e;
+
+  font-size:
+    clamp(
+      1.15rem,
+      3.95vw,
+      1.34rem
+    );
+
+  font-weight: 740;
+  line-height: 1.34;
+
+  letter-spacing: -0.04em;
+}
+
+
+.train-breakdown-context
+.dynamic-conclusion,
+.train-breakdown-context
+.dynamic-conclusion.dynamic-medium,
+.train-breakdown-context
+.dynamic-conclusion.dynamic-long {
+  max-width: 520px;
+
+  margin: 0;
+
+  color: var(--breakdown-ink);
+
+  font-size:
+    clamp(
+      2.36rem,
+      7.55vw,
+      3.02rem
+    );
+
+  font-weight: 900;
+  line-height: 1.03;
+
+  letter-spacing: -0.066em;
+}
+
+
+/* ---------------------------------------------------------
+   TEMPORARY STOP VISUAL
+
+   ─────────  II  ─────────
+              일시 정차
+   --------------------------------------------------------- */
+
+.train-breakdown-visual {
+  width: 100%;
+  max-width: 470px;
+
+  margin-top: 26px;
+
+  padding-top: 15px;
+
+  border-top:
+    1px solid
+    var(--breakdown-line);
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(40px, 1fr)
+    42px
+    minmax(40px, 1fr);
+
+  align-items: center;
+
+  gap: 9px;
+}
+
+
+.train-breakdown-line {
+  display: block;
+
+  height: 3px;
+
+  background: #69747b;
+}
+
+
+.train-breakdown-pause {
+  width: 34px;
+  height: 34px;
+
+  justify-self: center;
+
+  border:
+    2px solid
+    var(--breakdown-blue);
+
+  display: grid;
+  place-items: center;
+
+  color: #135c82;
+
+  font-size: 0.68rem;
+  font-weight: 950;
+
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+
+.train-breakdown-status {
+  margin-top: 7px;
+
+  color: #66727a;
+
+  font-size: 0.62rem;
+  font-weight: 830;
+
+  text-align: center;
+}
+
+
+/* ---------------------------------------------------------
+   ACTION
+   --------------------------------------------------------- */
+
+.train-breakdown-action {
+  margin:
+    0
+    -24px;
+
+  padding:
+    22px
+    30px
+    24px;
+
+  border-top:
+    1px solid
+    #c7dce7;
+
+  background: var(--breakdown-blue-soft);
+}
+
+
+.train-breakdown-action
+.message-kicker {
+  margin-bottom: 9px;
+
+  color: #315a70;
+
+  font-size: 0.69rem;
+  font-weight: 850;
+}
+
+
+.train-breakdown-action
+.dynamic-support,
+.train-breakdown-action
+.dynamic-support.support-medium,
+.train-breakdown-action
+.dynamic-support.support-long {
+  max-width: 450px;
+
+  margin: 0;
+
+  color: var(--breakdown-ink);
+
+  font-size:
+    clamp(
+      1.62rem,
+      5.35vw,
+      2rem
+    );
+
+  font-weight: 900;
+  line-height: 1.22;
+
+  letter-spacing: -0.052em;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 520px) {
+  .focus-announcement[data-severity='일반'][data-label='열차 일시 정차']::before {
+    left: -20px;
+
+    width: calc(100% + 40px);
+  }
+
+  .train-breakdown-context {
+    min-height: 270px;
+
+    padding:
+      24px
+      6px
+      21px;
+  }
+
+  .train-breakdown-visual {
+    max-width: 420px;
+
+    margin-top: 23px;
+  }
+
+  .train-breakdown-action {
+    margin:
+      0
+      -20px;
+
+    padding:
+      21px
+      25px
+      23px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .focus-announcement[data-severity='일반'][data-label='열차 일시 정차']::before {
+    left: -14px;
+
+    width: calc(100% + 28px);
+  }
+
+  .train-breakdown-context {
+    min-height: 246px;
+
+    padding:
+      21px
+      3px
+      19px;
+  }
+
+  .train-breakdown-context
+  .dynamic-conclusion,
+  .train-breakdown-context
+  .dynamic-conclusion.dynamic-medium,
+  .train-breakdown-context
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(
+        1.95rem,
+        9.25vw,
+        2.38rem
+      );
+  }
+
+  .train-breakdown-visual {
+    grid-template-columns:
+      minmax(30px, 1fr)
+      36px
+      minmax(30px, 1fr);
+
+    gap: 7px;
+  }
+
+  .train-breakdown-pause {
+    width: 30px;
+    height: 30px;
+  }
+
+  .train-breakdown-action {
+    margin:
+      0
+      -14px;
+
+    padding:
+      20px
+      20px
+      21px;
+  }
+
+  .train-breakdown-action
+  .dynamic-support {
+    font-size: 1.34rem;
+  }
+}
+
+
+/* =========================================================
+   TRAIN BREAKDOWN — 100% FINAL POLISH
+
+   목표
+   - 미디어 '일시정지 버튼'처럼 보이던 II 박스를 제거
+   - 철도 운행선이 실제로 끊겨 멈춘 듯한 정차 신호로 표현
+   - 핵심 정보 "잠시 정차 중입니다"를 가장 강하게 유지
+   - 행동은 과도한 경고 없이 차분하고 명확하게 안내
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   MAIN MESSAGE — 미세 조정
+   --------------------------------------------------------- */
+
+.train-breakdown-context {
+  min-height: 282px;
+
+  padding-top: 26px;
+  padding-bottom: 22px;
+}
+
+
+.train-breakdown-context
+.dynamic-lead {
+  margin-bottom: 4px;
+
+  color: #535c62;
+
+  font-size:
+    clamp(
+      1.12rem,
+      3.8vw,
+      1.31rem
+    );
+}
+
+
+.train-breakdown-context
+.dynamic-conclusion,
+.train-breakdown-context
+.dynamic-conclusion.dynamic-medium,
+.train-breakdown-context
+.dynamic-conclusion.dynamic-long {
+  max-width: 520px;
+
+  font-size:
+    clamp(
+      2.34rem,
+      7.45vw,
+      2.98rem
+    );
+
+  line-height: 1.025;
+
+  letter-spacing: -0.066em;
+}
+
+
+/* ---------------------------------------------------------
+   TEMPORARY STOP SIGNAL
+
+   ━━━━━━━━━  ║║  ━━━━━━━━━
+               일시 정차
+
+   '재생/일시정지' UI가 아니라
+   운행선이 정차 지점에서 끊긴 공공교통 신호처럼 보이게 한다.
+   --------------------------------------------------------- */
+
+.train-breakdown-visual {
+  max-width: 480px;
+
+  margin-top: 25px;
+
+  padding-top: 14px;
+
+  grid-template-columns:
+    minmax(40px, 1fr)
+    34px
+    minmax(40px, 1fr);
+
+  gap: 10px;
+}
+
+
+.train-breakdown-line {
+  height: 4px;
+
+  background: #66727a;
+}
+
+
+.train-breakdown-stop-mark {
+  width: 28px;
+  height: 32px;
+
+  justify-self: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+}
+
+
+.train-breakdown-stop-mark i {
+  display: block;
+
+  width: 5px;
+  height: 30px;
+
+  background: var(--breakdown-blue);
+}
+
+
+.train-breakdown-status {
+  margin-top: 6px;
+
+  color: #5c6a72;
+
+  font-size: 0.62rem;
+  font-weight: 850;
+
+  letter-spacing: -0.01em;
+}
+
+
+/*
+  기존 pause-box 스타일이 남아 있어도
+  최종 마크에는 영향을 주지 않게 숨긴다.
+*/
+.train-breakdown-pause {
+  display: none;
+}
+
+
+/* ---------------------------------------------------------
+   PASSENGER ACTION
+   --------------------------------------------------------- */
+
+.train-breakdown-action {
+  padding-top: 22px;
+  padding-bottom: 24px;
+
+  background: #edf8fd;
+}
+
+
+.train-breakdown-action
+.message-kicker {
+  margin-bottom: 8px;
+
+  color: #315a70;
+}
+
+
+.train-breakdown-action
+.dynamic-support,
+.train-breakdown-action
+.dynamic-support.support-medium,
+.train-breakdown-action
+.dynamic-support.support-long {
+  max-width: 460px;
+
+  font-size:
+    clamp(
+      1.58rem,
+      5.15vw,
+      1.94rem
+    );
+
+  line-height: 1.2;
+}
+
+
+/* ---------------------------------------------------------
+   HEADER — 기존 일반 안내 시스템과 통일
+   --------------------------------------------------------- */
+
+.focus-announcement[data-severity='일반'][data-label='열차 일시 정차']
+.severity-symbol {
+  width: 39px;
+  height: 39px;
+
+  flex-basis: 39px;
+}
+
+
+.focus-announcement[data-severity='일반'][data-label='열차 일시 정차']
+.focus-head {
+  min-height: 70px;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 520px) {
+  .train-breakdown-context {
+    min-height: 262px;
+
+    padding-top: 23px;
+    padding-bottom: 20px;
+  }
+
+  .train-breakdown-visual {
+    max-width: 420px;
+
+    margin-top: 22px;
+
+    grid-template-columns:
+      minmax(34px, 1fr)
+      30px
+      minmax(34px, 1fr);
+
+    gap: 8px;
+  }
+
+  .train-breakdown-stop-mark {
+    width: 25px;
+    height: 29px;
+
+    gap: 4px;
+  }
+
+  .train-breakdown-stop-mark i {
+    width: 4px;
+    height: 27px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .train-breakdown-context {
+    min-height: 240px;
+
+    padding-top: 20px;
+    padding-bottom: 18px;
+  }
+
+  .train-breakdown-context
+  .dynamic-conclusion,
+  .train-breakdown-context
+  .dynamic-conclusion.dynamic-medium,
+  .train-breakdown-context
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(
+        1.92rem,
+        9.1vw,
+        2.34rem
+      );
+  }
+
+  .train-breakdown-visual {
+    grid-template-columns:
+      minmax(28px, 1fr)
+      27px
+      minmax(28px, 1fr);
+
+    gap: 7px;
+  }
+
+  .train-breakdown-stop-mark i {
+    height: 25px;
+  }
+
+  .train-breakdown-action
+  .dynamic-support {
+    font-size: 1.31rem;
+  }
+}

@@ -95,6 +95,12 @@ const DEMO_SAMPLES: DemoSample[] = [
     audio: `${import.meta.env.BASE_URL}audio/train_passing.wav`,
   },
   {
+    name: 'train_breakdown',
+    title: '열차 일시 정차',
+    source: '시나리오 녹음',
+    audio: `${import.meta.env.BASE_URL}audio/train_breakdown.wav`,
+  },
+  {
     name: 'restricted_items',
     title: '반입 제한',
     source: '시나리오 녹음',
@@ -243,24 +249,45 @@ function createDemoAnnouncement(
         },
       }
 
+    case 'train_breakdown':
+      return {
+        ...common,
+        original:
+          '열차 고장으로 인해 잠시 정차합니다. 잠시만 기다려 주십시오.',
+        simplified:
+          '열차 고장으로 인해 잠시 정차합니다. 잠시만 기다려 주세요.',
+        category:
+          '일반 안내' as AnnouncementCategory,
+        label: '열차 일시 정차',
+        severity: '일반',
+        display: {
+          lead:
+            '열차 고장으로 인해',
+          conclusion:
+            '잠시 정차 중입니다',
+          support:
+            '잠시만 기다려 주세요',
+        },
+      }
+
     case 'restricted_items':
       return {
         ...common,
         original:
-          '전동킥보드와 전기자전거 등은 반입이 제한됩니다. 역사와 열차 내 반입을 삼가시기 바랍니다.',
+          '안내 말씀드립니다. 2026년 7월 1일부터 화재 사고 예방을 위해 전동 킥보드, 전기자전거, 전동휠 등 리튬 배터리로 구동되는 모든 이동수단 및 대용량 리튬 배터리의 역과 열차 내 휴대 반입을 제한합니다. 안전한 철도 환경 조성을 위해 승객 여러분의 협조를 부탁드립니다.',
         simplified:
-          '전동킥보드와 전기자전거 등은 반입이 제한됩니다. 역사와 열차 내 반입을 삼가 주세요.',
+          '전동 킥보드·전기자전거·전동휠 등 리튬 배터리 이동수단과 대용량 리튬 배터리는 역·열차 내 반입이 제한됩니다.',
         category:
           '일반 안내' as AnnouncementCategory,
-        label: '반입 제한',
+        label: '리튬 배터리 반입 제한',
         severity: '일반',
         display: {
           lead:
-            '전동킥보드와 전기자전거 등은',
+            '전동 킥보드·전기자전거·전동휠 등',
           conclusion:
-            '반입이 제한됩니다',
+            '역·열차 내\n반입이 제한됩니다',
           support:
-            '역사와 열차 내 반입을 삼가 주세요',
+            '해당 물품은 역과 열차 안으로\n가져오지 말아 주세요',
         },
       }
 
@@ -268,20 +295,20 @@ function createDemoAnnouncement(
       return {
         ...common,
         original:
-          '역사 내 화재가 발생하였습니다. 즉시 대피하시기 바랍니다. 가까운 비상구를 이용하여 주시기 바랍니다.',
+          '승객 여러분, 지금 열차에 화재, 화재가 발생하였습니다. 손수건이나 옷으로 입과 코를 막고 신속하게 옆 칸이나 안전한 곳으로 대피해 주십시오. 또한 통로문 옆에는 소화기가 비치되어 있으니 초기 진화에 활용하시기 바랍니다. 정차 후 출입문이 열리지 않으면 출입문 옆 의자 밑에 있는 비상 손잡이를 앞으로 당겨 주십시오. 공기가 빠지면 손으로 출입문을 연 후 승강장 안전문 수동 개방 손잡이를 화살표 방향으로 돌리거나 비상 레버를 앞으로 밀어 신속히 대피하시기 바랍니다.',
         simplified:
-          '역사 내 화재가 발생했습니다. 즉시 대피하고 가까운 비상구를 이용해 주세요.',
+          '열차에 화재가 발생했습니다. 입과 코를 막고 옆 칸이나 안전한 곳으로 신속히 대피하세요. 출입문이 열리지 않으면 비상 손잡이를 당겨 문을 수동으로 열고 승강장 안전문을 수동 개방하세요.',
         category:
           '긴급 안내' as AnnouncementCategory,
-        label: '화재 대피',
+        label: '열차 화재',
         severity: '긴급',
         display: {
           lead:
-            '역사 내 화재가 발생하였습니다',
+            '열차에\n화재가 발생했습니다',
           conclusion:
-            '즉시 대피하시기 바랍니다',
+            '입과 코를 막고\n신속히 대피하세요',
           support:
-            '가까운 비상구를 이용해 주세요',
+            '옆 칸 또는 안전한 곳으로\n이동해 주세요',
         },
       }
 
@@ -623,6 +650,193 @@ function FocusAnnouncement({
   const isTrainPassing =
     announcement.label ===
     '열차 통과'
+
+  const isTrainBreakdown =
+    announcement.label ===
+    '열차 일시 정차'
+
+  const isRestrictedItems =
+    announcement.label ===
+    '리튬 배터리 반입 제한'
+
+  const isFireEvacuation =
+    announcement.label ===
+    '열차 화재'
+
+  /*
+    ========================================================
+    열차 화재 — 긴급 전용 화면
+
+    즉시 행동 → 이동 방향 → 현재 상황 → 조건부 대피 절차
+    ========================================================
+  */
+  if (
+    isEmergency &&
+    isFireEvacuation &&
+    announcement.display
+  ) {
+    return (
+      <article
+        className="focus-announcement fire-emergency"
+        data-severity="긴급"
+        data-label="열차 화재"
+      >
+        <section
+          className="fire-emergency-hero"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <header className="fire-emergency-head">
+            <div className="fire-emergency-title">
+              <span
+                className="fire-emergency-symbol"
+                aria-hidden="true"
+              >
+                !
+              </span>
+
+              <div>
+                <span>
+                  긴급
+                </span>
+
+                <strong>
+                  열차 화재
+                </strong>
+              </div>
+            </div>
+
+            <time
+              dateTime={new Date(
+                announcement.ts,
+              ).toISOString()}
+              aria-label={`방송 시각 ${formatTime(
+                announcement.ts,
+              )}`}
+            >
+              {formatTime(
+                announcement.ts,
+              )}
+            </time>
+          </header>
+
+          <div className="fire-emergency-primary">
+            <span className="message-kicker">
+              즉시 행동
+            </span>
+
+            <p
+              className={`dynamic-conclusion ${dynamicConclusionClass(
+                announcement.display
+                  .conclusion,
+              )}`}
+            >
+              {
+                announcement.display
+                  .conclusion
+              }
+            </p>
+
+            <div className="fire-emergency-move">
+              <span
+                className="fire-emergency-move-arrow"
+                aria-hidden="true"
+              >
+                →
+              </span>
+
+              <p>
+                {
+                  announcement.display
+                    .support
+                }
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="fire-emergency-context">
+          <span className="message-kicker">
+            현재 상황
+          </span>
+
+          <p className="dynamic-lead">
+            {
+              announcement.display
+                .lead
+            }
+          </p>
+        </section>
+
+        <section className="fire-emergency-procedure">
+          <div className="fire-procedure-heading">
+            <span className="message-kicker">
+              출입문이 열리지 않으면
+            </span>
+
+            <strong>
+              비상 개방 후 대피
+            </strong>
+          </div>
+
+          <ol className="fire-procedure-list">
+            <li>
+              <span className="fire-procedure-number">
+                01
+              </span>
+
+              <p>
+                출입문 옆 의자 밑
+                <strong>
+                  비상 손잡이를 앞으로 당기세요
+                </strong>
+              </p>
+            </li>
+
+            <li>
+              <span className="fire-procedure-number">
+                02
+              </span>
+
+              <p>
+                공기가 빠지면
+                <strong>
+                  출입문을 손으로 여세요
+                </strong>
+              </p>
+            </li>
+
+            <li>
+              <span className="fire-procedure-number">
+                03
+              </span>
+
+              <p>
+                승강장 안전문을
+                <strong>
+                  수동 개방하고 대피하세요
+                </strong>
+              </p>
+            </li>
+          </ol>
+        </section>
+
+        <section className="fire-extinguisher-note">
+          <span>
+            추가 안내
+          </span>
+
+          <p>
+            <strong>
+              소화기
+            </strong>
+            는 통로문 옆에 비치되어 있습니다.
+          </p>
+        </section>
+      </article>
+    )
+  }
 
   /*
     ========================================================
@@ -984,6 +1198,166 @@ function FocusAnnouncement({
                     .support
                 }
               </p>
+            </section>
+          </div>
+        ) : isTrainBreakdown ? (
+          <div className="train-breakdown-layout">
+            <section className="train-breakdown-context">
+              <span className="message-kicker train-breakdown-kicker">
+                현재 상황
+              </span>
+
+              <p className="dynamic-lead">
+                {
+                  announcement.display
+                    .lead
+                }
+              </p>
+
+              <p
+                className={`dynamic-conclusion ${dynamicConclusionClass(
+                  announcement.display
+                    .conclusion,
+                )}`}
+              >
+                {
+                  announcement.display
+                    .conclusion
+                }
+              </p>
+
+              <div
+                className="train-breakdown-visual"
+                role="img"
+                aria-label="열차가 고장으로 인해 잠시 정차 중입니다"
+              >
+                <span className="train-breakdown-line" />
+
+                <span
+                  className="train-breakdown-stop-mark"
+                  aria-hidden="true"
+                >
+                  <i />
+                  <i />
+                </span>
+
+                <span className="train-breakdown-line" />
+              </div>
+
+              <strong className="train-breakdown-status">
+                일시 정차
+              </strong>
+            </section>
+
+            <section className="train-breakdown-action">
+              <span className="message-kicker">
+                승객 안내
+              </span>
+
+              <p
+                className={`dynamic-support ${supportingTextClass(
+                  announcement.display
+                    .support,
+                )}`}
+              >
+                {
+                  announcement.display
+                    .support
+                }
+              </p>
+            </section>
+          </div>
+        ) : isRestrictedItems ? (
+          <div className="restricted-items-layout">
+            <section className="restricted-items-context">
+              <span className="message-kicker restricted-items-kicker">
+                반입 제한 안내
+              </span>
+
+              <p className="dynamic-lead">
+                {
+                  announcement.display
+                    .lead
+                }
+              </p>
+
+              <p
+                className={`dynamic-conclusion ${dynamicConclusionClass(
+                  announcement.display
+                    .conclusion,
+                )}`}
+              >
+                {
+                  announcement.display
+                    .conclusion
+                }
+              </p>
+
+              <div
+                className="restricted-items-visual"
+                role="img"
+                aria-label="리튬 배터리 이동수단과 대용량 리튬 배터리는 역과 열차 내 반입이 제한됩니다"
+              >
+                <div className="restricted-items-source">
+                  <span className="restricted-items-source-label">
+                    제한 대상
+                  </span>
+
+                  <strong>
+                    리튬 배터리 이동수단
+                  </strong>
+
+                  <strong>
+                    대용량 리튬 배터리
+                  </strong>
+                </div>
+
+                <div
+                  className="restricted-items-barrier"
+                  aria-hidden="true"
+                >
+                  <span />
+                  <span />
+                </div>
+
+                <div className="restricted-items-target">
+                  <strong>
+                    역 · 열차
+                  </strong>
+
+                  <span>
+                    반입 제한
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            <section className="restricted-items-action">
+              <span className="message-kicker">
+                이용 안내
+              </span>
+
+              <p
+                className={`dynamic-support ${supportingTextClass(
+                  announcement.display
+                    .support,
+                )}`}
+              >
+                {
+                  announcement.display
+                    .support
+                }
+              </p>
+
+              <div className="restricted-items-meta">
+                <span>
+                  화재 사고 예방
+                </span>
+
+                <strong>
+                  2026.07.01 시행
+                </strong>
+              </div>
             </section>
           </div>
         ) : (
@@ -1456,6 +1830,32 @@ function prependAnnouncement(
 function historySummary(
   announcement: Announcement,
 ): string {
+  const label =
+    announcement.label ??
+    announcement.category
+
+  const summaries:
+    Record<string, string> = {
+      '열차 화재':
+        '입과 코를 막고 신속히 대피하세요',
+      '리튬 배터리 반입 제한':
+        '역·열차 내 반입이 제한됩니다',
+      '열차 통과':
+        '우리 역을 통과합니다',
+      '열차 일시 정차':
+        '열차 고장으로 잠시 정차 중입니다',
+      '출입문 닫힘':
+        '출입문이 닫힙니다',
+      '발빠짐 주의':
+        '열차와 승강장 사이가 넓습니다',
+      '열차 진입':
+        '열차가 들어오고 있습니다',
+    }
+
+  if (summaries[label]) {
+    return summaries[label]
+  }
+
   if (
     announcement.display
       ?.conclusion
@@ -1463,6 +1863,7 @@ function historySummary(
     return (
       announcement.display
         .conclusion
+        .replace(/\n/g, ' ')
     )
   }
 
@@ -1544,15 +1945,24 @@ function History({
                     }
                   />
 
-                  <time
-                    dateTime={new Date(
-                      announcement.ts,
-                    ).toISOString()}
-                  >
-                    {formatTime(
-                      announcement.ts,
-                    )}
-                  </time>
+                  <div className="history-meta">
+                    <time
+                      dateTime={new Date(
+                        announcement.ts,
+                      ).toISOString()}
+                    >
+                      {formatTime(
+                        announcement.ts,
+                      )}
+                    </time>
+
+                    <span
+                      className="history-chevron"
+                      aria-hidden="true"
+                    >
+                      ›
+                    </span>
+                  </div>
                 </div>
 
                 <p
