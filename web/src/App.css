@@ -1,33 +1,65 @@
 :root {
   color-scheme: light;
-  font-family: Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
-  color: #000;
-  background: #fff;
+
+  font-family:
+    Pretendard,
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    sans-serif;
+
   font-synthesis: none;
-  --surface: #fff;
-  --surface-raised: #f5f6f7;
-  --line: #d9dadd;
-  --muted: #4c4c4e;
-  --general: #00a5ff;
-  --general-bg: #eaf8ff;
-  --attention: #000;
-  --attention-bg: #f3f3f3;
-  --emergency: #fe2e36;
-  --emergency-bg: #fff0f1;
+
+  /* =======================================================
+     CORE
+     ======================================================= */
+
+  --black: #101010;
+  --black-soft: #252525;
+
+  --white: #ffffff;
+
+  --text: #111111;
+  --text-secondary: #40464b;
+  --muted: #687078;
+
+  --line: #d8dcdf;
+  --line-strong: #aeb5ba;
+
+  /*
+    실시간 / 연결 / STT / 일반 안내
+  */
+  --sky: #00a5ff;
+  --sky-dark: #007dbd;
+  --sky-soft: #eef9ff;
+
+  /*
+    평상시 최소 브랜드 accent
+  */
+  --brand-red: #e31b23;
+
+  /*
+    긴급
+  */
+  --emergency: #d4141e;
+  --emergency-dark: #b90f18;
+  --emergency-soft: #fff1f2;
+
+  --surface: #ffffff;
+  --surface-subtle: #f5f6f7;
+
+  --app-width: 680px;
 }
 
-* { box-sizing: border-box; }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
 }
 
 html,
@@ -36,709 +68,2014 @@ body,
   width: 100%;
   min-width: 320px;
   min-height: 100%;
+
   margin: 0;
-  overflow-x: clip;
+}
+
+html {
+  background: #edf1f5;
 }
 
 body {
   min-height: 100vh;
   min-height: 100dvh;
-  background: #f3f4f5;
+
+  margin: 0;
+
+  overflow-x: clip;
+
+  color: var(--text);
+  background: #edf1f5;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 button,
-summary { font: inherit; }
+summary,
+audio {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.sr-only {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+  margin: -1px;
+
+  overflow: hidden;
+
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+
+  white-space: nowrap;
+
+  border: 0;
+}
+
+
+/* =========================================================
+   APP SHELL
+   ========================================================= */
 
 .app-shell {
   width: 100%;
-  max-width: 680px;
+  max-width: var(--app-width);
+
   min-width: 0;
   min-height: 100vh;
   min-height: 100dvh;
+
   margin: 0 auto;
-  background: #fff;
+
+  background: var(--white);
 }
 
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
 .topbar {
-  min-height: 60px;
-  padding: 15px 16px 13px;
-  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  width: 100%;
+
+  min-height: 86px;
+
+  padding:
+    max(14px, env(safe-area-inset-top))
+    22px
+    13px
+    25px;
+
+  color: var(--white);
+  background: var(--black);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+
+  gap: 14px;
 }
 
-.topbar h1 {
-  margin: 0;
-  color: #000;
-  font-size: 1.28rem;
-  line-height: 1.15;
-  letter-spacing: -0.04em;
+
+/*
+  평상시 Red는 브랜드 서명 수준으로만 사용.
+*/
+.topbar::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 3px;
+
+  background: var(--brand-red);
 }
 
-.topbar-tools {
-  display: flex;
-  align-items: center;
-  gap: 9px;
+
+/*
+  Sky blue는 연결/실시간 기능 신호.
+*/
+.topbar::after {
+  content: '';
+
+  position: absolute;
+
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  height: 3px;
+
+  background: var(--sky);
 }
 
-.current-clock {
-  color: #000;
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  display: inline-flex;
-  align-items: baseline;
+.station-identity {
+  min-width: 0;
+
+  display: grid;
+
   gap: 5px;
 }
 
-.current-clock > span {
-  color: var(--muted);
-  font-size: 0.68rem;
-  font-weight: 680;
-}
-
-.demo-badge {
-  padding: 5px 8px 4px;
-  border: 1px solid #000;
-  border-radius: 999px;
-  color: #fff;
-  background: #000;
-  font-size: 0.68rem;
-  font-weight: 850;
-  letter-spacing: 0.08em;
-}
-
-.station-main {
-  padding: 16px 16px 28px;
-}
-
-.demo-player {
+.station-identity h1 {
   min-width: 0;
-  margin-bottom: 14px;
-  padding: 14px;
-  overflow: hidden;
-  border: 1px solid #b8dff3;
-  border-radius: 18px;
-  background: linear-gradient(145deg, #eaf8ff, #fff 76%);
-}
 
-.demo-player-head {
-  margin-bottom: 11px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.demo-player-head h2 {
   margin: 0;
-  font-size: 1.05rem;
-  letter-spacing: -0.035em;
+
+  color: var(--white);
+
+  font-size:
+    clamp(1.48rem, 5.3vw, 1.92rem);
+
+  font-weight: 900;
+  line-height: 1;
+
+  letter-spacing: -0.055em;
+
+  word-break: keep-all;
 }
 
-.demo-player-head p {
-  margin: 3px 0 0;
-  color: var(--muted);
-  font-size: 0.75rem;
-}
 
-.demo-running {
-  flex: 0 0 auto;
-  padding: 5px 8px;
-  border-radius: 999px;
-  color: #fff;
-  background: var(--emergency);
-  font-size: 0.68rem;
-  font-weight: 800;
-}
+/* =========================================================
+   CONNECTION STATUS
+   ========================================================= */
 
-.demo-sample-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.connection-status {
+  min-width: 0;
+
+  color: #edf2f4;
+
+  font-size: 0.78rem;
+  font-weight: 750;
+  line-height: 1.15;
+
+  display: inline-flex;
+  align-items: center;
+
   gap: 7px;
 }
 
-.demo-sample-grid button {
+.connection-status > span:last-child {
   min-width: 0;
-  min-height: 58px;
-  padding: 8px 9px;
-  border: 1px solid #8bcff2;
-  border-radius: 11px;
-  color: #000;
-  background: #fff;
-  text-align: left;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
 
-.demo-sample-grid button:disabled { cursor: default; opacity: 0.45; }
-
-.demo-sample-grid button[aria-pressed='true'] {
-  border-color: #000;
-  box-shadow: inset 0 0 0 1px #000;
-}
-
-.demo-play-icon {
-  width: 28px;
-  height: 28px;
-  flex: 0 0 28px;
-  border-radius: 50%;
-  color: #fff;
-  background: #000;
-  display: grid;
-  place-items: center;
-  padding-left: 2px;
-  font-size: 0.63rem;
-}
-
-.demo-sample-grid button > span:last-child {
-  min-width: 0;
-  display: grid;
-  gap: 2px;
-}
-
-.demo-sample-grid strong {
   overflow: hidden;
-  font-size: 0.82rem;
-  letter-spacing: -0.03em;
+
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.demo-sample-grid small {
-  color: var(--muted);
-  font-size: 0.65rem;
-  white-space: nowrap;
+.connection-dot {
+  width: 9px;
+  height: 9px;
+
+  flex: 0 0 9px;
+
+  border-radius: 50%;
+
+  background: var(--sky);
 }
 
-.demo-audio {
-  display: none;
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  height: 42px;
-  margin-top: 10px;
+.connection-status[data-state='connecting'],
+.connection-status[data-state='reconnecting'] {
+  color: #c9ced1;
 }
 
-.demo-audio.is-visible { display: block; }
+.connection-status[data-state='connecting']
+.connection-dot,
+.connection-status[data-state='reconnecting']
+.connection-dot {
+  border: 1.5px solid #c9ced1;
 
-.demo-notice {
-  margin: 9px 0 0;
-  color: #000;
-  font-size: 0.75rem;
-  font-weight: 650;
+  background: transparent;
 }
 
-.all-samples {
-  margin-top: 9px;
-  border-top: 1px solid #b8dff3;
-}
 
-.all-samples summary {
-  padding-top: 9px;
-  color: #000;
-  font-size: 0.72rem;
-  font-weight: 720;
-  cursor: pointer;
-}
+/* =========================================================
+   HEADER TOOLS
+   ========================================================= */
 
-.all-samples .sample-list { margin-top: 9px; }
+.topbar-tools {
+  flex: 0 0 auto;
 
-.demo-preview {
-  margin-bottom: 12px;
-}
-
-.demo-preview h2 {
-  margin: 0 0 8px;
-  font-size: 0.82rem;
-  letter-spacing: -0.025em;
-}
-
-.preview-switcher {
-  width: 100%;
-  min-width: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 7px;
-}
-
-.preview-switcher button {
-  --accent: var(--general);
-  --severity-bg: var(--general-bg);
-  min-width: 0;
-  min-height: 44px;
-  padding: 8px 6px 7px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  color: #000;
-  background: #fff;
-  cursor: pointer;
-  display: grid;
-  gap: 2px;
-}
-
-.preview-switcher button:disabled { cursor: default; opacity: 0.45; }
-
-.preview-switcher button > span {
-  font-size: 0.88rem;
-  font-weight: 820;
-}
-
-.preview-switcher button > small {
-  color: var(--muted);
-  font-size: 0.64rem;
-  font-weight: 650;
-}
-
-.preview-switcher button[aria-pressed='true'] {
-  border-color: var(--accent);
-  background: var(--severity-bg);
-  box-shadow: inset 0 -2px 0 var(--accent);
-}
-
-.preview-switcher button:focus-visible {
-  outline: 2px solid #000;
-  outline-offset: 2px;
-}
-
-.streaming-caption {
-  min-height: 390px;
-  padding: 22px;
-  overflow: hidden;
-  border: 2px solid var(--general);
-  border-radius: 23px;
-  background: linear-gradient(145deg, var(--general-bg), #fff 72%);
-  box-shadow: inset 0 7px 0 var(--general), 0 14px 34px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-}
-
-.streaming-head {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #000;
-  font-size: 0.82rem;
-}
 
-.streaming-head strong { font-size: 1rem; }
-.streaming-head > span:last-child { margin-left: auto; color: var(--muted); }
-
-.streaming-dot {
-  width: 13px;
-  height: 13px;
-  border: 4px solid var(--general);
-  border-radius: 50%;
-}
-
-.streaming-text {
-  margin: auto 0;
-  padding: 28px 0;
-  color: #000;
-  font-size: clamp(1.78rem, 7.7vw, 2.55rem);
-  font-weight: 790;
-  line-height: 1.32;
-  letter-spacing: -0.045em;
-  word-break: keep-all;
-  text-wrap: wrap;
-}
-
-.streaming-caret {
-  width: 3px;
-  height: 1em;
-  margin-left: 5px;
-  border-radius: 2px;
-  background: var(--emergency);
-  display: inline-block;
-  vertical-align: -0.08em;
-}
-
-.focus-announcement,
-.history-card {
-  --accent: var(--general);
-  --severity-bg: var(--general-bg);
-}
-
-[data-severity='주의'] {
-  --accent: var(--attention);
-  --severity-bg: var(--attention-bg);
-}
-
-[data-severity='긴급'] {
-  --accent: var(--emergency);
-  --severity-bg: var(--emergency-bg);
-}
-
-.focus-announcement {
-  position: relative;
-  min-height: 390px;
-  padding: 22px;
-  overflow: hidden;
-  border: 2px solid var(--accent);
-  border-radius: 23px;
-  background: linear-gradient(145deg, var(--severity-bg), #fff 72%);
-  box-shadow: inset 0 7px 0 var(--accent), 0 14px 34px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  animation: reveal 300ms ease-out both;
-}
-
-.focus-announcement::after {
-  content: '';
-  position: absolute;
-  width: 280px;
-  height: 280px;
-  right: -145px;
-  top: 120px;
-  border: 48px solid color-mix(in srgb, var(--accent) 10%, transparent);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-@keyframes reveal {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.focus-head,
-.focus-meta,
-.history-head,
-.section-title {
-  display: flex;
-  align-items: center;
-}
-
-.focus-head {
-  position: relative;
-  z-index: 1;
-  align-items: flex-start;
-  justify-content: space-between;
   gap: 12px;
 }
 
-.severity-badge {
-  color: #000;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
+.current-clock {
+  color: var(--white);
 
-.severity-symbol {
-  width: 44px;
-  height: 44px;
-  flex: 0 0 44px;
-  border: 2px solid var(--accent);
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 1.2rem;
+  font-size:
+    clamp(1.4rem, 5.1vw, 1.78rem);
+
   font-weight: 900;
   line-height: 1;
-  color: #000;
-  background: var(--accent);
-}
 
-[data-severity='주의'] .severity-symbol {
-  border-radius: 10px;
-  font-size: 0.9rem;
-  color: #000;
-  background: #fff;
-}
+  letter-spacing: -0.05em;
 
-[data-severity='긴급'] .severity-symbol {
-  border-radius: 8px;
-  color: #000;
-  background: var(--accent);
-}
-
-.severity-copy {
-  display: grid;
-  gap: 1px;
-}
-
-.severity-copy strong {
-  font-size: 1.05rem;
-  letter-spacing: -0.03em;
-}
-
-.focus-meta {
-  align-items: baseline;
-  gap: 5px;
-}
-
-.focus-meta > span {
-  color: var(--muted);
-  font-size: 0.7rem;
-  font-weight: 680;
-}
-
-.focus-meta time {
-  color: #000;
-  font-size: 1.05rem;
-  font-weight: 740;
-  letter-spacing: -0.02em;
-}
-
-time {
-  color: #4c4c4e;
-  font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
+
   white-space: nowrap;
 }
 
-.focus-message {
-  position: relative;
-  z-index: 1;
-  margin: auto 0;
-  padding: 24px 0;
-  color: #000;
-  font-weight: 830;
-  line-height: 1.19;
-  letter-spacing: -0.052em;
-  word-break: keep-all;
-  text-wrap: balance;
-}
 
-.focus-announcement[data-severity='일반'] .copy-short { font-size: clamp(2.15rem, 9.3vw, 3.2rem); }
-.focus-announcement[data-severity='일반'] .copy-medium { font-size: clamp(1.82rem, 7.8vw, 2.7rem); }
-.focus-announcement[data-severity='일반'] .copy-long { font-size: clamp(1.58rem, 6.7vw, 2.25rem); }
-.focus-announcement[data-severity='주의'] .copy-short { font-size: clamp(2.38rem, 10.2vw, 3.45rem); }
-.focus-announcement[data-severity='주의'] .copy-medium { font-size: clamp(2rem, 8.6vw, 2.9rem); }
-.focus-announcement[data-severity='주의'] .copy-long { font-size: clamp(1.68rem, 7.2vw, 2.4rem); }
-.focus-announcement[data-severity='긴급'] .copy-short { font-size: clamp(2.6rem, 11.1vw, 3.7rem); }
-.focus-announcement[data-severity='긴급'] .copy-medium { font-size: clamp(2.18rem, 9.3vw, 3.1rem); }
-.focus-announcement[data-severity='긴급'] .copy-long { font-size: clamp(1.8rem, 7.7vw, 2.55rem); }
+/*
+  기존 App.tsx에 DEMO badge가 남아 있는 경우도 대응.
+*/
+.demo-badge {
+  padding: 7px 10px;
 
-.dynamic-caption {
-  position: relative;
-  z-index: 1;
-  margin: auto 0;
-  padding: 22px 0 18px;
-  display: grid;
-  gap: 13px;
-}
+  border: 1px solid #9ca4a9;
+  border-radius: 0;
 
-.dynamic-lead {
-  max-width: min(100%, 520px);
-  margin: 0;
-  color: #000;
-  font-size: clamp(1.18rem, 5.3vw, 1.52rem);
-  font-weight: 720;
-  line-height: 1.28;
-  letter-spacing: -0.035em;
-  word-break: keep-all;
-  text-wrap: pretty;
-  animation: support-rise 300ms ease-out both;
-}
+  color: var(--white);
+  background: transparent;
 
-.dynamic-conclusion {
-  margin: 0;
-  color: #000;
-  font-size: clamp(3rem, 10vw, 3.25rem);
-  font-weight: 900;
-  line-height: 0.98;
-  letter-spacing: -0.07em;
-  word-break: keep-all;
-  text-wrap: pretty;
-  transform-origin: left center;
-  animation: conclusion-pop 520ms cubic-bezier(0.2, 0.85, 0.25, 1.25) 80ms both;
-}
-
-.focus-announcement[data-severity='일반'] .dynamic-conclusion {
-  font-size: clamp(2.7rem, 9vw, 3.1rem);
-}
-
-.focus-announcement .dynamic-conclusion.dynamic-medium {
-  font-size: clamp(2.65rem, 8vw, 2.8rem);
-}
-
-.focus-announcement .dynamic-conclusion.dynamic-long {
-  font-size: clamp(2.25rem, 7vw, 2.5rem);
-  line-height: 1.04;
-}
-
-.dynamic-support {
-  max-width: min(100%, 520px);
-  margin: 0;
-  color: #000;
-  font-size: clamp(1.28rem, 5.6vw, 1.65rem);
-  font-weight: 790;
-  line-height: 1.3;
-  letter-spacing: -0.035em;
-  word-break: keep-all;
-  text-wrap: pretty;
-  animation: support-rise 360ms ease-out 320ms both;
-}
-
-@keyframes conclusion-pop {
-  0% { opacity: 0; transform: scale(0.84, 1.03); }
-  64% { opacity: 1; transform: scale(1.075, 0.98); }
-  100% { opacity: 1; transform: scale(1); }
-}
-
-@keyframes support-rise {
-  from { transform: translateY(7px); }
-  to { transform: translateY(0); }
-}
-
-.waiting-panel {
-  min-height: 350px;
-  padding: 30px 24px;
-  border: 1px solid var(--line);
-  border-radius: 23px;
-  background: linear-gradient(145deg, var(--general-bg), #fff 72%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.waiting-mark {
-  margin-bottom: 24px;
-  color: var(--general);
-  font-size: 4rem;
-  font-weight: 800;
-  line-height: 0.35;
-  letter-spacing: 0.06em;
-}
-
-.waiting-panel h2 {
-  margin: 0;
-  font-size: clamp(2.15rem, 9.6vw, 3.4rem);
-  line-height: 1.16;
-  letter-spacing: -0.055em;
-}
-
-.history {
-  margin-top: 24px;
-}
-
-.section-title {
-  justify-content: space-between;
-  margin-bottom: 11px;
-}
-
-.section-title h2 {
-  margin: 0;
-  font-size: 1rem;
-  letter-spacing: -0.03em;
-}
-
-.section-title span {
-  color: var(--muted);
   font-size: 0.75rem;
+  font-weight: 900;
+  line-height: 1;
+
+  letter-spacing: 0.1em;
 }
 
-.history-list {
-  display: grid;
-  gap: 10px;
+
+/* =========================================================
+   EMERGENCY HEADER
+   ========================================================= */
+
+.app-shell[data-live-severity='긴급']
+.topbar {
+  background: var(--emergency-dark);
 }
 
-.history-card {
-  padding: 16px;
-  border: 1px solid color-mix(in srgb, var(--accent) 52%, #a2a4a3);
-  border-left: 4px solid var(--accent);
-  border-radius: 15px;
-  background: var(--severity-bg);
+.app-shell[data-live-severity='긴급']
+.topbar::before,
+.app-shell[data-live-severity='긴급']
+.topbar::after {
+  display: none;
 }
 
-.history-head {
+.app-shell[data-live-severity='긴급']
+.connection-dot {
+  background: var(--white);
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.station-main {
+  width: 100%;
+  min-width: 0;
+
+  padding-right: 24px;
+  padding-left: 24px;
+}
+
+.passenger-main {
+  padding-bottom: 32px;
+}
+
+
+/* =========================================================
+   DEMO TOOLS
+   ========================================================= */
+
+.demo-tools-shell {
+  padding-top:
+    max(22px, env(safe-area-inset-top));
+
+  padding-bottom: 0;
+
+  background: var(--surface-subtle);
+}
+
+.demo-control {
+  width: 100%;
+
+  padding: 0 0 23px;
+
+  background: var(--surface-subtle);
+}
+
+
+/* =========================================================
+   DEMO HEADER
+   ========================================================= */
+
+.demo-control-head {
+  margin-bottom: 18px;
+
+  display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
+
+  gap: 15px;
 }
 
-.history-card .severity-badge { gap: 7px; }
-
-.history-card .severity-symbol {
-  width: 30px;
-  height: 30px;
-  flex-basis: 30px;
-  border-width: 1px;
-  border-radius: 50%;
-  font-size: 0.8rem;
+.demo-control-head > div {
+  min-width: 0;
 }
 
-.history-card[data-severity='주의'] .severity-symbol { border-radius: 7px; font-size: 0.58rem; }
-.history-card[data-severity='긴급'] .severity-symbol { border-radius: 5px; }
-.history-card .severity-copy strong { font-size: 0.85rem; }
+.demo-project-label {
+  display: block;
 
-.history-card > p {
-  margin: 14px 0 11px;
-  font-size: 1rem;
-  font-weight: 720;
-  line-height: 1.45;
-  letter-spacing: -0.03em;
+  margin-bottom: 7px;
+
+  color: var(--brand-red);
+
+  font-size: 0.74rem;
+  font-weight: 900;
+  line-height: 1.2;
+
+  letter-spacing: 0.025em;
+}
+
+.demo-control-head h2 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: 1.48rem;
+  font-weight: 900;
+  line-height: 1.15;
+
+  letter-spacing: -0.05em;
+}
+
+.demo-control-head p {
+  max-width: 460px;
+
+  margin: 8px 0 0;
+
+  color: var(--muted);
+
+  font-size: 0.89rem;
+  font-weight: 570;
+  line-height: 1.48;
+
+  letter-spacing: -0.025em;
+
   word-break: keep-all;
 }
 
-.test-dock {
-  padding: 0 16px 28px;
+.demo-running {
+  flex: 0 0 auto;
+
+  padding: 6px 8px;
+
+  color: var(--white);
+  background: var(--black);
+
+  font-size: 0.68rem;
+  font-weight: 850;
+  line-height: 1;
 }
 
-.test-dock > details {
-  border: 1px dashed #a2a4a3;
-  border-radius: 13px;
-  background: #f5f6f7;
+
+/* =========================================================
+   DEMO SAMPLE BUTTONS
+   ========================================================= */
+
+.demo-sample-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 8px;
 }
 
-.test-dock summary {
-  padding: 13px 14px;
-  color: #000;
+.demo-sample-grid button {
+  min-width: 0;
+  min-height: 60px;
+
+  padding: 8px 11px;
+
+  border: 1px solid #c7cdd1;
+  border-radius: 2px;
+
+  color: var(--text);
+  background: var(--white);
+
+  text-align: left;
+
   cursor: pointer;
-  list-style: none;
-  font-size: 0.8rem;
-  font-weight: 700;
+
   display: flex;
   align-items: center;
+
   gap: 10px;
 }
 
-.test-dock summary::-webkit-details-marker { display: none; }
-.test-dock summary::after { content: '+'; margin-left: 3px; color: var(--general); font-size: 1rem; }
-.test-dock details[open] summary::after { content: '−'; }
-.test-dock summary small { margin-left: auto; color: #4c4c4e; }
+.demo-sample-grid
+button[aria-pressed='true'] {
+  border-color: var(--black);
 
-.test-content {
-  padding: 0 14px 14px;
-  border-top: 1px solid #d9dadd;
+  box-shadow:
+    inset 0 -4px 0 var(--sky);
 }
 
-.test-content > p {
-  margin: 13px 0;
-  color: #4c4c4e;
+.demo-sample-grid
+button:disabled {
+  cursor: default;
+
+  opacity: 0.42;
+}
+
+.demo-play-icon {
+  width: 30px;
+  height: 30px;
+
+  flex: 0 0 30px;
+
+  border-radius: 50%;
+
+  color: var(--white);
+  background: var(--black);
+
+  display: grid;
+  place-items: center;
+
+  padding-left: 2px;
+
+  font-size: 0.62rem;
+}
+
+.demo-sample-copy {
+  min-width: 0;
+
+  display: grid;
+
+  gap: 3px;
+}
+
+.demo-sample-copy strong {
+  overflow: hidden;
+
+  color: var(--text);
+
+  font-size: 0.86rem;
+  font-weight: 850;
+  line-height: 1.2;
+
+  letter-spacing: -0.035em;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demo-sample-copy small {
+  overflow: hidden;
+
+  color: var(--muted);
+
+  font-size: 0.63rem;
+  font-weight: 580;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   AUDIO
+   ========================================================= */
+
+.demo-audio {
+  display: none;
+
+  width: 100%;
+  height: 42px;
+
+  margin-top: 11px;
+}
+
+.demo-audio.is-visible {
+  display: block;
+}
+
+.demo-notice {
+  margin: 10px 0 0;
+
+  padding: 9px 10px;
+
+  border-left: 3px solid var(--black);
+
+  color: var(--text);
+  background: var(--white);
+
+  font-size: 0.76rem;
+  font-weight: 650;
+  line-height: 1.45;
+
+  word-break: keep-all;
+}
+
+
+/* =========================================================
+   ALL SAMPLES
+   ========================================================= */
+
+.all-samples {
+  margin-top: 12px;
+
+  border-top: 1px solid var(--line);
+}
+
+.all-samples summary {
+  min-height: 41px;
+
+  padding-top: 12px;
+
+  color: var(--text);
+
   font-size: 0.75rem;
+  font-weight: 780;
+
+  cursor: pointer;
 }
 
 .sample-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
-}
 
-.sample-list button,
-.invalid-page button {
-  border: 1px solid #000;
-  border-radius: 9px;
-  color: #000;
-  background: #fff;
-  cursor: pointer;
+  gap: 6px;
 }
 
 .sample-list button {
-  padding: 8px 10px;
+  min-height: 38px;
+
+  padding: 7px 10px;
+
+  border: 1px solid var(--black);
+  border-radius: 2px;
+
+  color: var(--text);
+  background: var(--white);
+
+  font-size: 0.72rem;
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+.sample-list button:disabled {
+  opacity: 0.4;
+}
+
+
+/* =========================================================
+   DEMO PREVIEW
+   ========================================================= */
+
+.demo-preview {
+  margin-top: 18px;
+}
+
+.demo-preview-label {
+  display: block;
+
+  margin-bottom: 9px;
+
+  color: var(--muted);
+
+  font-size: 0.76rem;
+  font-weight: 780;
+}
+
+.preview-switcher {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 7px;
+}
+
+.preview-switcher button {
+  --preview-accent: var(--sky);
+
+  min-width: 0;
+  min-height: 67px;
+
+  padding: 8px;
+
+  border: 1px solid var(--line);
+  border-bottom: 4px solid var(--line);
+
+  border-radius: 2px;
+
+  color: var(--text);
+  background: var(--white);
+
+  cursor: pointer;
+
+  display: grid;
+  align-content: center;
+
+  gap: 4px;
+}
+
+.preview-switcher
+button[data-severity='주의'] {
+  --preview-accent: var(--black);
+}
+
+.preview-switcher
+button[data-severity='긴급'] {
+  --preview-accent: var(--emergency);
+}
+
+.preview-switcher
+button[aria-pressed='true'] {
+  border-color: var(--preview-accent);
+  border-bottom-color: var(--preview-accent);
+}
+
+.preview-switcher button > span {
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.preview-switcher button > small {
+  overflow: hidden;
+
+  color: var(--muted);
+
+  font-size: 0.68rem;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-switcher button:disabled {
+  opacity: 0.42;
+}
+
+
+/* =========================================================
+   DEMO → PASSENGER DIVIDER
+   ========================================================= */
+
+.demo-passenger-divider {
+  position: relative;
+
+  height: 48px;
+
+  margin-right: -24px;
+  margin-left: -24px;
+
+  color: var(--text);
+  background: var(--white);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.demo-passenger-divider::before {
+  content: '';
+
+  position: absolute;
+
+  right: 0;
+  left: 0;
+
+  height: 1px;
+
+  background: var(--line);
+}
+
+.demo-passenger-divider span {
+  position: relative;
+  z-index: 1;
+
+  padding: 0 14px;
+
+  color: var(--text);
+  background: var(--white);
+
+  font-size: 0.74rem;
+  font-weight: 850;
+  line-height: 1;
+
+  letter-spacing: -0.025em;
+}
+
+
+/* =========================================================
+   LIVE STAGE
+   ========================================================= */
+
+.live-stage {
+  width: 100%;
+  min-width: 0;
+}
+
+
+/* =========================================================
+   WAITING
+
+   핵심 구조
+
+   제목 = 전체 폭
+   ↓
+   설명 + 캐릭터
+
+   캐릭터가 제목 폭을 침범하지 않는다.
+   ========================================================= */
+
+.waiting-panel {
+  width: 100%;
+
+  background: var(--white);
+}
+
+.waiting-hero {
+  width: 100%;
+
+  padding:
+    42px
+    6px
+    40px;
+}
+
+
+/*
+  정확히 의도한 두 줄 유지.
+
+  현재 안내방송이
+  없습니다
+*/
+.waiting-title {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size:
+    clamp(2.15rem, 8.4vw, 3rem);
+
+  font-weight: 900;
+  line-height: 1.06;
+
+  letter-spacing: -0.065em;
+}
+
+.waiting-title > span {
+  display: block;
+}
+
+
+/*
+  첫 줄은 절대 자동 줄바꿈하지 않는다.
+*/
+.waiting-title > span:first-child {
+  white-space: nowrap;
+}
+
+
+/*
+  제목 아래 설명 + 캐릭터
+*/
+.waiting-bottom {
+  width: 100%;
+
+  margin-top: 24px;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    112px;
+
+  align-items: center;
+
+  gap: 16px;
+}
+
+.waiting-description {
+  min-width: 0;
+  max-width: 400px;
+
+  margin: 0;
+
+  color: var(--text-secondary);
+
+  font-size:
+    clamp(0.96rem, 3.6vw, 1.08rem);
+
+  font-weight: 620;
+  line-height: 1.55;
+
+  letter-spacing: -0.03em;
+
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+
+/* =========================================================
+   WAITING CHARACTER
+   ========================================================= */
+
+.waiting-character-wrap {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform: translateY(-6px);
+}
+
+.waiting-character {
+  width: 100%;
+  max-width: 105px;
+  height: auto;
+
+  max-height: 145px;
+
+  object-fit: contain;
+  object-position: center;
+
+  user-select: none;
+  pointer-events: none;
+}
+
+
+/*
+  DEMO 승객 화면과 실제 /stations는 동일.
+*/
+.app-shell[data-mode='passenger']
+.waiting-hero,
+.app-shell[data-mode='demo']
+.waiting-hero {
+  padding-top: 42px;
+  padding-bottom: 40px;
+}
+
+
+/* =========================================================
+   구버전 WaitingPanel이 잠시 남아 있어도
+   레이아웃이 크게 깨지지 않도록 호환
+   ========================================================= */
+
+.waiting-copy {
+  min-width: 0;
+}
+
+.waiting-copy h2 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size:
+    clamp(2.15rem, 8.4vw, 3rem);
+
+  font-weight: 900;
+  line-height: 1.06;
+
+  letter-spacing: -0.065em;
+
+  word-break: keep-all;
+}
+
+
+/* =========================================================
+   STREAMING STT
+   ========================================================= */
+
+.streaming-caption {
+  width: 100%;
+
+  padding-bottom: 27px;
+
+  border-bottom: 1px solid var(--line);
+
+  background: var(--white);
+}
+
+.streaming-status {
+  min-height: 52px;
+
+  margin-right: -24px;
+  margin-left: -24px;
+
+  padding: 0 24px;
+
+  border-bottom: 1px solid #bcdfea;
+
+  color: var(--sky-dark);
+  background: var(--sky-soft);
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+.streaming-dot {
+  width: 11px;
+  height: 11px;
+
+  flex: 0 0 11px;
+
+  border: 3px solid var(--sky);
+  border-radius: 50%;
+
+  background: var(--white);
+}
+
+.streaming-status strong {
+  font-size: 0.86rem;
+  font-weight: 850;
+}
+
+.streaming-unconfirmed {
+  margin-left: auto;
+
+  padding: 5px 7px;
+
+  border: 1px solid #91c6dc;
+
+  color: #456b79;
+  background: var(--white);
+
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+.streaming-content {
+  padding:
+    31px
+    5px
+    25px;
+}
+
+.streaming-eyebrow {
+  display: block;
+
+  margin-bottom: 15px;
+
+  color: var(--muted);
+
+  font-size: 0.75rem;
+  font-weight: 780;
+  line-height: 1.2;
+}
+
+.streaming-text {
+  max-width: 590px;
+
+  margin: 0;
+
+  color: var(--text);
+
+  font-size:
+    clamp(1.9rem, 7.5vw, 2.65rem);
+
+  font-weight: 830;
+  line-height: 1.35;
+
+  letter-spacing: -0.052em;
+
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.streaming-text-empty {
+  color: #555d63;
+
+  font-size:
+    clamp(1.58rem, 6.2vw, 2.05rem);
+
+  font-weight: 760;
+  line-height: 1.38;
+}
+
+.streaming-help {
+  max-width: 470px;
+
+  margin: 0 5px;
+
+  padding-top: 17px;
+
+  border-top: 1px solid var(--line);
+
+  color: var(--muted);
+
+  font-size: 0.8rem;
+  font-weight: 590;
+  line-height: 1.52;
+
+  letter-spacing: -0.02em;
+
+  word-break: keep-all;
+}
+
+
+/* =========================================================
+   FOCUS ANNOUNCEMENT
+   ========================================================= */
+
+.focus-announcement {
+  --severity-accent: var(--sky);
+
+  width: 100%;
+  min-width: 0;
+
+  border-top: 5px solid var(--severity-accent);
+  border-bottom: 1px solid var(--line);
+
+  background: var(--white);
+}
+
+.focus-announcement[data-severity='주의'] {
+  --severity-accent: var(--black);
+}
+
+.focus-announcement[data-severity='긴급'] {
+  --severity-accent: var(--emergency);
+
+  border-top: 0;
+}
+
+
+/* =========================================================
+   FOCUS HEADER
+   ========================================================= */
+
+.focus-head {
+  min-height: 76px;
+
+  padding:
+    10px
+    4px;
+
+  border-bottom: 1px solid var(--line);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 11px;
+}
+
+
+/* =========================================================
+   SEVERITY
+   ========================================================= */
+
+.severity-badge {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+.severity-symbol {
+  width: 44px;
+  height: 44px;
+
+  flex: 0 0 44px;
+
+  border: 2px solid var(--severity-accent);
+
+  color: var(--text);
+  background: var(--sky);
+
+  display: grid;
+  place-items: center;
+
+  font-size: 0.98rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+[data-severity='일반']
+.severity-symbol {
+  border-radius: 50%;
+}
+
+[data-severity='주의']
+.severity-symbol {
+  color: var(--black);
+  background: var(--white);
+
   font-size: 0.78rem;
 }
 
-.sample-list button:disabled { cursor: default; opacity: 0.42; }
+[data-severity='긴급']
+.severity-symbol {
+  color: var(--white);
+  background: var(--emergency);
+
+  font-size: 1.1rem;
+}
+
+.severity-copy {
+  min-width: 0;
+
+  display: grid;
+
+  gap: 2px;
+}
+
+.severity-level {
+  color: var(--muted);
+
+  font-size: 0.63rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+[data-severity='긴급']
+.severity-level {
+  color: var(--emergency);
+}
+
+.severity-copy strong {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: var(--text);
+
+  font-size: 1.04rem;
+  font-weight: 900;
+  line-height: 1.17;
+
+  letter-spacing: -0.045em;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.focus-time {
+  flex: 0 0 auto;
+
+  color: var(--muted);
+
+  font-size: 0.8rem;
+  font-weight: 720;
+  line-height: 1;
+
+  font-variant-numeric: tabular-nums;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   MESSAGE COMMON
+   ========================================================= */
+
+.dynamic-caption {
+  width: 100%;
+  min-width: 0;
+}
+
+.message-kicker {
+  display: block;
+
+  margin-bottom: 9px;
+
+  font-size: 0.73rem;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.context-kicker {
+  color: var(--muted);
+}
+
+.dynamic-lead,
+.dynamic-conclusion,
+.dynamic-support {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+
+/* =========================================================
+   GENERAL
+   ========================================================= */
+
+.dynamic-caption-general {
+  padding:
+    31px
+    6px
+    33px;
+}
+
+.dynamic-caption-general
+.dynamic-lead {
+  max-width: 550px;
+
+  margin: 0 0 15px;
+
+  color: var(--text-secondary);
+
+  font-size:
+    clamp(1.14rem, 4.2vw, 1.45rem);
+
+  font-weight: 700;
+  line-height: 1.4;
+
+  letter-spacing: -0.038em;
+}
+
+.dynamic-caption-general
+.dynamic-conclusion {
+  max-width: 600px;
+
+  margin: 0;
+
+  color: var(--text);
+
+  font-size:
+    clamp(2.72rem, 9.2vw, 3.55rem);
+
+  font-weight: 900;
+  line-height: 1.06;
+
+  letter-spacing: -0.066em;
+}
+
+.dynamic-caption-general
+.dynamic-conclusion.dynamic-medium {
+  font-size:
+    clamp(2.28rem, 7.8vw, 2.95rem);
+}
+
+.dynamic-caption-general
+.dynamic-conclusion.dynamic-long {
+  font-size:
+    clamp(1.9rem, 6.5vw, 2.45rem);
+
+  line-height: 1.13;
+}
+
+.dynamic-caption-general
+.dynamic-support {
+  max-width: 560px;
+
+  margin: 25px 0 0;
+
+  padding-top: 19px;
+
+  border-top: 1px solid var(--line);
+
+  color: var(--text);
+
+  font-size:
+    clamp(1.12rem, 4.2vw, 1.42rem);
+
+  font-weight: 780;
+  line-height: 1.43;
+
+  letter-spacing: -0.035em;
+}
+
+.dynamic-caption-general
+.dynamic-support.support-long {
+  font-size:
+    clamp(1.02rem, 3.85vw, 1.27rem);
+}
+
+
+/* =========================================================
+   ATTENTION
+   ========================================================= */
+
+.dynamic-caption-attention {
+  width: 100%;
+}
+
+.announcement-context {
+  padding:
+    22px
+    6px
+    18px;
+}
+
+.announcement-context
+.message-kicker {
+  margin-bottom: 7px;
+}
+
+.announcement-context
+.dynamic-lead {
+  max-width: 550px;
+
+  margin: 0 0 7px;
+
+  color: var(--text-secondary);
+
+  font-size:
+    clamp(1.08rem, 4vw, 1.38rem);
+
+  font-weight: 700;
+  line-height: 1.34;
+
+  letter-spacing: -0.035em;
+}
+
+.announcement-context
+.dynamic-conclusion {
+  max-width: 600px;
+
+  margin: 0;
+
+  color: var(--text);
+
+  font-size:
+    clamp(2.4rem, 8.1vw, 3.18rem);
+
+  font-weight: 900;
+  line-height: 1.04;
+
+  letter-spacing: -0.065em;
+}
+
+.announcement-context
+.dynamic-conclusion.dynamic-medium {
+  font-size:
+    clamp(2.08rem, 7vw, 2.7rem);
+}
+
+.announcement-context
+.dynamic-conclusion.dynamic-long {
+  font-size:
+    clamp(1.78rem, 5.9vw, 2.28rem);
+
+  line-height: 1.1;
+}
+
+
+/* =========================================================
+   ATTENTION ACTION
+   ========================================================= */
+
+.attention-action {
+  margin-right: -24px;
+  margin-left: -24px;
+
+  padding:
+    23px
+    30px
+    27px;
+
+  color: var(--white);
+  background: var(--black);
+}
+
+.attention-action
+.message-kicker {
+  margin-bottom: 9px;
+
+  color: #c9ced1;
+
+  font-size: 0.74rem;
+}
+
+.attention-action
+.dynamic-support {
+  max-width: 610px;
+
+  margin: 0;
+
+  color: var(--white);
+
+  font-size:
+    clamp(1.68rem, 5.8vw, 2.12rem);
+
+  font-weight: 900;
+  line-height: 1.3;
+
+  letter-spacing: -0.052em;
+}
+
+.attention-action
+.dynamic-support.support-medium {
+  font-size:
+    clamp(1.5rem, 5.3vw, 1.92rem);
+}
+
+.attention-action
+.dynamic-support.support-long {
+  font-size:
+    clamp(1.31rem, 4.65vw, 1.63rem);
+
+  line-height: 1.37;
+}
+
+
+/* =========================================================
+   EMERGENCY
+   ========================================================= */
+
+.dynamic-caption-emergency {
+  width: 100%;
+}
+
+
+/* =========================================================
+   EMERGENCY ACTION
+   ========================================================= */
+
+.emergency-action {
+  margin-right: -24px;
+  margin-left: -24px;
+
+  padding:
+    21px
+    30px
+    27px;
+
+  color: var(--white);
+  background: var(--emergency);
+}
+
+.emergency-level {
+  margin-bottom: 15px;
+
+  color: var(--white);
+
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+}
+
+.emergency-level-symbol {
+  width: 24px;
+  height: 24px;
+
+  border: 2px solid var(--white);
+
+  color: var(--emergency);
+  background: var(--white);
+
+  display: grid;
+  place-items: center;
+
+  font-size: 0.82rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.emergency-action
+.message-kicker {
+  margin-bottom: 9px;
+
+  color: #ffe2e4;
+
+  font-size: 0.77rem;
+}
+
+.emergency-action
+.dynamic-conclusion {
+  max-width: 620px;
+
+  margin: 0;
+
+  color: var(--white);
+
+  font-size:
+    clamp(2.9rem, 10.1vw, 3.95rem);
+
+  font-weight: 900;
+  line-height: 1.01;
+
+  letter-spacing: -0.075em;
+}
+
+.emergency-action
+.dynamic-conclusion.dynamic-medium {
+  font-size:
+    clamp(2.47rem, 8.6vw, 3.3rem);
+
+  line-height: 1.04;
+}
+
+.emergency-action
+.dynamic-conclusion.dynamic-long {
+  font-size:
+    clamp(2rem, 6.9vw, 2.62rem);
+
+  line-height: 1.09;
+}
+
+
+/* =========================================================
+   EMERGENCY META
+   ========================================================= */
+
+.emergency-focus-head {
+  min-height: 44px;
+
+  padding:
+    5px
+    5px;
+}
+
+.emergency-focus-head
+.severity-symbol {
+  width: 27px;
+  height: 27px;
+
+  flex-basis: 27px;
+
+  border-width: 1px;
+
+  font-size: 0.68rem;
+}
+
+.emergency-focus-head
+.severity-badge {
+  gap: 7px;
+}
+
+.emergency-focus-head
+.severity-level {
+  font-size: 0.5rem;
+}
+
+.emergency-focus-head
+.severity-copy strong {
+  font-size: 0.78rem;
+}
+
+.emergency-focus-head
+.focus-time {
+  font-size: 0.66rem;
+}
+
+
+/* =========================================================
+   EMERGENCY CONTEXT
+   ========================================================= */
+
+.emergency-context {
+  padding:
+    16px
+    7px
+    13px;
+}
+
+.emergency-context
+.message-kicker {
+  margin-bottom: 6px;
+
+  color: var(--emergency);
+
+  font-size: 0.7rem;
+}
+
+.emergency-context
+.dynamic-lead {
+  max-width: 580px;
+
+  margin: 0;
+
+  color: var(--text);
+
+  font-size:
+    clamp(1.22rem, 4.3vw, 1.52rem);
+
+  font-weight: 850;
+  line-height: 1.32;
+
+  letter-spacing: -0.04em;
+}
+
+
+/* =========================================================
+   EMERGENCY NEXT ACTION
+   ========================================================= */
+
+.emergency-next-action {
+  margin: 0 7px;
+
+  padding:
+    13px
+    0
+    10px;
+
+  border-top: 3px solid var(--emergency);
+}
+
+.emergency-next-action
+.message-kicker {
+  margin-bottom: 6px;
+
+  color: var(--emergency);
+
+  font-size: 0.71rem;
+}
+
+.emergency-next-action
+.dynamic-support {
+  max-width: 580px;
+
+  margin: 0;
+
+  color: var(--text);
+
+  font-size:
+    clamp(1.36rem, 4.75vw, 1.72rem);
+
+  font-weight: 900;
+  line-height: 1.31;
+
+  letter-spacing: -0.045em;
+}
+
+.emergency-next-action
+.dynamic-support.support-medium {
+  font-size:
+    clamp(1.28rem, 4.5vw, 1.6rem);
+}
+
+.emergency-next-action
+.dynamic-support.support-long {
+  font-size:
+    clamp(1.18rem, 4.15vw, 1.48rem);
+}
+
+
+/* =========================================================
+   FALLBACK
+   ========================================================= */
+
+.focus-message {
+  margin: 0;
+
+  padding:
+    33px
+    6px
+    35px;
+
+  color: var(--text);
+
+  font-weight: 850;
+  line-height: 1.25;
+
+  letter-spacing: -0.05em;
+
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.focus-announcement[data-severity='일반']
+.copy-short {
+  font-size:
+    clamp(2.1rem, 8vw, 2.88rem);
+}
+
+.focus-announcement[data-severity='일반']
+.copy-medium {
+  font-size:
+    clamp(1.78rem, 6.7vw, 2.38rem);
+}
+
+.focus-announcement[data-severity='일반']
+.copy-long {
+  font-size:
+    clamp(1.5rem, 5.55vw, 1.96rem);
+}
+
+.focus-announcement[data-severity='주의']
+.copy-short {
+  font-size:
+    clamp(2.25rem, 8.4vw, 3rem);
+}
+
+.focus-announcement[data-severity='주의']
+.copy-medium {
+  font-size:
+    clamp(1.86rem, 7vw, 2.45rem);
+}
+
+.focus-announcement[data-severity='주의']
+.copy-long {
+  font-size:
+    clamp(1.54rem, 5.75vw, 2rem);
+}
+
+.focus-announcement[data-severity='긴급']
+.emergency-fallback {
+  margin-right: -24px;
+  margin-left: -24px;
+
+  padding:
+    30px
+    30px
+    34px;
+
+  color: var(--white);
+  background: var(--emergency);
+}
+
+.focus-announcement[data-severity='긴급']
+.copy-short {
+  font-size:
+    clamp(2.7rem, 9.9vw, 3.6rem);
+}
+
+.focus-announcement[data-severity='긴급']
+.copy-medium {
+  font-size:
+    clamp(2.16rem, 8vw, 2.85rem);
+}
+
+.focus-announcement[data-severity='긴급']
+.copy-long {
+  font-size:
+    clamp(1.74rem, 6.4vw, 2.28rem);
+}
+
+
+/* =========================================================
+   HISTORY
+   ========================================================= */
+
+.history {
+  margin-top: 27px;
+
+  border-top: 2px solid var(--black);
+}
+
+.history-disclosure {
+  width: 100%;
+}
+
+.history-disclosure > summary {
+  min-height: 54px;
+
+  padding: 0 3px;
+
+  list-style: none;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+.history-disclosure
+> summary::-webkit-details-marker {
+  display: none;
+}
+
+.history-summary-copy {
+  min-width: 0;
+
+  display: flex;
+  align-items: baseline;
+
+  gap: 8px;
+}
+
+.history-summary-copy strong {
+  color: var(--text);
+
+  font-size: 0.95rem;
+  font-weight: 850;
+
+  letter-spacing: -0.035em;
+}
+
+.history-summary-copy > span {
+  color: var(--muted);
+
+  font-size: 0.69rem;
+  font-weight: 680;
+}
+
+.history-summary-action {
+  color: var(--muted);
+
+  font-size: 0.7rem;
+  font-weight: 780;
+}
+
+.history-summary-action::after {
+  content: ' ↓';
+
+  color: var(--text);
+}
+
+.history-disclosure[open]
+.history-summary-action {
+  font-size: 0;
+}
+
+.history-disclosure[open]
+.history-summary-action::before {
+  content: '접기';
+
+  color: var(--muted);
+
+  font-size: 0.7rem;
+}
+
+.history-disclosure[open]
+.history-summary-action::after {
+  content: ' ↑';
+
+  color: var(--text);
+
+  font-size: 0.7rem;
+}
+
+
+/* =========================================================
+   HISTORY LIST
+   ========================================================= */
+
+.history-list {
+  border-top: 1px solid var(--line);
+}
+
+.history-card {
+  --history-accent: var(--sky);
+
+  padding:
+    11px
+    4px
+    12px
+    10px;
+
+  border-bottom: 1px solid var(--line);
+  border-left: 3px solid var(--history-accent);
+
+  background: var(--white);
+}
+
+.history-card[data-severity='주의'] {
+  --history-accent: var(--black);
+}
+
+.history-card[data-severity='긴급'] {
+  --history-accent: var(--emergency);
+}
+
+.history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 9px;
+}
+
+.history-card
+.severity-badge {
+  gap: 7px;
+}
+
+.history-card
+.severity-symbol {
+  width: 27px;
+  height: 27px;
+
+  flex-basis: 27px;
+
+  border-width: 1px;
+
+  font-size: 0.66rem;
+}
+
+.history-card[data-severity='주의']
+.severity-symbol {
+  font-size: 0.49rem;
+}
+
+
+/*
+  과거 긴급 안내는 현재 긴급처럼
+  빨간 면으로 강조하지 않는다.
+*/
+.history-card[data-severity='긴급']
+.severity-symbol {
+  color: var(--emergency);
+  background: var(--white);
+
+  border-color: var(--emergency);
+
+  font-size: 0.7rem;
+}
+
+.history-card
+.severity-level {
+  font-size: 0.52rem;
+}
+
+.history-card
+.severity-copy strong {
+  max-width: 200px;
+
+  font-size: 0.77rem;
+}
+
+.history-card time {
+  flex: 0 0 auto;
+
+  color: var(--muted);
+
+  font-size: 0.68rem;
+  font-weight: 680;
+
+  font-variant-numeric: tabular-nums;
+
+  white-space: nowrap;
+}
+
+.history-summary-text {
+  margin: 8px 0 0;
+
+  color: #353b3f;
+
+  font-size: 0.91rem;
+  font-weight: 720;
+  line-height: 1.4;
+
+  letter-spacing: -0.03em;
+
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+
+/* =========================================================
+   INVALID PAGE
+   ========================================================= */
 
 .invalid-page {
-  width: min(100% - 32px, 560px);
+  width:
+    min(
+      calc(100% - 32px),
+      560px
+    );
+
   min-height: 100vh;
   min-height: 100dvh;
+
   margin: 0 auto;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -746,75 +2083,6336 @@ time {
 }
 
 .invalid-icon {
-  width: 62px;
-  height: 62px;
-  margin-bottom: 30px;
-  border: 2px solid var(--attention);
-  border-radius: 15px;
-  color: var(--attention);
+  width: 60px;
+  height: 60px;
+
+  margin-bottom: 27px;
+
+  border: 2px solid var(--black);
+  border-left: 4px solid var(--brand-red);
+
+  color: var(--text);
+  background: var(--white);
+
   display: grid;
   place-items: center;
-  font-size: 1rem;
+
+  font-size: 0.9rem;
   font-weight: 850;
-  letter-spacing: 0.06em;
 }
 
 .invalid-page h1 {
   margin: 0;
-  font-size: clamp(2.7rem, 13vw, 4.5rem);
+
+  color: var(--text);
+
+  font-size:
+    clamp(2.5rem, 11vw, 4rem);
+
+  font-weight: 900;
   line-height: 1.08;
+
   letter-spacing: -0.06em;
 }
 
-.invalid-page > p:not(.eyebrow) {
+.invalid-page > p {
   margin: 21px 0 0;
+
   color: var(--muted);
+
   font-size: 1rem;
   line-height: 1.55;
 }
 
 .invalid-page button {
-  margin-top: 30px;
-  padding: 12px 18px;
-  font-weight: 720;
-  color: #fff;
-  background: #000;
+  min-height: 49px;
+
+  margin-top: 29px;
+
+  padding: 11px 18px;
+
+  border: 0;
+
+  color: var(--white);
+  background: var(--black);
+
+  font-weight: 800;
+
+  cursor: pointer;
 }
 
-button:hover:not(:disabled) { border-color: var(--general); }
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
 
 button:focus-visible,
 summary:focus-visible {
-  outline: 3px solid var(--general);
+  outline: 3px solid var(--sky);
   outline-offset: 3px;
 }
 
-@media (min-width: 681px) {
-  .app-shell {
-    border-right: 1px solid #d9dadd;
-    border-left: 1px solid #d9dadd;
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+@media (hover: hover) {
+
+  .demo-sample-grid
+  button:hover:not(:disabled),
+
+  .preview-switcher
+  button:hover:not(:disabled),
+
+  .sample-list
+  button:hover:not(:disabled) {
+    border-color: var(--black);
   }
 
-  .topbar { padding-right: 24px; padding-left: 24px; }
-  .station-main { padding: 22px 24px 38px; }
-  .test-dock { padding-right: 24px; padding-left: 24px; }
-  .focus-announcement { padding: 28px; }
+  .invalid-page
+  button:hover:not(:disabled) {
+    background: #303030;
+  }
 }
 
-@media (max-width: 359px) {
-  .station-main,
-  .topbar,
-  .test-dock { padding-right: 12px; padding-left: 12px; }
-  .focus-announcement { padding: 20px 18px; }
+
+/* =========================================================
+   DESKTOP / WIDE
+   ========================================================= */
+
+@media (min-width: 681px) {
+
+  .app-shell {
+    border-right: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+
+  .demo-tools-shell {
+    padding-top: 26px;
+  }
 }
+
+
+/* =========================================================
+   STANDARD PHONE
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+  .topbar {
+    min-height: 80px;
+
+    padding:
+      max(13px, env(safe-area-inset-top))
+      18px
+      11px
+      21px;
+  }
+
+  .station-main {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .demo-tools-shell {
+    padding-top:
+      max(19px, env(safe-area-inset-top));
+  }
+
+  .demo-passenger-divider {
+    margin-right: -20px;
+    margin-left: -20px;
+  }
+
+
+  /* =======================================================
+     WAITING
+     ======================================================= */
+
+  .waiting-hero {
+    padding-top: 38px;
+    padding-bottom: 36px;
+  }
+
+  .waiting-title {
+    font-size:
+      clamp(2rem, 8.9vw, 2.7rem);
+  }
+
+  .waiting-bottom {
+    margin-top: 22px;
+
+    grid-template-columns:
+      minmax(0, 1fr)
+      100px;
+
+    gap: 12px;
+  }
+
+  .waiting-description {
+    font-size:
+      clamp(0.92rem, 3.55vw, 1.04rem);
+  }
+
+  .waiting-character-wrap {
+    transform: translateY(-5px);
+  }
+
+  .waiting-character {
+    max-width: 96px;
+    max-height: 135px;
+  }
+
+
+  /* =======================================================
+     STT
+     ======================================================= */
+
+  .streaming-status {
+    margin-right: -20px;
+    margin-left: -20px;
+
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+
+  /* =======================================================
+     ATTENTION
+     ======================================================= */
+
+  .attention-action {
+    margin-right: -20px;
+    margin-left: -20px;
+
+    padding-right: 25px;
+    padding-left: 25px;
+  }
+
+
+  /* =======================================================
+     EMERGENCY
+     ======================================================= */
+
+  .emergency-action {
+    margin-right: -20px;
+    margin-left: -20px;
+
+    padding:
+      19px
+      25px
+      24px;
+  }
+
+  .emergency-context {
+    padding-top: 14px;
+    padding-bottom: 12px;
+  }
+
+  .emergency-next-action {
+    padding-top: 12px;
+  }
+
+  .focus-announcement[data-severity='긴급']
+  .emergency-fallback {
+    margin-right: -20px;
+    margin-left: -20px;
+
+    padding-right: 25px;
+    padding-left: 25px;
+  }
+}
+
+
+/* =========================================================
+   320 ~ 379px
+   ========================================================= */
+
+@media (max-width: 379px) {
+
+  .topbar {
+    min-height: 74px;
+
+    padding:
+      max(11px, env(safe-area-inset-top))
+      13px
+      10px
+      17px;
+
+    gap: 8px;
+  }
+
+  .station-identity {
+    gap: 4px;
+  }
+
+  .station-identity h1 {
+    font-size: 1.23rem;
+  }
+
+  .connection-status {
+    font-size: 0.64rem;
+  }
+
+  .connection-dot {
+    width: 8px;
+    height: 8px;
+
+    flex-basis: 8px;
+  }
+
+  .current-clock {
+    font-size: 1.12rem;
+  }
+
+  .demo-badge {
+    padding: 5px 6px;
+
+    font-size: 0.62rem;
+  }
+
+  .station-main {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+
+  /* =======================================================
+     DEMO
+     ======================================================= */
+
+  .demo-tools-shell {
+    padding-top: 17px;
+  }
+
+  .demo-control-head {
+    gap: 10px;
+  }
+
+  .demo-project-label {
+    font-size: 0.66rem;
+  }
+
+  .demo-control-head h2 {
+    font-size: 1.22rem;
+  }
+
+  .demo-control-head p {
+    font-size: 0.79rem;
+  }
+
+  .demo-running {
+    padding: 5px 6px;
+
+    font-size: 0.6rem;
+  }
+
+  .demo-sample-grid {
+    gap: 5px;
+  }
+
+  .demo-sample-grid button {
+    min-height: 54px;
+
+    padding: 7px;
+
+    gap: 6px;
+  }
+
+  .demo-play-icon {
+    width: 27px;
+    height: 27px;
+
+    flex-basis: 27px;
+  }
+
+  .demo-sample-copy strong {
+    font-size: 0.76rem;
+  }
+
+  .demo-sample-copy small {
+    font-size: 0.57rem;
+  }
+
+  .preview-switcher {
+    gap: 5px;
+  }
+
+  .preview-switcher button {
+    min-height: 59px;
+
+    padding: 6px;
+  }
+
+  .preview-switcher button > span {
+    font-size: 0.88rem;
+  }
+
+  .preview-switcher button > small {
+    font-size: 0.59rem;
+  }
+
+  .demo-passenger-divider {
+    height: 45px;
+
+    margin-right: -14px;
+    margin-left: -14px;
+  }
+
+
+  /* =======================================================
+     WAITING
+
+     320px에서도 제목은 반드시 2줄.
+
+     현재 안내방송이
+     없습니다
+     ======================================================= */
+
+  .waiting-hero {
+    padding:
+      32px
+      2px
+      30px;
+  }
+
+  .waiting-title {
+    font-size:
+      clamp(1.75rem, 8.7vw, 2.02rem);
+
+    letter-spacing: -0.07em;
+  }
+
+  .waiting-title > span:first-child {
+    white-space: nowrap;
+  }
+
+  .waiting-bottom {
+    margin-top: 19px;
+
+    grid-template-columns:
+      minmax(0, 1fr)
+      78px;
+
+    gap: 8px;
+  }
+
+  .waiting-description {
+    font-size: 0.81rem;
+    line-height: 1.5;
+  }
+
+  .waiting-character-wrap {
+    transform: translateY(-2px);
+  }
+
+  .waiting-character {
+    width: 76px;
+    max-width: 76px;
+    max-height: 108px;
+  }
+
+
+  /* =======================================================
+     STT
+     ======================================================= */
+
+  .streaming-status {
+    min-height: 48px;
+
+    margin-right: -14px;
+    margin-left: -14px;
+
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .streaming-status strong {
+    font-size: 0.75rem;
+  }
+
+  .streaming-unconfirmed {
+    font-size: 0.54rem;
+  }
+
+  .streaming-content {
+    padding:
+      27px
+      3px
+      23px;
+  }
+
+  .streaming-text {
+    font-size:
+      clamp(1.64rem, 8vw, 2rem);
+  }
+
+  .streaming-text-empty {
+    font-size:
+      clamp(1.4rem, 6.8vw, 1.68rem);
+  }
+
+  .streaming-help {
+    margin-right: 3px;
+    margin-left: 3px;
+
+    font-size: 0.74rem;
+  }
+
+
+  /* =======================================================
+     FOCUS HEADER
+     ======================================================= */
+
+  .focus-head {
+    min-height: 64px;
+
+    padding:
+      8px
+      3px;
+  }
+
+  .severity-badge {
+    gap: 7px;
+  }
+
+  .severity-symbol {
+    width: 38px;
+    height: 38px;
+
+    flex-basis: 38px;
+  }
+
+  .severity-copy strong {
+    max-width: 132px;
+
+    font-size: 0.92rem;
+  }
+
+  .focus-time {
+    font-size: 0.7rem;
+  }
+
+
+  /* =======================================================
+     GENERAL
+     ======================================================= */
+
+  .dynamic-caption-general {
+    padding:
+      27px
+      3px
+      29px;
+  }
+
+  .dynamic-caption-general
+  .dynamic-lead {
+    font-size: 1.02rem;
+  }
+
+  .dynamic-caption-general
+  .dynamic-support {
+    margin-top: 22px;
+
+    padding-top: 17px;
+  }
+
+
+  /* =======================================================
+     ATTENTION
+     ======================================================= */
+
+  .announcement-context {
+    padding:
+      18px
+      3px
+      15px;
+  }
+
+  .announcement-context
+  .dynamic-lead {
+    font-size: 1rem;
+  }
+
+  .announcement-context
+  .dynamic-conclusion {
+    font-size:
+      clamp(2.08rem, 10.1vw, 2.55rem);
+  }
+
+  .announcement-context
+  .dynamic-conclusion.dynamic-medium {
+    font-size:
+      clamp(1.9rem, 9vw, 2.3rem);
+  }
+
+  .announcement-context
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(1.65rem, 7.8vw, 1.98rem);
+  }
+
+  .attention-action {
+    margin-right: -14px;
+    margin-left: -14px;
+
+    padding:
+      20px
+      18px
+      23px;
+  }
+
+  .attention-action
+  .dynamic-support {
+    font-size:
+      clamp(1.48rem, 7vw, 1.72rem);
+  }
+
+
+  /* =======================================================
+     EMERGENCY
+     ======================================================= */
+
+  .emergency-action {
+    margin-right: -14px;
+    margin-left: -14px;
+
+    padding:
+      17px
+      18px
+      21px;
+  }
+
+  .emergency-level {
+    margin-bottom: 12px;
+
+    font-size: 0.76rem;
+  }
+
+  .emergency-level-symbol {
+    width: 22px;
+    height: 22px;
+
+    font-size: 0.74rem;
+  }
+
+  .emergency-action
+  .message-kicker {
+    margin-bottom: 7px;
+  }
+
+  .emergency-action
+  .dynamic-conclusion {
+    font-size:
+      clamp(2.38rem, 11.3vw, 2.95rem);
+  }
+
+  .emergency-action
+  .dynamic-conclusion.dynamic-medium {
+    font-size:
+      clamp(2.07rem, 9.8vw, 2.52rem);
+  }
+
+  .emergency-action
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(1.76rem, 8.2vw, 2.12rem);
+  }
+
+  .emergency-focus-head {
+    min-height: 40px;
+
+    padding:
+      4px
+      3px;
+  }
+
+  .emergency-focus-head
+  .severity-symbol {
+    width: 25px;
+    height: 25px;
+
+    flex-basis: 25px;
+  }
+
+  .emergency-context {
+    padding:
+      12px
+      3px
+      10px;
+  }
+
+  .emergency-context
+  .dynamic-lead {
+    font-size: 1.13rem;
+  }
+
+  .emergency-next-action {
+    margin-right: 3px;
+    margin-left: 3px;
+
+    padding-top: 10px;
+  }
+
+  .emergency-next-action
+  .dynamic-support {
+    font-size:
+      clamp(1.25rem, 5.9vw, 1.47rem);
+  }
+
+  .focus-announcement[data-severity='긴급']
+  .emergency-fallback {
+    margin-right: -14px;
+    margin-left: -14px;
+
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+
+  /* =======================================================
+     HISTORY
+     ======================================================= */
+
+  .history {
+    margin-top: 23px;
+  }
+
+  .history-disclosure > summary {
+    min-height: 49px;
+  }
+
+  .history-card {
+    padding:
+      9px
+      3px
+      10px
+      8px;
+  }
+
+  .history-card
+  .severity-symbol {
+    width: 25px;
+    height: 25px;
+
+    flex-basis: 25px;
+  }
+
+  .history-card
+  .severity-copy strong {
+    max-width: 125px;
+
+    font-size: 0.72rem;
+  }
+
+  .history-summary-text {
+    margin-top: 7px;
+
+    font-size: 0.86rem;
+  }
+}
+
+
+/* =========================================================
+   VERY NARROW
+   ========================================================= */
+
+@media (max-width: 339px) {
+
+  .station-identity h1 {
+    font-size: 1.14rem;
+  }
+
+  .connection-status {
+    max-width: 155px;
+
+    font-size: 0.6rem;
+  }
+
+  .current-clock {
+    font-size: 1.06rem;
+  }
+
+  /*
+    첫 줄이 320px에서도 확실히 한 줄로 유지되도록
+    최저 폰트 크기 조정.
+  */
+  .waiting-title {
+    font-size: 1.72rem;
+  }
+
+  .waiting-bottom {
+    grid-template-columns:
+      minmax(0, 1fr)
+      72px;
+
+    gap: 7px;
+  }
+
+  .waiting-description {
+    font-size: 0.77rem;
+  }
+
+  .waiting-character {
+    max-width: 70px;
+    max-height: 100px;
+  }
+
+  .severity-copy strong {
+    max-width: 112px;
+  }
+}
+
+
+/* =========================================================
+   SHORT VIEWPORT
+   ========================================================= */
+
+@media (max-height: 700px) {
+
+  .app-shell[data-mode='passenger']
+  .waiting-hero,
+  .app-shell[data-mode='demo']
+  .waiting-hero {
+    padding-top: 28px;
+    padding-bottom: 27px;
+  }
+
+  .waiting-bottom {
+    margin-top: 17px;
+  }
+
+  .streaming-content {
+    padding-top: 25px;
+    padding-bottom: 22px;
+  }
+
+  .dynamic-caption-general {
+    padding-top: 26px;
+    padding-bottom: 27px;
+  }
+
+  .announcement-context {
+    padding-top: 17px;
+    padding-bottom: 14px;
+  }
+
+  .attention-action {
+    padding-top: 19px;
+    padding-bottom: 22px;
+  }
+
+  .emergency-action {
+    padding-top: 16px;
+    padding-bottom: 21px;
+  }
+
+  .emergency-context {
+    padding-top: 11px;
+    padding-bottom: 9px;
+  }
+
+  .emergency-next-action {
+    padding-top: 9px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
     scroll-behavior: auto !important;
+
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+
     transition-duration: 0.01ms !important;
+  }
+}
+/* =========================================================
+   FINAL SEVERITY DESIGN SYSTEM
+   KT BRAND + TRANSIT SAFETY UX
+
+   일반 = KT BLUE
+   주의 = KT BLACK
+   긴급 = KT RED
+   ========================================================= */
+
+:root {
+  --kt-red: #fe2e36;
+  --kt-purple: #aa50ff;
+  --kt-blue: #00a5ff;
+  --kt-teal: #00beac;
+
+  --kt-black: #000000;
+  --kt-dark-gray: #4c4c4e;
+  --kt-light-gray: #a2a4a3;
+  --kt-white: #ffffff;
+
+  --kt-blue-soft: #eef9ff;
+  --kt-blue-line: #b9e7ff;
+}
+
+
+/* =========================================================
+   1. GENERAL
+   정보형 화면
+
+   BLUE는 "정보"에만 사용.
+   긴급처럼 강한 면을 만들지 않는다.
+   ========================================================= */
+
+.focus-announcement[data-severity='일반'] {
+  border-top:
+    6px solid
+    var(--kt-blue);
+}
+
+
+/*
+  일반 안내 meta는 작고 빠르게.
+*/
+.focus-announcement[data-severity='일반']
+.focus-head {
+  min-height: 72px;
+
+  padding:
+    9px
+    5px;
+
+  border-bottom:
+    1px solid
+    var(--kt-blue-line);
+}
+
+
+/*
+  일반 symbol
+*/
+.focus-announcement[data-severity='일반']
+.severity-symbol {
+  width: 45px;
+  height: 45px;
+
+  flex-basis: 45px;
+
+  border: 0;
+  border-radius: 50%;
+
+  color: var(--kt-black);
+  background: var(--kt-blue);
+
+  font-weight: 950;
+}
+
+
+/*
+  일반 콘텐츠
+*/
+.dynamic-caption-general {
+  padding:
+    27px
+    5px
+    30px;
+}
+
+
+/*
+  상황 설명
+*/
+.dynamic-caption-general
+.dynamic-lead {
+  margin:
+    0
+    5px
+    16px;
+
+  color: var(--kt-dark-gray);
+
+  font-size:
+    clamp(
+      1.13rem,
+      4.15vw,
+      1.42rem
+    );
+
+  font-weight: 720;
+  line-height: 1.4;
+}
+
+
+/*
+  ==========================================================
+  핵심 개선
+
+  일반 안내의 결론을
+  하나의 명확한 Information Zone으로 만든다.
+  ==========================================================
+*/
+
+.general-conclusion-zone {
+  position: relative;
+
+  margin: 0;
+
+  padding:
+    23px
+    20px
+    25px;
+
+  border-left:
+    6px solid
+    var(--kt-blue);
+
+  background:
+    var(--kt-blue-soft);
+}
+
+
+.general-conclusion-zone
+.dynamic-conclusion {
+  margin: 0;
+
+  color: var(--kt-black);
+
+  font-size:
+    clamp(
+      2.7rem,
+      9.1vw,
+      3.52rem
+    );
+
+  font-weight: 900;
+  line-height: 1.04;
+
+  letter-spacing:
+    -0.068em;
+}
+
+
+.general-conclusion-zone
+.dynamic-conclusion.dynamic-medium {
+  font-size:
+    clamp(
+      2.28rem,
+      7.7vw,
+      2.95rem
+    );
+}
+
+
+.general-conclusion-zone
+.dynamic-conclusion.dynamic-long {
+  font-size:
+    clamp(
+      1.9rem,
+      6.4vw,
+      2.42rem
+    );
+
+  line-height: 1.11;
+}
+
+
+/*
+  추가 안내
+*/
+.dynamic-caption-general
+.dynamic-support {
+  margin:
+    23px
+    5px
+    0;
+
+  padding-top:
+    18px;
+
+  border-top:
+    1px solid
+    var(--kt-light-gray);
+
+  color: var(--kt-black);
+
+  font-size:
+    clamp(
+      1.08rem,
+      4.05vw,
+      1.37rem
+    );
+
+  font-weight: 780;
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   2. CAUTION
+   경고형 화면
+
+   BLACK HEADER
+   +
+   WHITE CONTEXT
+   +
+   BLACK ACTION ZONE
+
+   화면 구조 자체만 봐도 주의임을 알 수 있다.
+   ========================================================= */
+
+.focus-announcement[data-severity='주의'] {
+  border-top: 0;
+}
+
+
+/*
+  상단 상태 Bar
+*/
+.focus-announcement[data-severity='주의']
+.focus-head {
+  min-height: 76px;
+
+  margin-right: -24px;
+  margin-left: -24px;
+
+  padding:
+    10px
+    30px;
+
+  border: 0;
+
+  color: var(--kt-white);
+  background: var(--kt-black);
+}
+
+
+/*
+  주의 icon
+*/
+.focus-announcement[data-severity='주의']
+.severity-symbol {
+  width: 45px;
+  height: 45px;
+
+  flex-basis: 45px;
+
+  border:
+    2px solid
+    var(--kt-white);
+
+  color: var(--kt-black);
+  background: var(--kt-white);
+
+  font-size: 0.78rem;
+}
+
+
+/*
+  주의 meta typography
+*/
+.focus-announcement[data-severity='주의']
+.severity-level {
+  color:
+    var(--kt-light-gray);
+}
+
+
+.focus-announcement[data-severity='주의']
+.severity-copy strong {
+  color:
+    var(--kt-white);
+}
+
+
+.focus-announcement[data-severity='주의']
+.focus-time {
+  color:
+    var(--kt-white);
+}
+
+
+/*
+  현재 상황 영역
+*/
+.focus-announcement[data-severity='주의']
+.announcement-context {
+  padding:
+    25px
+    6px
+    22px;
+}
+
+
+.focus-announcement[data-severity='주의']
+.context-kicker {
+  display: inline-block;
+
+  margin-bottom:
+    12px;
+
+  padding-bottom:
+    4px;
+
+  border-bottom:
+    3px solid
+    var(--kt-black);
+
+  color:
+    var(--kt-dark-gray);
+
+  font-size:
+    0.72rem;
+
+  font-weight:
+    850;
+}
+
+
+.focus-announcement[data-severity='주의']
+.announcement-context
+.dynamic-lead {
+  margin:
+    0
+    0
+    9px;
+
+  color:
+    var(--kt-dark-gray);
+
+  font-size:
+    clamp(
+      1.08rem,
+      4vw,
+      1.38rem
+    );
+
+  font-weight:
+    720;
+}
+
+
+/*
+  상황 핵심
+*/
+.focus-announcement[data-severity='주의']
+.announcement-context
+.dynamic-conclusion {
+  max-width:
+    590px;
+
+  margin: 0;
+
+  color:
+    var(--kt-black);
+
+  font-size:
+    clamp(
+      2.48rem,
+      8.3vw,
+      3.2rem
+    );
+
+  font-weight:
+    900;
+
+  line-height:
+    1.03;
+
+  letter-spacing:
+    -0.067em;
+}
+
+
+.focus-announcement[data-severity='주의']
+.announcement-context
+.dynamic-conclusion.dynamic-medium {
+  font-size:
+    clamp(
+      2.1rem,
+      7.05vw,
+      2.7rem
+    );
+}
+
+
+.focus-announcement[data-severity='주의']
+.announcement-context
+.dynamic-conclusion.dynamic-long {
+  font-size:
+    clamp(
+      1.8rem,
+      5.95vw,
+      2.28rem
+    );
+
+  line-height:
+    1.09;
+}
+
+
+/*
+  ==========================================================
+  안전 행동 영역
+
+  주의 화면에서 가장 중요한 영역.
+  ==========================================================
+*/
+
+.focus-announcement[data-severity='주의']
+.attention-action {
+  margin-right:
+    -24px;
+
+  margin-left:
+    -24px;
+
+  padding:
+    24px
+    30px
+    29px;
+
+  color:
+    var(--kt-white);
+
+  background:
+    var(--kt-black);
+}
+
+
+.focus-announcement[data-severity='주의']
+.attention-action
+.message-kicker {
+  margin-bottom:
+    10px;
+
+  color:
+    var(--kt-light-gray);
+
+  font-size:
+    0.74rem;
+
+  font-weight:
+    850;
+}
+
+
+.focus-announcement[data-severity='주의']
+.attention-action
+.dynamic-support {
+  margin: 0;
+
+  color:
+    var(--kt-white);
+
+  font-size:
+    clamp(
+      1.68rem,
+      5.8vw,
+      2.12rem
+    );
+
+  font-weight:
+    900;
+
+  line-height:
+    1.28;
+
+  letter-spacing:
+    -0.052em;
+}
+
+
+/* =========================================================
+   3. EMERGENCY
+   행동형 화면
+
+   RED = 실제 긴급 행동에만 사용.
+   ========================================================= */
+
+.focus-announcement[data-severity='긴급'] {
+  border: 0;
+}
+
+
+/*
+  즉시 행동
+*/
+.emergency-action {
+  margin-right:
+    -24px;
+
+  margin-left:
+    -24px;
+
+  padding:
+    22px
+    30px
+    29px;
+
+  color:
+    var(--kt-white);
+
+  background:
+    var(--kt-red);
+}
+
+
+/*
+  긴급 배지
+*/
+.emergency-level {
+  margin-bottom:
+    17px;
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    7px;
+
+  padding:
+    5px
+    9px
+    5px
+    5px;
+
+  color:
+    var(--kt-black);
+
+  background:
+    var(--kt-white);
+
+  font-size:
+    0.79rem;
+
+  font-weight:
+    900;
+
+  line-height:
+    1;
+}
+
+
+.emergency-level-symbol {
+  width:
+    22px;
+
+  height:
+    22px;
+
+  color:
+    var(--kt-white);
+
+  background:
+    var(--kt-black);
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  font-size:
+    0.78rem;
+
+  font-weight:
+    950;
+}
+
+
+/*
+  지금 바로
+*/
+.emergency-action
+.message-kicker {
+  margin-bottom:
+    10px;
+
+  color:
+    var(--kt-black);
+
+  font-size:
+    0.78rem;
+
+  font-weight:
+    950;
+}
+
+
+/*
+  즉시 행동 문장
+*/
+.emergency-action
+.dynamic-conclusion {
+  max-width:
+    620px;
+
+  margin: 0;
+
+  color:
+    var(--kt-white);
+
+  font-size:
+    clamp(
+      2.95rem,
+      10.2vw,
+      4rem
+    );
+
+  font-weight:
+    900;
+
+  line-height:
+    1.01;
+
+  letter-spacing:
+    -0.075em;
+}
+
+
+.emergency-action
+.dynamic-conclusion.dynamic-medium {
+  font-size:
+    clamp(
+      2.5rem,
+      8.7vw,
+      3.35rem
+    );
+}
+
+
+.emergency-action
+.dynamic-conclusion.dynamic-long {
+  font-size:
+    clamp(
+      2.02rem,
+      7vw,
+      2.65rem
+    );
+
+  line-height:
+    1.08;
+}
+
+
+/*
+  화재 대피 / 시간
+*/
+.emergency-meta {
+  min-height:
+    43px;
+
+  padding:
+    0
+    6px;
+
+  border-bottom:
+    1px solid
+    rgba(
+      162,
+      164,
+      163,
+      0.5
+    );
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    12px;
+}
+
+
+.emergency-meta strong {
+  color:
+    var(--kt-black);
+
+  font-size:
+    0.82rem;
+
+  font-weight:
+    900;
+}
+
+
+.emergency-meta time {
+  color:
+    var(--kt-dark-gray);
+
+  font-size:
+    0.69rem;
+
+  font-weight:
+    720;
+
+  font-variant-numeric:
+    tabular-nums;
+}
+
+
+/*
+  현재 상황
+*/
+.emergency-context {
+  padding:
+    16px
+    7px
+    14px;
+}
+
+
+.emergency-context
+.message-kicker {
+  margin-bottom:
+    7px;
+
+  padding-left:
+    9px;
+
+  border-left:
+    4px solid
+    var(--kt-red);
+
+  color:
+    var(--kt-black);
+
+  font-size:
+    0.71rem;
+
+  font-weight:
+    900;
+}
+
+
+.emergency-context
+.dynamic-lead {
+  margin: 0;
+
+  color:
+    var(--kt-black);
+
+  font-size:
+    clamp(
+      1.24rem,
+      4.4vw,
+      1.55rem
+    );
+
+  font-weight:
+    850;
+
+  line-height:
+    1.32;
+}
+
+
+/*
+  다음 행동
+*/
+.emergency-next-action {
+  margin:
+    0
+    7px;
+
+  padding:
+    14px
+    0
+    12px;
+
+  border-top:
+    4px solid
+    var(--kt-red);
+}
+
+
+.emergency-next-action
+.message-kicker {
+  margin-bottom:
+    7px;
+
+  color:
+    var(--kt-red);
+
+  font-size:
+    0.72rem;
+
+  font-weight:
+    900;
+}
+
+
+.emergency-next-action
+.dynamic-support {
+  max-width:
+    590px;
+
+  margin: 0;
+
+  color:
+    var(--kt-black);
+
+  font-size:
+    clamp(
+      1.4rem,
+      4.9vw,
+      1.78rem
+    );
+
+  font-weight:
+    900;
+
+  line-height:
+    1.31;
+
+  letter-spacing:
+    -0.045em;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+  /*
+    주의 Header full bleed
+  */
+  .focus-announcement[data-severity='주의']
+  .focus-head {
+    margin-right:
+      -20px;
+
+    margin-left:
+      -20px;
+
+    padding-right:
+      25px;
+
+    padding-left:
+      25px;
+  }
+
+
+  /*
+    주의 Action
+  */
+  .focus-announcement[data-severity='주의']
+  .attention-action {
+    margin-right:
+      -20px;
+
+    margin-left:
+      -20px;
+
+    padding-right:
+      25px;
+
+    padding-left:
+      25px;
+  }
+
+
+  /*
+    긴급
+  */
+  .emergency-action {
+    margin-right:
+      -20px;
+
+    margin-left:
+      -20px;
+
+    padding:
+      20px
+      25px
+      25px;
+  }
+}
+
+
+/* =========================================================
+   320 ~ 379
+   ========================================================= */
+
+@media (max-width: 379px) {
+
+  /*
+    GENERAL
+  */
+  .general-conclusion-zone {
+    padding:
+      19px
+      14px
+      21px;
+
+    border-left-width:
+      5px;
+  }
+
+
+  .general-conclusion-zone
+  .dynamic-conclusion {
+    font-size:
+      clamp(
+        2.05rem,
+        10vw,
+        2.55rem
+      );
+  }
+
+
+  /*
+    CAUTION
+  */
+  .focus-announcement[data-severity='주의']
+  .focus-head {
+    margin-right:
+      -14px;
+
+    margin-left:
+      -14px;
+
+    padding:
+      9px
+      18px;
+  }
+
+
+  .focus-announcement[data-severity='주의']
+  .attention-action {
+    margin-right:
+      -14px;
+
+    margin-left:
+      -14px;
+
+    padding:
+      20px
+      18px
+      23px;
+  }
+
+
+  /*
+    EMERGENCY
+  */
+  .emergency-action {
+    margin-right:
+      -14px;
+
+    margin-left:
+      -14px;
+
+    padding:
+      17px
+      18px
+      22px;
+  }
+
+
+  .emergency-action
+  .dynamic-conclusion {
+    font-size:
+      clamp(
+        2.38rem,
+        11.3vw,
+        2.95rem
+      );
+  }
+
+
+  .emergency-context {
+    padding:
+      13px
+      3px
+      11px;
+  }
+
+
+  .emergency-next-action {
+    margin-right:
+      3px;
+
+    margin-left:
+      3px;
+
+    padding-top:
+      11px;
+  }
+}
+
+/* =========================================================
+   DEMO / HISTORY INTERACTION UPGRADE
+   App.tsx 6-case demo + history detail navigation
+   ========================================================= */
+
+/*
+  재생 중에는 다른 버튼을 잠그되,
+  현재 선택된 샘플은 흐려지지 않도록 한다.
+*/
+.demo-sample-grid
+button[aria-pressed='true']:disabled {
+  opacity: 1;
+}
+
+
+/*
+  지난 안내 카드를 클릭 가능한 버튼으로 사용한다.
+  기존 .history-card의 시각 구조는 그대로 유지한다.
+*/
+.history-card-button {
+  width: 100%;
+
+  border-top: 0;
+  border-right: 0;
+  border-radius: 0;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.history-card-button:hover:not(:disabled) {
+  background: var(--surface-subtle);
+}
+
+.history-card-button:focus-visible {
+  position: relative;
+  z-index: 1;
+
+  outline: 3px solid var(--sky);
+  outline-offset: -3px;
+}
+
+.history-card-button:disabled {
+  cursor: default;
+  opacity: 0.52;
+}
+
+
+/*
+  사용자가 지난 안내 상세 화면을 보고 있을 때
+  "현재 안내로" 돌아갈 수 있는 상단 바.
+*/
+.history-detail-bar {
+  min-height: 56px;
+
+  margin-right: -24px;
+  margin-left: -24px;
+
+  padding:
+    8px
+    24px;
+
+  border-bottom: 1px solid var(--line);
+
+  background: var(--surface-subtle);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+.history-return-button {
+  min-height: 38px;
+
+  padding:
+    8px
+    12px;
+
+  border: 1px solid var(--black);
+  border-radius: 2px;
+
+  color: var(--white);
+  background: var(--black);
+
+  font-size: 0.78rem;
+  font-weight: 850;
+  line-height: 1;
+
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  white-space: nowrap;
+}
+
+.history-return-button:hover {
+  background: #303030;
+}
+
+.history-return-button:focus-visible {
+  outline: 3px solid var(--sky);
+  outline-offset: 3px;
+}
+
+.history-detail-status {
+  min-width: 0;
+
+  color: var(--muted);
+
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.35;
+
+  text-align: right;
+
+  word-break: keep-all;
+}
+
+
+@media (max-width: 520px) {
+  .history-detail-bar {
+    margin-right: -20px;
+    margin-left: -20px;
+
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .history-detail-bar {
+    min-height: 52px;
+
+    margin-right: -14px;
+    margin-left: -14px;
+
+    padding:
+      7px
+      14px;
+
+    gap: 8px;
+  }
+
+  .history-return-button {
+    min-height: 34px;
+
+    padding:
+      7px
+      9px;
+
+    font-size: 0.7rem;
+  }
+
+  .history-detail-status {
+    font-size: 0.62rem;
+  }
+}
+
+
+/* =========================================================
+   DEMO AS PASSENGER SCREEN
+
+   /demo도 실제 승객 화면과 동일한 구조를 사용한다.
+   데모 전용 UI는 헤더의 "시연" 버튼과 bottom sheet뿐이다.
+   ========================================================= */
+
+.demo-audio-engine {
+  position: fixed;
+
+  width: 1px;
+  height: 1px;
+
+  overflow: hidden;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+.demo-header-control {
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+}
+
+.demo-trigger-button {
+  min-height: 32px;
+
+  padding:
+    7px
+    10px;
+
+  border: 1px solid #9ca4a9;
+  border-radius: 2px;
+
+  color: var(--white);
+  background: transparent;
+
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1;
+
+  letter-spacing: -0.02em;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+}
+
+.demo-trigger-button:hover {
+  border-color: var(--white);
+  background: rgb(255 255 255 / 0.08);
+}
+
+.demo-trigger-button:focus-visible {
+  outline: 3px solid var(--sky);
+  outline-offset: 3px;
+}
+
+.demo-countdown {
+  min-height: 32px;
+
+  padding:
+    6px
+    8px;
+
+  border: 1px solid #667078;
+  border-radius: 2px;
+
+  color: #dce3e7;
+  background: #1b1d1f;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  font-size: 0.64rem;
+  font-weight: 720;
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+.demo-countdown strong {
+  color: var(--white);
+
+  font-size: 0.78rem;
+  font-weight: 900;
+
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   DEMO BOTTOM SHEET
+   ========================================================= */
+
+.demo-sheet-backdrop {
+  position: fixed;
+  z-index: 300;
+
+  inset: 0;
+
+  padding:
+    18px
+    12px
+    max(12px, env(safe-area-inset-bottom));
+
+  background: rgb(0 0 0 / 0.46);
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.demo-sheet {
+  width:
+    min(
+      100%,
+      640px
+    );
+
+  max-height:
+    min(
+      78dvh,
+      690px
+    );
+
+  overflow: hidden;
+
+  border: 1px solid #c7cdd1;
+  border-radius:
+    18px
+    18px
+    8px
+    8px;
+
+  background: var(--white);
+
+  box-shadow:
+    0 22px 60px
+    rgb(0 0 0 / 0.28);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.demo-sheet-handle {
+  width: 42px;
+  height: 4px;
+
+  margin:
+    9px
+    auto
+    3px;
+
+  border-radius: 999px;
+
+  background: #c7cdd1;
+}
+
+.demo-sheet-head {
+  padding:
+    13px
+    18px
+    14px;
+
+  border-bottom: 1px solid var(--line);
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 14px;
+}
+
+.demo-sheet-head > div {
+  min-width: 0;
+}
+
+.demo-sheet-head h2 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size:
+    clamp(
+      1.32rem,
+      5vw,
+      1.62rem
+    );
+
+  font-weight: 900;
+  line-height: 1.14;
+
+  letter-spacing: -0.055em;
+}
+
+.demo-sheet-head p {
+  max-width: 500px;
+
+  margin:
+    7px
+    0
+    0;
+
+  color: var(--muted);
+
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.45;
+
+  letter-spacing: -0.025em;
+
+  word-break: keep-all;
+}
+
+.demo-sheet-close {
+  width: 36px;
+  height: 36px;
+
+  flex: 0 0 36px;
+
+  padding: 0;
+
+  border: 1px solid var(--line);
+  border-radius: 50%;
+
+  color: var(--text);
+  background: var(--white);
+
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1;
+
+  cursor: pointer;
+
+  display: grid;
+  place-items: center;
+}
+
+.demo-sheet-close:hover {
+  border-color: var(--black);
+}
+
+.demo-sheet-close:focus-visible {
+  outline: 3px solid var(--sky);
+  outline-offset: 3px;
+}
+
+.demo-sheet-notice {
+  margin:
+    12px
+    18px
+    0;
+
+  padding:
+    10px
+    11px;
+
+  border-left: 3px solid var(--emergency);
+
+  color: var(--text);
+  background: var(--emergency-soft);
+
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.demo-sheet-list {
+  min-height: 0;
+
+  padding:
+    8px
+    10px
+    14px;
+
+  overflow-y: auto;
+
+  overscroll-behavior: contain;
+}
+
+.demo-sheet-sample {
+  width: 100%;
+  min-height: 62px;
+
+  padding:
+    9px
+    9px;
+
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+
+  color: var(--text);
+  background: var(--white);
+
+  text-align: left;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+}
+
+.demo-sheet-sample:last-child {
+  border-bottom: 0;
+}
+
+.demo-sheet-sample:hover:not(:disabled) {
+  background: var(--surface-subtle);
+}
+
+.demo-sheet-sample:focus-visible {
+  position: relative;
+  z-index: 1;
+
+  outline: 3px solid var(--sky);
+  outline-offset: -3px;
+}
+
+.demo-sheet-sample:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.demo-sheet-sample[aria-pressed='true']:disabled {
+  opacity: 1;
+
+  background: var(--sky-soft);
+}
+
+.demo-sheet-play-icon {
+  width: 36px;
+  height: 36px;
+
+  flex: 0 0 36px;
+
+  border-radius: 50%;
+
+  color: var(--white);
+  background: var(--black);
+
+  display: grid;
+  place-items: center;
+
+  padding-left: 2px;
+
+  font-size: 0.7rem;
+}
+
+.demo-sheet-sample[aria-pressed='true']
+.demo-sheet-play-icon {
+  background: var(--sky-dark);
+}
+
+.demo-sheet-sample-copy {
+  min-width: 0;
+
+  display: grid;
+
+  gap: 3px;
+}
+
+.demo-sheet-sample-copy strong {
+  overflow: hidden;
+
+  color: var(--text);
+
+  font-size: 0.92rem;
+  font-weight: 850;
+  line-height: 1.2;
+
+  letter-spacing: -0.035em;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demo-sheet-sample-copy small {
+  overflow: hidden;
+
+  color: var(--muted);
+
+  font-size: 0.67rem;
+  font-weight: 620;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demo-sheet-arrow {
+  margin-left: auto;
+
+  color: var(--muted);
+
+  font-size: 1.45rem;
+  font-weight: 300;
+  line-height: 1;
+}
+
+
+@media (max-width: 520px) {
+  .topbar-tools {
+    gap: 8px;
+  }
+
+  .demo-header-control {
+    gap: 5px;
+  }
+
+  .demo-trigger-button {
+    min-height: 30px;
+
+    padding:
+      6px
+      8px;
+
+    font-size: 0.68rem;
+  }
+
+  .demo-countdown {
+    min-height: 30px;
+
+    padding:
+      6px
+      7px;
+  }
+
+  .demo-countdown-label {
+    display: none;
+  }
+
+  .demo-sheet-backdrop {
+    padding:
+      0
+      0
+      env(safe-area-inset-bottom);
+  }
+
+  .demo-sheet {
+    width: 100%;
+
+    max-height: 82dvh;
+
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+
+    border-radius:
+      18px
+      18px
+      0
+      0;
+  }
+
+  .demo-sheet-head {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .demo-sheet-list {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .topbar-tools {
+    gap: 6px;
+  }
+
+  .demo-header-control {
+    gap: 4px;
+  }
+
+  .demo-trigger-button {
+    min-height: 28px;
+
+    padding:
+      5px
+      7px;
+
+    font-size: 0.62rem;
+  }
+
+  .demo-countdown {
+    min-height: 28px;
+
+    padding:
+      5px
+      6px;
+
+    font-size: 0.58rem;
+  }
+
+  .demo-countdown strong {
+    font-size: 0.68rem;
+  }
+
+  .demo-sheet-head {
+    padding:
+      11px
+      14px
+      12px;
+  }
+
+  .demo-sheet-head p {
+    font-size: 0.73rem;
+  }
+
+  .demo-sheet-list {
+    padding-bottom: 10px;
+  }
+
+  .demo-sheet-sample {
+    min-height: 57px;
+
+    padding:
+      8px
+      7px;
+  }
+
+  .demo-sheet-play-icon {
+    width: 32px;
+    height: 32px;
+
+    flex-basis: 32px;
+  }
+
+  .demo-sheet-sample-copy strong {
+    font-size: 0.83rem;
+  }
+
+  .demo-sheet-sample-copy small {
+    font-size: 0.61rem;
+  }
+}
+
+
+/* =========================================================
+   FINAL PASSENGER VIEWPORT PRIORITY
+
+   현재 안내가 첫 화면을 온전히 사용하도록 하고,
+   지난 안내는 아래로 스크롤한 뒤에 접근하도록 한다.
+   특히 주의/긴급 안내 중에는 지난 안내가 첫 viewport에
+   노출되어 시선을 분산시키지 않는다.
+   ========================================================= */
+
+.live-stage {
+  min-height: calc(100dvh - 86px);
+}
+
+
+/*
+  데모에서도 실제 사용자 화면과 동일하게
+  현재 시각은 항상 헤더의 가장 오른쪽에 둔다.
+
+  데모 재생 중:
+  [남은 시간] [시연] [현재 시각]
+*/
+.topbar-tools {
+  margin-left: auto;
+}
+
+.current-clock {
+  flex: 0 0 auto;
+}
+
+.demo-header-control {
+  flex: 0 0 auto;
+}
+
+
+/*
+  History 자체의 기존 디자인은 유지하되
+  live-stage가 한 viewport를 확보하므로 자연스럽게
+  첫 화면 아래에서 시작된다.
+*/
+.history {
+  margin-top: 0;
+}
+
+
+/*
+  긴급 상황은 특히 현재 안내만 첫 화면에서 보이도록 보장한다.
+*/
+.app-shell[data-live-severity='긴급']
+.live-stage {
+  min-height: calc(100dvh - 86px);
+}
+
+
+@media (max-width: 520px) {
+  .live-stage,
+  .app-shell[data-live-severity='긴급']
+  .live-stage {
+    min-height: calc(100dvh - 80px);
+  }
+}
+
+
+@media (max-width: 379px) {
+  .live-stage,
+  .app-shell[data-live-severity='긴급']
+  .live-stage {
+    min-height: calc(100dvh - 74px);
+  }
+}
+
+
+/* =========================================================
+   FINAL HISTORY POSITION — COLLAPSED AT SCREEN BOTTOM
+
+   기본 상태:
+   - 현재 안내/대기 영역이 남는 공간을 채운다.
+   - '지난 안내' 요약 바는 첫 화면 하단에 위치한다.
+
+   펼친 상태:
+   - 지난 안내 목록의 양만큼 아래로 길어지고,
+     필요한 경우 페이지 전체가 자연스럽게 스크롤된다.
+   ========================================================= */
+
+/*
+  이전 FINAL PASSENGER VIEWPORT PRIORITY에서 강제로
+  live-stage를 한 화면 높이로 만들었던 값을 무효화한다.
+*/
+.live-stage,
+.app-shell[data-live-severity='긴급'] .live-stage {
+  min-height: 0;
+}
+
+
+/*
+  헤더를 제외한 승객 화면 영역을 최소 한 화면 높이로 확보하고,
+  내부를 세로 flex로 구성한다.
+*/
+.station-main.passenger-main {
+  min-height: calc(100dvh - 86px);
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/*
+  현재 안내/대기 화면이 남는 공간을 먼저 사용한다.
+  안내 내용이 길어지면 자체 높이만큼 자연스럽게 늘어난다.
+*/
+.station-main.passenger-main > .live-stage {
+  flex: 1 0 auto;
+}
+
+
+/*
+  지난 안내는 접혀 있을 때 화면 하단에 붙는다.
+  details를 펼치면 목록 높이만큼 아래로 확장되며
+  필요할 때만 전체 페이지 스크롤이 생긴다.
+*/
+.station-main.passenger-main > .history {
+  flex: 0 0 auto;
+
+  margin-top: auto;
+}
+
+
+/*
+  데모와 실제 사용자 화면 모두 같은 규칙 적용.
+  긴급 상태에서도 접힌 '지난 안내'는 하단에만 위치하고,
+  긴급 안내 내용이 화면보다 길면 자연스럽게 스크롤된다.
+*/
+@media (max-width: 520px) {
+  .station-main.passenger-main {
+    min-height: calc(100dvh - 80px);
+  }
+}
+
+
+@media (max-width: 379px) {
+  .station-main.passenger-main {
+    min-height: calc(100dvh - 74px);
+  }
+}
+
+/* =========================================================
+   TRAIN ARRIVAL — 열차 진입 전용 화면
+
+   방향:
+   - "예쁜 카드"가 아니라 실제 교통 안전 안내 화면
+   - Yellow = 열차 접근 / 주의 상태
+   - White = 현재 상황
+   - Black = 반드시 지켜야 할 행동
+   - 선, 면적, 타이포그래피로 우선순위를 만든다.
+   ========================================================= */
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입'] {
+  --train-yellow: #f4c900;
+  --train-yellow-deep: #7a6700;
+  --train-ink: #111111;
+  --train-muted: #5f666b;
+
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+
+  overflow: visible;
+
+  border: 0;
+  border-bottom: 1px solid var(--line);
+
+  border-radius: 0;
+
+  background: var(--white);
+
+  box-shadow: none;
+}
+
+
+/*
+  상단 전체폭 안전 신호.
+  카드 테두리 대신 하나의 명확한 상태 신호만 사용.
+*/
+.focus-announcement[data-severity='주의'][data-label='열차 진입']::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: -24px;
+
+  width: calc(100% + 48px);
+  height: 6px;
+
+  background: var(--train-yellow);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.focus-head {
+  min-height: 76px;
+
+  padding:
+    15px
+    4px
+    11px;
+
+  border-bottom: 1px solid var(--line);
+
+  color: var(--text);
+  background: var(--white);
+
+  align-items: center;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.severity-badge {
+  gap: 10px;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.severity-symbol {
+  width: 40px;
+  height: 40px;
+
+  flex: 0 0 40px;
+
+  border: 2px solid var(--train-ink);
+  border-radius: 0;
+
+  color: var(--train-ink);
+  background: var(--train-yellow);
+
+  font-size: 0.72rem;
+  font-weight: 950;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.severity-level {
+  color: var(--train-yellow-deep);
+
+  font-size: 0.62rem;
+  font-weight: 900;
+
+  letter-spacing: 0.01em;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.severity-copy strong {
+  color: var(--train-ink);
+
+  font-size: 1.06rem;
+  font-weight: 900;
+
+  letter-spacing: -0.04em;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.focus-time {
+  color: var(--muted);
+
+  font-size: 0.78rem;
+  font-weight: 720;
+}
+
+
+/* =========================================================
+   CURRENT SITUATION
+   ========================================================= */
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.announcement-context {
+  position: relative;
+
+  padding:
+    29px
+    5px
+    24px;
+
+  background: var(--white);
+}
+
+
+/*
+  "현재 상황"은 상태색을 차지하지 않는다.
+  작은 회색 정보 레이블로 낮춘다.
+*/
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.context-kicker {
+  display: block;
+
+  margin:
+    0
+    0
+    13px;
+
+  padding: 0;
+
+  color: var(--train-muted);
+  background: transparent;
+
+  font-size: 0.72rem;
+  font-weight: 820;
+  line-height: 1.2;
+
+  letter-spacing: -0.02em;
+}
+
+
+/*
+  lead: 열차가
+*/
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.announcement-context
+.dynamic-lead {
+  max-width: 590px;
+
+  margin:
+    0
+    0
+    2px;
+
+  color: #444a4f;
+
+  font-size:
+    clamp(
+      1.22rem,
+      4.35vw,
+      1.46rem
+    );
+
+  font-weight: 730;
+  line-height: 1.32;
+
+  letter-spacing: -0.04em;
+}
+
+
+/*
+  conclusion: 들어오고 있습니다
+  이 화면에서 가장 큰 정보.
+*/
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.announcement-context
+.dynamic-conclusion,
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.announcement-context
+.dynamic-conclusion.dynamic-medium,
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.announcement-context
+.dynamic-conclusion.dynamic-long {
+  max-width: 610px;
+
+  margin: 0;
+
+  color: var(--train-ink);
+
+  font-size:
+    clamp(
+      2.42rem,
+      8.15vw,
+      3.2rem
+    );
+
+  font-weight: 900;
+  line-height: 1.03;
+
+  letter-spacing: -0.066em;
+
+  text-wrap: pretty;
+}
+
+
+/* =========================================================
+   TRAIN APPROACH RAIL
+
+   그림이나 장식 대신 "접근 방향"을 하나의 정보 신호로 사용.
+   ========================================================= */
+
+.train-arrival-approach {
+  width: 100%;
+  max-width: 520px;
+
+  margin-top: 25px;
+
+  padding-top: 14px;
+
+  border-top: 1px solid #d9dde0;
+
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(90px, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+
+.train-arrival-approach-label {
+  color: var(--train-muted);
+
+  font-size: 0.68rem;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+
+.train-arrival-approach > strong {
+  color: var(--train-ink);
+
+  font-size: 0.72rem;
+  font-weight: 900;
+
+  white-space: nowrap;
+}
+
+
+.train-arrival-rail {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0;
+}
+
+
+.train-arrival-rail-dot {
+  width: 10px;
+  height: 10px;
+
+  flex: 0 0 10px;
+
+  border: 2px solid var(--train-ink);
+
+  background: var(--train-yellow);
+}
+
+
+.train-arrival-rail-line {
+  height: 3px;
+
+  flex: 1 1 auto;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      var(--train-ink) 0,
+      var(--train-ink) 18px,
+      transparent 18px,
+      transparent 25px
+    );
+}
+
+
+.train-arrival-rail-arrow {
+  margin-left: 5px;
+
+  color: var(--train-ink);
+
+  font-size: 1.18rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   ACTION ZONE
+   ========================================================= */
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.attention-action {
+  position: relative;
+
+  margin:
+    0
+    -24px;
+
+  padding:
+    21px
+    30px
+    25px;
+
+  border: 0;
+  border-radius: 0;
+
+  color: var(--white);
+  background: var(--train-ink);
+
+  box-shadow: none;
+}
+
+
+/*
+  Black action zone에도 Yellow를 넓게 쓰지 않고
+  왼쪽 신호선 하나만 둔다.
+*/
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.attention-action::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 6px;
+
+  background: var(--train-yellow);
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.attention-action
+.message-kicker {
+  margin:
+    0
+    0
+    8px;
+
+  color: #f5d83f;
+
+  font-size: 0.71rem;
+  font-weight: 880;
+  line-height: 1.2;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.attention-action
+.dynamic-support,
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.attention-action
+.dynamic-support.support-medium,
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.attention-action
+.dynamic-support.support-long {
+  max-width: 610px;
+
+  margin: 0;
+
+  color: var(--white);
+
+  font-size:
+    clamp(
+      1.48rem,
+      5.2vw,
+      1.92rem
+    );
+
+  font-weight: 900;
+  line-height: 1.28;
+
+  letter-spacing: -0.05em;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 520px) {
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']::before {
+    left: -20px;
+
+    width: calc(100% + 40px);
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .focus-head {
+    min-height: 72px;
+
+    padding:
+      14px
+      3px
+      10px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .announcement-context {
+    padding:
+      27px
+      3px
+      23px;
+  }
+
+  .train-arrival-approach {
+    margin-top: 22px;
+
+    gap: 9px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .attention-action {
+    margin:
+      0
+      -20px;
+
+    padding:
+      20px
+      25px
+      24px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']::before {
+    left: -14px;
+
+    width: calc(100% + 28px);
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .focus-head {
+    min-height: 64px;
+
+    padding:
+      12px
+      2px
+      8px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .severity-symbol {
+    width: 36px;
+    height: 36px;
+
+    flex-basis: 36px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .announcement-context {
+    padding:
+      23px
+      2px
+      21px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .announcement-context
+  .dynamic-conclusion,
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .announcement-context
+  .dynamic-conclusion.dynamic-medium,
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .announcement-context
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(
+        2.08rem,
+        10.25vw,
+        2.55rem
+      );
+  }
+
+  .train-arrival-approach {
+    grid-template-columns:
+      auto
+      minmax(60px, 1fr)
+      auto;
+
+    margin-top: 20px;
+
+    gap: 7px;
+  }
+
+  .train-arrival-approach-label,
+  .train-arrival-approach > strong {
+    font-size: 0.62rem;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .attention-action {
+    margin:
+      0
+      -14px;
+
+    padding:
+      18px
+      20px
+      21px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .attention-action
+  .dynamic-support {
+    font-size: 1.32rem;
+  }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .train-arrival-rail,
+  .train-arrival-rail * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* =========================================================
+   TRAIN ARRIVAL — FINAL POLISH
+
+   목표:
+   1. headline과 안전 행동이 가장 먼저 보인다.
+   2. 접근 rail은 장식이 아니라 보조 상태 신호로만 남긴다.
+   3. 과거 안내 상세 상단 바는 현재 안전 정보보다 약하게 보인다.
+   4. 지난 안내가 하단에 있을 때 남는 공간을 의도적인 레이아웃으로 사용한다.
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   지난 안내 상세 내비게이션: 기능은 유지하되 시각적 우선순위 낮춤
+   --------------------------------------------------------- */
+
+.history-detail-bar {
+  min-height: 48px;
+
+  margin-right: -24px;
+  margin-left: -24px;
+
+  padding:
+    6px
+    24px;
+
+  border-top: 0;
+  border-bottom: 1px solid var(--line);
+
+  background: #ffffff;
+
+  gap: 10px;
+}
+
+
+.history-return-button {
+  min-height: 34px;
+
+  padding:
+    6px
+    2px;
+
+  border: 0;
+  border-radius: 0;
+
+  color: #252525;
+  background: transparent;
+
+  font-size: 0.76rem;
+  font-weight: 820;
+
+  gap: 6px;
+}
+
+
+.history-return-button > span {
+  color: var(--sky-dark);
+
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+
+.history-return-button:hover {
+  color: #000000;
+  background: transparent;
+
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+
+.history-detail-status {
+  color: #858b90;
+
+  font-size: 0.68rem;
+  font-weight: 680;
+
+  letter-spacing: -0.015em;
+}
+
+
+/* ---------------------------------------------------------
+   열차 진입이 표시될 때 live-stage를 세로 레이아웃으로 사용.
+   검정 Action Zone 아래에 큰 공백이 생기지 않고
+   Action Zone 자체가 현재 안내의 끝을 명확하게 만든다.
+   --------------------------------------------------------- */
+
+.live-stage[data-current-label='열차 진입'] {
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+.live-stage[data-current-label='열차 진입']
+.focus-announcement[data-label='열차 진입'] {
+  flex: 1 1 auto;
+
+  display: grid;
+
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  align-content: stretch;
+}
+
+
+/*
+  현재 상황 영역이 남는 여백을 흡수한다.
+  의미 없는 빈 공간이 Action Zone 아래에 남지 않도록 한다.
+*/
+.live-stage[data-current-label='열차 진입']
+.focus-announcement[data-label='열차 진입']
+.announcement-context {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  min-height: 305px;
+}
+
+
+/* ---------------------------------------------------------
+   현재 상황 레이블
+   기존 공통 CSS의 검정 밑줄을 완전히 제거.
+   --------------------------------------------------------- */
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.context-kicker {
+  display: block;
+
+  width: auto;
+
+  margin:
+    0
+    0
+    14px;
+
+  padding: 0;
+
+  border: 0;
+  border-bottom: 0;
+
+  color: #6d7479;
+  background: transparent;
+
+  font-size: 0.7rem;
+  font-weight: 800;
+
+  letter-spacing: -0.015em;
+}
+
+
+/* ---------------------------------------------------------
+   headline: 조금 더 숨을 주고, 한눈에 읽히는 크기로 정리
+   --------------------------------------------------------- */
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.announcement-context
+.dynamic-lead {
+  margin-bottom: 3px;
+
+  color: #4d5358;
+
+  font-size:
+    clamp(
+      1.18rem,
+      4.05vw,
+      1.4rem
+    );
+
+  font-weight: 720;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.announcement-context
+.dynamic-conclusion,
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.announcement-context
+.dynamic-conclusion.dynamic-medium,
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.announcement-context
+.dynamic-conclusion.dynamic-long {
+  max-width: 560px;
+
+  font-size:
+    clamp(
+      2.28rem,
+      7.55vw,
+      3rem
+    );
+
+  line-height: 1.045;
+
+  letter-spacing: -0.062em;
+}
+
+
+/* ---------------------------------------------------------
+   열차 접근 rail: headline과 경쟁하지 않는 보조 정보
+   --------------------------------------------------------- */
+
+.train-arrival-approach {
+  max-width: 465px;
+
+  margin-top: 28px;
+
+  padding-top: 12px;
+
+  border-top: 1px solid #e0e3e5;
+
+  grid-template-columns:
+    auto
+    minmax(82px, 1fr)
+    auto;
+
+  gap: 9px;
+}
+
+
+.train-arrival-approach-label,
+.train-arrival-approach > strong {
+  color: #6e757a;
+
+  font-size: 0.63rem;
+  font-weight: 760;
+}
+
+
+.train-arrival-approach > strong {
+  color: #4e555a;
+}
+
+
+.train-arrival-rail-dot {
+  width: 8px;
+  height: 8px;
+
+  flex-basis: 8px;
+
+  border: 1.5px solid #34383b;
+
+  background: var(--train-yellow);
+}
+
+
+.train-arrival-rail-line {
+  height: 2px;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #777d81 0,
+      #777d81 12px,
+      transparent 12px,
+      transparent 19px
+    );
+}
+
+
+.train-arrival-rail-arrow {
+  margin-left: 4px;
+
+  color: #555b5f;
+
+  font-size: 0.92rem;
+  font-weight: 850;
+}
+
+
+/* ---------------------------------------------------------
+   Action Zone
+   행동 문장 자체가 주인공.
+   --------------------------------------------------------- */
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.attention-action {
+  padding:
+    23px
+    30px
+    29px;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.attention-action
+.message-kicker {
+  margin-bottom: 10px;
+
+  font-size: 0.69rem;
+  font-weight: 850;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.attention-action
+.dynamic-support,
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.attention-action
+.dynamic-support.support-medium,
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.attention-action
+.dynamic-support.support-long {
+  max-width: 420px;
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      1.52rem,
+      5.25vw,
+      1.96rem
+    );
+
+  line-height: 1.22;
+
+  letter-spacing: -0.052em;
+}
+
+
+/* ---------------------------------------------------------
+   Header status block: 주의 상징은 유지하되 너무 크지 않게
+   --------------------------------------------------------- */
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.severity-symbol {
+  width: 38px;
+  height: 38px;
+
+  flex-basis: 38px;
+
+  border-width: 2px;
+
+  font-size: 0.68rem;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.focus-head {
+  min-height: 72px;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.severity-copy strong {
+  font-size: 1.02rem;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 520px) {
+  .history-detail-bar {
+    margin-right: -20px;
+    margin-left: -20px;
+
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .live-stage[data-current-label='열차 진입']
+  .focus-announcement[data-label='열차 진입']
+  .announcement-context {
+    min-height: 285px;
+
+    padding:
+      30px
+      3px
+      27px;
+  }
+
+  .train-arrival-approach {
+    max-width: 100%;
+
+    margin-top: 25px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .attention-action {
+    padding:
+      22px
+      25px
+      28px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .attention-action
+  .dynamic-support {
+    max-width: 330px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .history-detail-bar {
+    margin-right: -14px;
+    margin-left: -14px;
+
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .history-detail-status {
+    font-size: 0.62rem;
+  }
+
+  .live-stage[data-current-label='열차 진입']
+  .focus-announcement[data-label='열차 진입']
+  .announcement-context {
+    min-height: 255px;
+
+    padding:
+      25px
+      2px
+      23px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .announcement-context
+  .dynamic-conclusion,
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .announcement-context
+  .dynamic-conclusion.dynamic-medium,
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .announcement-context
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(
+        1.98rem,
+        9.8vw,
+        2.42rem
+      );
+  }
+
+  .train-arrival-approach {
+    margin-top: 21px;
+  }
+
+  .train-arrival-approach-label,
+  .train-arrival-approach > strong {
+    font-size: 0.58rem;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .attention-action {
+    padding:
+      20px
+      20px
+      24px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .attention-action
+  .dynamic-support {
+    max-width: 285px;
+
+    font-size: 1.3rem;
+  }
+}
+
+/* =========================================================
+   TRAIN ARRIVAL — FINAL MICRO POLISH
+   이전 완성형의 정보 구조는 유지하고 비율만 미세 조정.
+   ========================================================= */
+
+/* 1) 현재 상황 영역을 살짝 위로 당기고 높이 축소 */
+.live-stage[data-current-label='열차 진입']
+.focus-announcement[data-label='열차 진입']
+.announcement-context {
+  min-height: 270px;
+
+  padding-top: 24px;
+  padding-bottom: 22px;
+
+  justify-content: center;
+}
+
+
+/* 2) 주의 아이콘은 텍스트보다 앞서지 않도록 한 단계 축소 */
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.severity-symbol {
+  width: 35px;
+  height: 35px;
+
+  flex-basis: 35px;
+
+  font-size: 0.62rem;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.focus-head {
+  min-height: 68px;
+
+  padding-top: 13px;
+  padding-bottom: 9px;
+}
+
+
+/* 3) 접근 rail은 보조 정보로 더 약하게 */
+.train-arrival-approach {
+  max-width: 420px;
+
+  margin-top: 23px;
+
+  padding-top: 10px;
+
+  gap: 8px;
+
+  border-top-color: #e5e7e9;
+}
+
+
+.train-arrival-approach-label,
+.train-arrival-approach > strong {
+  color: #7d8387;
+
+  font-size: 0.6rem;
+  font-weight: 720;
+}
+
+
+.train-arrival-rail-dot {
+  width: 7px;
+  height: 7px;
+
+  flex-basis: 7px;
+
+  border-width: 1px;
+}
+
+
+.train-arrival-rail-line {
+  height: 1.5px;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #8c9195 0,
+      #8c9195 10px,
+      transparent 10px,
+      transparent 17px
+    );
+}
+
+
+.train-arrival-rail-arrow {
+  color: #747a7e;
+
+  font-size: 0.84rem;
+}
+
+
+/* 4) headline은 그대로 주인공이되 과밀하지 않게 미세 축소 */
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.announcement-context
+.dynamic-conclusion,
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.announcement-context
+.dynamic-conclusion.dynamic-medium,
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.announcement-context
+.dynamic-conclusion.dynamic-long {
+  font-size:
+    clamp(
+      2.2rem,
+      7.25vw,
+      2.9rem
+    );
+
+  line-height: 1.045;
+}
+
+
+/* 5) 안전 행동 영역은 힘을 유지하되 세로 부피만 소폭 축소 */
+.focus-announcement[data-severity='주의'][data-label='열차 진입']
+.attention-action {
+  padding-top: 21px;
+  padding-bottom: 25px;
+}
+
+
+/* 6) 지난 안내를 아주 조금 위로 당겨 빈 공간 비율 개선 */
+.station-main.passenger-main > .history {
+  transform: translateY(-18px);
+
+  margin-bottom: -18px;
+}
+
+
+/* 작은 화면 보정 */
+@media (max-width: 520px) {
+  .live-stage[data-current-label='열차 진입']
+  .focus-announcement[data-label='열차 진입']
+  .announcement-context {
+    min-height: 255px;
+
+    padding-top: 22px;
+    padding-bottom: 21px;
+  }
+
+  .train-arrival-approach {
+    max-width: 385px;
+
+    margin-top: 21px;
+  }
+
+  .station-main.passenger-main > .history {
+    transform: translateY(-14px);
+
+    margin-bottom: -14px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .live-stage[data-current-label='열차 진입']
+  .focus-announcement[data-label='열차 진입']
+  .announcement-context {
+    min-height: 235px;
+
+    padding-top: 20px;
+    padding-bottom: 19px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .severity-symbol {
+    width: 33px;
+    height: 33px;
+
+    flex-basis: 33px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .announcement-context
+  .dynamic-conclusion,
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .announcement-context
+  .dynamic-conclusion.dynamic-medium,
+  .focus-announcement[data-severity='주의'][data-label='열차 진입']
+  .announcement-context
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(
+        1.92rem,
+        9.4vw,
+        2.34rem
+      );
+  }
+}
+
+
+/* =========================================================
+   GAP WARNING — 발빠짐 주의
+
+   열차 진입과 같은 '주의' 계열이지만,
+   이번 화면의 핵심은 "접근"이 아니라 "간격"이다.
+
+   Yellow = 위험 지점
+   White  = 현재 상황
+   Black  = 즉시 확인해야 할 행동
+   ========================================================= */
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의'] {
+  --gap-yellow: #f4c900;
+  --gap-ink: #111111;
+  --gap-muted: #62696e;
+
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+
+  overflow: visible;
+
+  border: 0;
+  border-bottom: 1px solid var(--line);
+
+  border-radius: 0;
+
+  background: var(--white);
+
+  box-shadow: none;
+}
+
+
+/* 상단 상태 신호 */
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: -24px;
+
+  width: calc(100% + 48px);
+  height: 6px;
+
+  background: var(--gap-yellow);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.focus-head {
+  min-height: 68px;
+
+  padding:
+    13px
+    4px
+    9px;
+
+  border-bottom: 1px solid var(--line);
+
+  color: var(--text);
+  background: var(--white);
+
+  align-items: center;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.severity-badge {
+  gap: 10px;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.severity-symbol {
+  width: 35px;
+  height: 35px;
+
+  flex: 0 0 35px;
+
+  border: 2px solid var(--gap-ink);
+  border-radius: 0;
+
+  color: var(--gap-ink);
+  background: var(--gap-yellow);
+
+  font-size: 0.62rem;
+  font-weight: 950;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.severity-level {
+  color: #6f5f00;
+
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.severity-copy strong {
+  color: var(--gap-ink);
+
+  font-size: 1.02rem;
+  font-weight: 900;
+
+  letter-spacing: -0.04em;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.focus-time {
+  color: var(--muted);
+
+  font-size: 0.78rem;
+  font-weight: 720;
+}
+
+
+/* =========================================================
+   CURRENT SITUATION
+   ========================================================= */
+
+.live-stage[data-current-label='발빠짐 주의'] {
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+.live-stage[data-current-label='발빠짐 주의']
+.focus-announcement[data-label='발빠짐 주의'] {
+  flex: 1 1 auto;
+
+  display: grid;
+
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    auto;
+}
+
+
+.live-stage[data-current-label='발빠짐 주의']
+.focus-announcement[data-label='발빠짐 주의']
+.announcement-context {
+  min-height: 285px;
+
+  padding:
+    25px
+    5px
+    23px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  background: var(--white);
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.context-kicker {
+  display: block;
+
+  width: auto;
+
+  margin:
+    0
+    0
+    13px;
+
+  padding: 0;
+
+  border: 0;
+  border-bottom: 0;
+
+  color: #6d7479;
+  background: transparent;
+
+  font-size: 0.7rem;
+  font-weight: 800;
+
+  letter-spacing: -0.015em;
+}
+
+
+/*
+  lead:
+  "열차와 승강장 사이가"
+*/
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.announcement-context
+.dynamic-lead {
+  max-width: 570px;
+
+  margin:
+    0
+    0
+    3px;
+
+  color: #4d5358;
+
+  font-size:
+    clamp(
+      1.18rem,
+      4.05vw,
+      1.4rem
+    );
+
+  font-weight: 720;
+  line-height: 1.32;
+
+  letter-spacing: -0.04em;
+}
+
+
+/*
+  conclusion:
+  "넓습니다"
+
+  위험 원인을 가장 크게 보여준다.
+*/
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.announcement-context
+.dynamic-conclusion,
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.announcement-context
+.dynamic-conclusion.dynamic-medium,
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.announcement-context
+.dynamic-conclusion.dynamic-long {
+  max-width: 560px;
+
+  margin: 0;
+
+  color: var(--gap-ink);
+
+  font-size:
+    clamp(
+      2.72rem,
+      8.8vw,
+      3.52rem
+    );
+
+  font-weight: 900;
+  line-height: 1.02;
+
+  letter-spacing: -0.068em;
+}
+
+
+/* =========================================================
+   GAP VISUAL
+
+   승강장 ━━━   GAP   ━━━ 열차
+
+   실제 사진/일러스트 대신 선과 간격만으로
+   위험 위치를 즉시 이해시키는 보조 정보.
+   ========================================================= */
+
+.gap-warning-visual {
+  width: 100%;
+  max-width: 500px;
+
+  margin-top: 24px;
+
+  padding-top: 13px;
+
+  border-top: 1px solid #e1e4e6;
+}
+
+
+.gap-warning-track {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    58px
+    minmax(0, 1fr);
+
+  align-items: end;
+
+  gap: 8px;
+}
+
+
+.gap-warning-side {
+  min-width: 0;
+
+  display: grid;
+
+  gap: 6px;
+}
+
+
+.gap-warning-side-label {
+  color: #72797e;
+
+  font-size: 0.62rem;
+  font-weight: 760;
+
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+
+.gap-warning-platform-line,
+.gap-warning-train-line {
+  display: block;
+
+  width: 100%;
+  height: 7px;
+
+  background: #31363a;
+}
+
+
+.gap-warning-platform-line {
+  border-right: 4px solid var(--gap-yellow);
+}
+
+
+.gap-warning-train-line {
+  border-left: 4px solid var(--gap-yellow);
+}
+
+
+.gap-warning-gap {
+  min-height: 42px;
+
+  color: #5e5200;
+
+  display: grid;
+  place-items: center;
+
+  align-content: end;
+
+  gap: 2px;
+}
+
+
+.gap-warning-gap-mark {
+  color: var(--gap-yellow);
+
+  font-size: 1.05rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+
+.gap-warning-gap strong {
+  color: #5f6366;
+
+  font-size: 0.61rem;
+  font-weight: 820;
+
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ACTION ZONE
+   ========================================================= */
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.attention-action {
+  position: relative;
+
+  margin:
+    0
+    -24px;
+
+  padding:
+    21px
+    30px
+    25px;
+
+  border: 0;
+  border-radius: 0;
+
+  color: var(--white);
+  background: var(--gap-ink);
+
+  box-shadow: none;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.attention-action::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 6px;
+
+  background: var(--gap-yellow);
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.attention-action
+.message-kicker {
+  margin:
+    0
+    0
+    10px;
+
+  color: #f5d83f;
+
+  font-size: 0.69rem;
+  font-weight: 850;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.attention-action
+.dynamic-support,
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.attention-action
+.dynamic-support.support-medium,
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.attention-action
+.dynamic-support.support-long {
+  max-width: 410px;
+
+  margin: 0;
+
+  color: var(--white);
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      1.52rem,
+      5.25vw,
+      1.96rem
+    );
+
+  font-weight: 900;
+  line-height: 1.22;
+
+  letter-spacing: -0.052em;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 520px) {
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']::before {
+    left: -20px;
+
+    width: calc(100% + 40px);
+  }
+
+  .live-stage[data-current-label='발빠짐 주의']
+  .focus-announcement[data-label='발빠짐 주의']
+  .announcement-context {
+    min-height: 265px;
+
+    padding:
+      23px
+      3px
+      22px;
+  }
+
+  .gap-warning-visual {
+    max-width: 430px;
+
+    margin-top: 22px;
+  }
+
+  .gap-warning-track {
+    grid-template-columns:
+      minmax(0, 1fr)
+      52px
+      minmax(0, 1fr);
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+  .attention-action {
+    margin:
+      0
+      -20px;
+
+    padding:
+      21px
+      25px
+      26px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+  .attention-action
+  .dynamic-support {
+    max-width: 330px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']::before {
+    left: -14px;
+
+    width: calc(100% + 28px);
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+  .severity-symbol {
+    width: 33px;
+    height: 33px;
+
+    flex-basis: 33px;
+  }
+
+  .live-stage[data-current-label='발빠짐 주의']
+  .focus-announcement[data-label='발빠짐 주의']
+  .announcement-context {
+    min-height: 242px;
+
+    padding:
+      20px
+      2px
+      19px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+  .announcement-context
+  .dynamic-conclusion,
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+  .announcement-context
+  .dynamic-conclusion.dynamic-medium,
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+  .announcement-context
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(
+        2.32rem,
+        11vw,
+        2.86rem
+      );
+  }
+
+  .gap-warning-track {
+    grid-template-columns:
+      minmax(0, 1fr)
+      46px
+      minmax(0, 1fr);
+  }
+
+  .gap-warning-side-label,
+  .gap-warning-gap strong {
+    font-size: 0.56rem;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+  .attention-action {
+    margin:
+      0
+      -14px;
+
+    padding:
+      20px
+      20px
+      24px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+  .attention-action
+  .dynamic-support {
+    max-width: 285px;
+
+    font-size: 1.3rem;
+  }
+}
+
+
+/* =========================================================
+   GAP WARNING — FINAL POLISH
+
+   최종 목표
+   - "넓습니다"가 위험 원인으로 가장 먼저 읽힌다.
+   - 승강장/열차 사이의 실제 '빈 공간'을 시각적으로 보여준다.
+   - ↔는 거리/간격을 의미하는 보조 신호로만 사용한다.
+   - 행동 문구는 "주의하세요"보다 구체적인 행동을 제시한다.
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   CURRENT SITUATION
+   --------------------------------------------------------- */
+
+.live-stage[data-current-label='발빠짐 주의']
+.focus-announcement[data-label='발빠짐 주의']
+.announcement-context {
+  min-height: 276px;
+
+  padding-top: 24px;
+  padding-bottom: 22px;
+
+  justify-content: center;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.announcement-context
+.dynamic-lead {
+  margin-bottom: 2px;
+
+  color: #4d5358;
+
+  font-size:
+    clamp(
+      1.17rem,
+      4vw,
+      1.38rem
+    );
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.announcement-context
+.dynamic-conclusion,
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.announcement-context
+.dynamic-conclusion.dynamic-medium,
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.announcement-context
+.dynamic-conclusion.dynamic-long {
+  font-size:
+    clamp(
+      2.56rem,
+      8.25vw,
+      3.28rem
+    );
+
+  line-height: 1.02;
+
+  letter-spacing: -0.067em;
+}
+
+
+/* ---------------------------------------------------------
+   GAP DIAGRAM
+
+   승강장 ━━━━━┃   ↔   ┃━━━━━ 열차
+
+   양쪽 검정 면을 실제로 끊어 보여서
+   "사이가 비어 있다"는 의미가 첫눈에 보이게 한다.
+   --------------------------------------------------------- */
+
+.gap-warning-visual {
+  width: 100%;
+  max-width: 500px;
+
+  margin-top: 26px;
+
+  padding-top: 14px;
+
+  border-top: 1px solid #e2e5e7;
+}
+
+
+.gap-warning-track {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    74px
+    minmax(0, 1fr);
+
+  align-items: end;
+
+  column-gap: 0;
+}
+
+
+.gap-warning-side {
+  min-width: 0;
+
+  display: grid;
+
+  gap: 7px;
+}
+
+
+.gap-warning-side-label {
+  color: #747b80;
+
+  font-size: 0.61rem;
+  font-weight: 760;
+
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+
+.gap-warning-side-train
+.gap-warning-side-label {
+  text-align: right;
+}
+
+
+.gap-warning-edge {
+  width: 100%;
+  height: 9px;
+
+  display: flex;
+  align-items: stretch;
+}
+
+
+.gap-warning-surface {
+  min-width: 0;
+
+  flex: 1 1 auto;
+
+  background: #34393d;
+}
+
+
+.gap-warning-boundary {
+  width: 5px;
+
+  flex: 0 0 5px;
+
+  background: var(--gap-yellow);
+}
+
+
+/*
+  가운데는 실제로 비어 있어야 한다.
+  배경 면을 만들지 않고 ↔와 설명만 둔다.
+*/
+.gap-warning-gap {
+  min-height: 48px;
+
+  padding-bottom: 1px;
+
+  color: #5d6266;
+  background: transparent;
+
+  display: grid;
+  place-items: center;
+  align-content: end;
+
+  gap: 3px;
+}
+
+
+.gap-warning-gap-arrow {
+  color: #8b7600;
+
+  font-size: 1.12rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+
+.gap-warning-gap strong {
+  color: #666d72;
+
+  font-size: 0.59rem;
+  font-weight: 820;
+
+  line-height: 1;
+
+  letter-spacing: -0.015em;
+
+  white-space: nowrap;
+}
+
+
+/* ---------------------------------------------------------
+   ACTION ZONE
+   --------------------------------------------------------- */
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.attention-action {
+  padding-top: 21px;
+  padding-bottom: 25px;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.attention-action
+.dynamic-support,
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.attention-action
+.dynamic-support.support-medium,
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.attention-action
+.dynamic-support.support-long {
+  max-width: 390px;
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      1.5rem,
+      5.2vw,
+      1.92rem
+    );
+
+  line-height: 1.22;
+}
+
+
+/*
+  발빠짐 경고는 행동문 자체가 중요하므로
+  "안전을 위해"는 보조 수준으로 유지.
+*/
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.attention-action
+.message-kicker {
+  margin-bottom: 9px;
+
+  color: #f1d237;
+}
+
+
+/* ---------------------------------------------------------
+   HEADER 미세 조정
+   --------------------------------------------------------- */
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.severity-symbol {
+  width: 35px;
+  height: 35px;
+
+  flex-basis: 35px;
+
+  font-size: 0.62rem;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+.focus-head {
+  min-height: 68px;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 520px) {
+  .live-stage[data-current-label='발빠짐 주의']
+  .focus-announcement[data-label='발빠짐 주의']
+  .announcement-context {
+    min-height: 258px;
+
+    padding-top: 22px;
+    padding-bottom: 21px;
+  }
+
+  .gap-warning-visual {
+    margin-top: 23px;
+  }
+
+  .gap-warning-track {
+    grid-template-columns:
+      minmax(0, 1fr)
+      66px
+      minmax(0, 1fr);
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+  .attention-action
+  .dynamic-support {
+    max-width: 330px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .live-stage[data-current-label='발빠짐 주의']
+  .focus-announcement[data-label='발빠짐 주의']
+  .announcement-context {
+    min-height: 238px;
+
+    padding-top: 19px;
+    padding-bottom: 18px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+  .announcement-context
+  .dynamic-conclusion,
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+  .announcement-context
+  .dynamic-conclusion.dynamic-medium,
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+  .announcement-context
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(
+        2.18rem,
+        10.45vw,
+        2.7rem
+      );
+  }
+
+  .gap-warning-track {
+    grid-template-columns:
+      minmax(0, 1fr)
+      58px
+      minmax(0, 1fr);
+  }
+
+  .gap-warning-gap-arrow {
+    font-size: 1rem;
+  }
+
+  .gap-warning-gap strong,
+  .gap-warning-side-label {
+    font-size: 0.54rem;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='발빠짐 주의']
+  .attention-action
+  .dynamic-support {
+    max-width: 285px;
+
+    font-size: 1.28rem;
+  }
+}
+
+
+/* =========================================================
+   DOOR CLOSING — 출입문 닫힘 FINAL
+
+   성격:
+   - 같은 '주의' 등급이지만 핵심은 위험 원인 설명이 아니라
+     "곧 닫힌다"는 변화와 즉시 행동이다.
+   - Yellow = 닫힘/주의 상태
+   - White  = 현재 상황
+   - Black  = 즉시 행동
+   - 문이 가운데로 닫히는 방향만 단순하게 시각화한다.
+   ========================================================= */
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘'] {
+  --door-yellow: #f4c900;
+  --door-ink: #111111;
+  --door-muted: #62696e;
+
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+
+  overflow: visible;
+
+  border: 0;
+  border-bottom: 1px solid var(--line);
+
+  border-radius: 0;
+
+  background: var(--white);
+
+  box-shadow: none;
+}
+
+
+/* 상단 주의 신호 */
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: -24px;
+
+  width: calc(100% + 48px);
+  height: 6px;
+
+  background: var(--door-yellow);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.focus-head {
+  min-height: 68px;
+
+  padding:
+    13px
+    4px
+    9px;
+
+  border-bottom: 1px solid var(--line);
+
+  color: var(--text);
+  background: var(--white);
+
+  align-items: center;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.severity-badge {
+  gap: 10px;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.severity-symbol {
+  width: 35px;
+  height: 35px;
+
+  flex: 0 0 35px;
+
+  border: 2px solid var(--door-ink);
+  border-radius: 0;
+
+  color: var(--door-ink);
+  background: var(--door-yellow);
+
+  font-size: 0.62rem;
+  font-weight: 950;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.severity-level {
+  color: #6f5f00;
+
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.severity-copy strong {
+  color: var(--door-ink);
+
+  font-size: 1.02rem;
+  font-weight: 900;
+
+  letter-spacing: -0.04em;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.focus-time {
+  color: var(--muted);
+
+  font-size: 0.78rem;
+  font-weight: 720;
+}
+
+
+/* =========================================================
+   CURRENT SITUATION
+   ========================================================= */
+
+.live-stage[data-current-label='출입문 닫힘'] {
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+.live-stage[data-current-label='출입문 닫힘']
+.focus-announcement[data-label='출입문 닫힘'] {
+  flex: 1 1 auto;
+
+  display: grid;
+
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    auto;
+}
+
+
+.live-stage[data-current-label='출입문 닫힘']
+.focus-announcement[data-label='출입문 닫힘']
+.announcement-context {
+  min-height: 282px;
+
+  padding:
+    24px
+    5px
+    23px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  background: var(--white);
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.context-kicker {
+  display: block;
+
+  width: auto;
+
+  margin:
+    0
+    0
+    13px;
+
+  padding: 0;
+
+  border: 0;
+  border-bottom: 0;
+
+  color: #6d7479;
+  background: transparent;
+
+  font-size: 0.7rem;
+  font-weight: 800;
+
+  letter-spacing: -0.015em;
+}
+
+
+/* lead: 곧 */
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.announcement-context
+.dynamic-lead {
+  max-width: 560px;
+
+  margin:
+    0
+    0
+    3px;
+
+  color: #4d5358;
+
+  font-size:
+    clamp(
+      1.16rem,
+      3.95vw,
+      1.36rem
+    );
+
+  font-weight: 720;
+  line-height: 1.3;
+
+  letter-spacing: -0.035em;
+}
+
+
+/*
+  핵심:
+  출입문이
+  닫힙니다
+*/
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.announcement-context
+.dynamic-conclusion,
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.announcement-context
+.dynamic-conclusion.dynamic-medium,
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.announcement-context
+.dynamic-conclusion.dynamic-long {
+  max-width: 500px;
+
+  margin: 0;
+
+  color: var(--door-ink);
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      2.42rem,
+      7.9vw,
+      3.16rem
+    );
+
+  font-weight: 900;
+  line-height: 1.03;
+
+  letter-spacing: -0.066em;
+}
+
+
+/* =========================================================
+   DOOR CLOSING VISUAL
+
+   [문] →  |  ← [문]
+
+   실제 도어 일러스트가 아니라
+   닫히는 방향만 빠르게 이해시키는 상태 신호.
+   ========================================================= */
+
+.door-closing-visual {
+  width: 100%;
+  max-width: 460px;
+
+  margin-top: 24px;
+
+  padding-top: 13px;
+
+  border-top: 1px solid #e2e5e7;
+}
+
+
+.door-closing-status {
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(150px, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+
+.door-closing-label {
+  color: #747b80;
+
+  font-size: 0.61rem;
+  font-weight: 760;
+
+  white-space: nowrap;
+}
+
+
+.door-closing-status > strong {
+  color: #676e72;
+
+  font-size: 0.61rem;
+  font-weight: 820;
+
+  white-space: nowrap;
+}
+
+
+.door-closing-track {
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(30px, 1fr)
+    24px
+    4px
+    24px
+    minmax(30px, 1fr);
+
+  align-items: center;
+
+  gap: 5px;
+}
+
+
+.door-panel {
+  display: block;
+
+  height: 12px;
+
+  background: #34393d;
+}
+
+
+.door-panel-left {
+  border-right: 4px solid var(--door-yellow);
+}
+
+
+.door-panel-right {
+  border-left: 4px solid var(--door-yellow);
+}
+
+
+.door-arrow {
+  color: #767c80;
+
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1;
+
+  text-align: center;
+}
+
+
+.door-center-line {
+  width: 2px;
+  height: 24px;
+
+  justify-self: center;
+
+  background: var(--door-yellow);
+}
+
+
+/* =========================================================
+   ACTION ZONE
+   ========================================================= */
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.attention-action {
+  position: relative;
+
+  margin:
+    0
+    -24px;
+
+  padding:
+    21px
+    30px
+    25px;
+
+  border: 0;
+  border-radius: 0;
+
+  color: var(--white);
+  background: var(--door-ink);
+
+  box-shadow: none;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.attention-action::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 6px;
+
+  background: var(--door-yellow);
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.attention-action
+.message-kicker {
+  margin:
+    0
+    0
+    9px;
+
+  color: #f1d237;
+
+  font-size: 0.69rem;
+  font-weight: 850;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.attention-action
+.dynamic-support,
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.attention-action
+.dynamic-support.support-medium,
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.attention-action
+.dynamic-support.support-long {
+  max-width: 455px;
+
+  margin: 0;
+
+  color: var(--white);
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      1.43rem,
+      4.95vw,
+      1.82rem
+    );
+
+  font-weight: 900;
+  line-height: 1.24;
+
+  letter-spacing: -0.05em;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 520px) {
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']::before {
+    left: -20px;
+
+    width: calc(100% + 40px);
+  }
+
+  .live-stage[data-current-label='출입문 닫힘']
+  .focus-announcement[data-label='출입문 닫힘']
+  .announcement-context {
+    min-height: 260px;
+
+    padding:
+      22px
+      3px
+      21px;
+  }
+
+  .door-closing-visual {
+    max-width: 420px;
+
+    margin-top: 22px;
+  }
+
+  .door-closing-status {
+    gap: 9px;
+  }
+
+  .door-closing-track {
+    grid-template-columns:
+      minmax(24px, 1fr)
+      20px
+      3px
+      20px
+      minmax(24px, 1fr);
+
+    gap: 4px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+  .attention-action {
+    margin:
+      0
+      -20px;
+
+    padding:
+      21px
+      25px
+      25px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+  .attention-action
+  .dynamic-support {
+    max-width: 355px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']::before {
+    left: -14px;
+
+    width: calc(100% + 28px);
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+  .severity-symbol {
+    width: 33px;
+    height: 33px;
+
+    flex-basis: 33px;
+  }
+
+  .live-stage[data-current-label='출입문 닫힘']
+  .focus-announcement[data-label='출입문 닫힘']
+  .announcement-context {
+    min-height: 240px;
+
+    padding:
+      19px
+      2px
+      18px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+  .announcement-context
+  .dynamic-conclusion,
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+  .announcement-context
+  .dynamic-conclusion.dynamic-medium,
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+  .announcement-context
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(
+        2.02rem,
+        9.75vw,
+        2.48rem
+      );
+  }
+
+  .door-closing-status {
+    grid-template-columns:
+      auto
+      minmax(120px, 1fr)
+      auto;
+
+    gap: 7px;
+  }
+
+  .door-closing-label,
+  .door-closing-status > strong {
+    font-size: 0.55rem;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+  .attention-action {
+    margin:
+      0
+      -14px;
+
+    padding:
+      20px
+      20px
+      23px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+  .attention-action
+  .dynamic-support {
+    max-width: 300px;
+
+    font-size: 1.22rem;
+  }
+}
+
+
+/* =========================================================
+   DOOR CLOSING — FINAL 100% POLISH
+
+   목표
+   1. "출입문이 닫힙니다"가 압도적인 1순위 정보
+   2. 중앙 도식은 닫히는 방향만 짧게 보조
+   3. 좌/우 라벨을 제거해 그래픽 해석 부담 최소화
+   4. 행동 문구는 검정 Action Zone에서 즉시 읽히게 유지
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   CURRENT SITUATION
+   --------------------------------------------------------- */
+
+.live-stage[data-current-label='출입문 닫힘']
+.focus-announcement[data-label='출입문 닫힘']
+.announcement-context {
+  min-height: 268px;
+
+  padding-top: 23px;
+  padding-bottom: 21px;
+
+  justify-content: center;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.announcement-context
+.dynamic-lead {
+  margin-bottom: 2px;
+
+  color: #555c61;
+
+  font-size:
+    clamp(
+      1.12rem,
+      3.8vw,
+      1.32rem
+    );
+
+  font-weight: 720;
+}
+
+
+/*
+  출입문이
+  닫힙니다
+*/
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.announcement-context
+.dynamic-conclusion,
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.announcement-context
+.dynamic-conclusion.dynamic-medium,
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.announcement-context
+.dynamic-conclusion.dynamic-long {
+  max-width: 470px;
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      2.34rem,
+      7.55vw,
+      3.02rem
+    );
+
+  line-height: 1.025;
+
+  letter-spacing: -0.066em;
+}
+
+
+/* ---------------------------------------------------------
+   DOOR CLOSING STATUS
+
+   ━━━━━ →  |  ← ━━━━━
+              닫히는 중
+
+   설명용 라벨을 없애고 방향 자체가 의미를 전달한다.
+   --------------------------------------------------------- */
+
+.door-closing-visual {
+  width: 100%;
+  max-width: 430px;
+
+  margin-top: 23px;
+
+  padding-top: 12px;
+
+  border-top: 1px solid #e3e6e8;
+
+  display: grid;
+
+  gap: 7px;
+}
+
+
+.door-closing-track {
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(42px, 1fr)
+    23px
+    4px
+    23px
+    minmax(42px, 1fr);
+
+  align-items: center;
+
+  gap: 5px;
+}
+
+
+.door-panel {
+  display: block;
+
+  height: 9px;
+
+  background: #3e4448;
+}
+
+
+.door-panel-left {
+  border-right: 4px solid var(--door-yellow);
+}
+
+
+.door-panel-right {
+  border-left: 4px solid var(--door-yellow);
+}
+
+
+.door-arrow {
+  color: #858b8f;
+
+  font-size: 0.86rem;
+  font-weight: 900;
+
+  line-height: 1;
+
+  text-align: center;
+}
+
+
+.door-center-line {
+  width: 2px;
+  height: 25px;
+
+  justify-self: center;
+
+  background: var(--door-yellow);
+}
+
+
+.door-closing-progress {
+  color: #737a7e;
+
+  font-size: 0.6rem;
+  font-weight: 800;
+
+  line-height: 1;
+
+  text-align: center;
+
+  letter-spacing: -0.015em;
+}
+
+
+/*
+  이전 좌우 라벨 레이아웃은 최종본에서 사용하지 않는다.
+*/
+.door-closing-status,
+.door-closing-label {
+  display: none;
+}
+
+
+/* ---------------------------------------------------------
+   HEADER
+   train_arrival / gap_warning과 같은 시스템 유지
+   --------------------------------------------------------- */
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.severity-symbol {
+  width: 35px;
+  height: 35px;
+
+  flex-basis: 35px;
+
+  font-size: 0.62rem;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.focus-head {
+  min-height: 68px;
+}
+
+
+/* ---------------------------------------------------------
+   ACTION ZONE
+   --------------------------------------------------------- */
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.attention-action {
+  padding-top: 21px;
+  padding-bottom: 25px;
+}
+
+
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.attention-action
+.dynamic-support,
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.attention-action
+.dynamic-support.support-medium,
+.focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+.attention-action
+.dynamic-support.support-long {
+  max-width: 450px;
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      1.4rem,
+      4.85vw,
+      1.78rem
+    );
+
+  line-height: 1.23;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 520px) {
+  .live-stage[data-current-label='출입문 닫힘']
+  .focus-announcement[data-label='출입문 닫힘']
+  .announcement-context {
+    min-height: 250px;
+
+    padding-top: 21px;
+    padding-bottom: 20px;
+  }
+
+  .door-closing-visual {
+    max-width: 395px;
+
+    margin-top: 21px;
+  }
+
+  .door-closing-track {
+    grid-template-columns:
+      minmax(34px, 1fr)
+      20px
+      3px
+      20px
+      minmax(34px, 1fr);
+
+    gap: 4px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+  .attention-action
+  .dynamic-support {
+    max-width: 355px;
+  }
+}
+
+
+@media (max-width: 379px) {
+  .live-stage[data-current-label='출입문 닫힘']
+  .focus-announcement[data-label='출입문 닫힘']
+  .announcement-context {
+    min-height: 230px;
+
+    padding-top: 18px;
+    padding-bottom: 17px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+  .announcement-context
+  .dynamic-conclusion,
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+  .announcement-context
+  .dynamic-conclusion.dynamic-medium,
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+  .announcement-context
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(
+        1.96rem,
+        9.4vw,
+        2.4rem
+      );
+  }
+
+  .door-closing-track {
+    grid-template-columns:
+      minmax(28px, 1fr)
+      18px
+      3px
+      18px
+      minmax(28px, 1fr);
+  }
+
+  .door-closing-progress {
+    font-size: 0.55rem;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='출입문 닫힘']
+  .attention-action
+  .dynamic-support {
+    max-width: 295px;
+
+    font-size: 1.2rem;
+  }
+}
+
+
+/* =========================================================
+   TRAIN PASSING — 열차 통과 FINAL
+
+   Yellow = 주의 / 통과 상태
+   White  = 현재 상황
+   Black  = 즉시 행동
+   ========================================================= */
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과'] {
+  --passing-yellow: #f4c900;
+  --passing-ink: #111111;
+  --passing-muted: #646b70;
+
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+
+  overflow: visible;
+
+  border: 0;
+  border-bottom: 1px solid var(--line);
+
+  border-radius: 0;
+
+  background: var(--white);
+
+  box-shadow: none;
+}
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: -24px;
+
+  width: calc(100% + 48px);
+  height: 6px;
+
+  background: var(--passing-yellow);
+}
+
+/* HEADER */
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.focus-head {
+  min-height: 68px;
+
+  padding:
+    13px
+    4px
+    9px;
+
+  border-bottom: 1px solid var(--line);
+
+  color: var(--text);
+  background: var(--white);
+
+  align-items: center;
+}
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.severity-badge {
+  gap: 10px;
+}
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.severity-symbol {
+  width: 35px;
+  height: 35px;
+
+  flex: 0 0 35px;
+
+  border: 2px solid var(--passing-ink);
+  border-radius: 0;
+
+  color: var(--passing-ink);
+  background: var(--passing-yellow);
+
+  font-size: 0.62rem;
+  font-weight: 950;
+}
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.severity-level {
+  color: #6f5f00;
+
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.severity-copy strong {
+  color: var(--passing-ink);
+
+  font-size: 1.02rem;
+  font-weight: 900;
+
+  letter-spacing: -0.04em;
+}
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.focus-time {
+  color: var(--muted);
+
+  font-size: 0.78rem;
+  font-weight: 720;
+}
+
+/* CURRENT SITUATION */
+
+.live-stage[data-current-label='열차 통과'] {
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.live-stage[data-current-label='열차 통과']
+.focus-announcement[data-label='열차 통과'] {
+  flex: 1 1 auto;
+
+  display: grid;
+
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    auto;
+}
+
+.live-stage[data-current-label='열차 통과']
+.focus-announcement[data-label='열차 통과']
+.announcement-context {
+  min-height: 276px;
+
+  padding:
+    24px
+    5px
+    22px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  background: var(--white);
+}
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.context-kicker {
+  display: block;
+
+  width: auto;
+
+  margin:
+    0
+    0
+    13px;
+
+  padding: 0;
+
+  border: 0;
+  border-bottom: 0;
+
+  color: #6d7479;
+  background: transparent;
+
+  font-size: 0.7rem;
+  font-weight: 800;
+
+  letter-spacing: -0.015em;
+}
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.announcement-context
+.dynamic-lead {
+  max-width: 570px;
+
+  margin:
+    0
+    0
+    3px;
+
+  color: #4d5358;
+
+  font-size:
+    clamp(
+      1.16rem,
+      3.95vw,
+      1.36rem
+    );
+
+  font-weight: 720;
+  line-height: 1.3;
+
+  letter-spacing: -0.035em;
+}
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.announcement-context
+.dynamic-conclusion,
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.announcement-context
+.dynamic-conclusion.dynamic-medium,
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.announcement-context
+.dynamic-conclusion.dynamic-long {
+  max-width: 490px;
+
+  margin: 0;
+
+  color: var(--passing-ink);
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      2.42rem,
+      7.85vw,
+      3.14rem
+    );
+
+  font-weight: 900;
+  line-height: 1.025;
+
+  letter-spacing: -0.066em;
+}
+
+/* PASSING VISUAL */
+
+.train-passing-visual {
+  width: 100%;
+  max-width: 440px;
+
+  margin-top: 23px;
+
+  padding-top: 12px;
+
+  border-top: 1px solid #e3e6e8;
+
+  display: grid;
+
+  gap: 7px;
+}
+
+.train-passing-track {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(40px, 1fr)
+    32px
+    minmax(40px, 1fr);
+
+  align-items: center;
+
+  gap: 7px;
+}
+
+.train-passing-line {
+  display: block;
+
+  height: 3px;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #747a7e 0,
+      #747a7e 18px,
+      transparent 18px,
+      transparent 25px
+    );
+}
+
+.train-passing-arrow {
+  color: #7a6800;
+
+  font-size: 1.08rem;
+  font-weight: 900;
+  line-height: 1;
+
+  text-align: center;
+}
+
+.train-passing-progress {
+  color: #737a7e;
+
+  font-size: 0.6rem;
+  font-weight: 800;
+
+  line-height: 1;
+
+  text-align: center;
+
+  letter-spacing: -0.015em;
+}
+
+/* ACTION ZONE */
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.attention-action {
+  position: relative;
+
+  margin:
+    0
+    -24px;
+
+  padding:
+    21px
+    30px
+    25px;
+
+  border: 0;
+  border-radius: 0;
+
+  color: var(--white);
+  background: var(--passing-ink);
+
+  box-shadow: none;
+}
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.attention-action::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 6px;
+
+  background: var(--passing-yellow);
+}
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.attention-action
+.message-kicker {
+  margin:
+    0
+    0
+    9px;
+
+  color: #f1d237;
+
+  font-size: 0.69rem;
+  font-weight: 850;
+}
+
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.attention-action
+.dynamic-support,
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.attention-action
+.dynamic-support.support-medium,
+.focus-announcement[data-severity='주의'][data-label='열차 통과']
+.attention-action
+.dynamic-support.support-long {
+  max-width: 390px;
+
+  margin: 0;
+
+  color: var(--white);
+
+  white-space: pre-line;
+
+  font-size:
+    clamp(
+      1.56rem,
+      5.35vw,
+      2rem
+    );
+
+  font-weight: 900;
+  line-height: 1.22;
+
+  letter-spacing: -0.052em;
+}
+
+/* MOBILE */
+
+@media (max-width: 520px) {
+  .focus-announcement[data-severity='주의'][data-label='열차 통과']::before {
+    left: -20px;
+
+    width: calc(100% + 40px);
+  }
+
+  .live-stage[data-current-label='열차 통과']
+  .focus-announcement[data-label='열차 통과']
+  .announcement-context {
+    min-height: 258px;
+
+    padding-top: 22px;
+    padding-bottom: 21px;
+  }
+
+  .train-passing-visual {
+    max-width: 400px;
+
+    margin-top: 21px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 통과']
+  .attention-action {
+    margin:
+      0
+      -20px;
+
+    padding:
+      21px
+      25px
+      25px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 통과']
+  .attention-action
+  .dynamic-support {
+    max-width: 330px;
+  }
+}
+
+@media (max-width: 379px) {
+  .focus-announcement[data-severity='주의'][data-label='열차 통과']::before {
+    left: -14px;
+
+    width: calc(100% + 28px);
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 통과']
+  .severity-symbol {
+    width: 33px;
+    height: 33px;
+
+    flex-basis: 33px;
+  }
+
+  .live-stage[data-current-label='열차 통과']
+  .focus-announcement[data-label='열차 통과']
+  .announcement-context {
+    min-height: 238px;
+
+    padding-top: 19px;
+    padding-bottom: 18px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 통과']
+  .announcement-context
+  .dynamic-conclusion,
+  .focus-announcement[data-severity='주의'][data-label='열차 통과']
+  .announcement-context
+  .dynamic-conclusion.dynamic-medium,
+  .focus-announcement[data-severity='주의'][data-label='열차 통과']
+  .announcement-context
+  .dynamic-conclusion.dynamic-long {
+    font-size:
+      clamp(
+        2.02rem,
+        9.7vw,
+        2.48rem
+      );
+  }
+
+  .train-passing-progress {
+    font-size: 0.55rem;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 통과']
+  .attention-action {
+    margin:
+      0
+      -14px;
+
+    padding:
+      20px
+      20px
+      23px;
+  }
+
+  .focus-announcement[data-severity='주의'][data-label='열차 통과']
+  .attention-action
+  .dynamic-support {
+    max-width: 285px;
+
+    font-size: 1.28rem;
   }
 }
